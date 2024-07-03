@@ -1,15 +1,12 @@
-//
-//  ContentView.swift
-//  HMSAdmin
-//
-//  Created by Kajal Choudhary on 02/07/24.
-//
-
 import SwiftUI
+import Firebase
 
 struct ContentView: View {
     @State private var username = ""
     @State private var password = ""
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -51,7 +48,12 @@ struct ContentView: View {
                     Spacer().frame(height: 50)
                     
                     Button("Login") {
-                        //authenticate user logic
+                        if username.isEmpty || password.isEmpty {
+                            alertMessage = "Please enter both email and password"
+                            showingAlert = true
+                        } else {
+                            authenticateUser(email: username, password: password)
+                        }
                     }
                     .foregroundColor(.white)
                     .frame(width: 317, height: 50)
@@ -59,14 +61,60 @@ struct ContentView: View {
                     .cornerRadius(14)
                     .fontWeight(.semibold)
                     .font(.system(size: 20))
+                    .alert(isPresented: $showingAlert) {
+                        Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    }
                 }
                 
-                Spacer() // This spacer will push the VStack to the top
+                Spacer()
             }
             .navigationBarHidden(true)
         }
     }
+    
+    func authenticateUser(email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                alertMessage = error.localizedDescription
+                showingAlert = true
+                return
+            }
+            
+            guard let user = authResult?.user else {
+                alertMessage = "Authentication failed"
+                showingAlert = true
+                return
+            }
+            
+            // User role based on email domain
+            let emailDomain = email.components(separatedBy: "@").last ?? ""
+            
+            switch emailDomain {
+            case "superadmin.com":
+                navigateToScreen(screen: SuperAdminView())
+                
+            case "admin.com":
+                navigateToScreen(screen: AdminView())
+                
+            case "doctor.com":
+                navigateToScreen(screen: DoctorView())
+                
+            default:
+                alertMessage = "Invalid email domain"
+                showingAlert = true
+            }
+        }
     }
+    
+    func navigateToScreen<Screen: View>(screen: Screen) {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let window = windowScene.windows.first {
+                window.rootViewController = UIHostingController(rootView: screen)
+                window.makeKeyAndVisible()
+            }
+        }
+    }
+}
 
 extension Color {
     init(hex: String) {
