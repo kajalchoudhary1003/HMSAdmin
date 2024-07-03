@@ -29,7 +29,7 @@ struct ContentView: View {
                     VStack (spacing: 0){
                         TextField("Email", text: $username)
                             .padding()
-                            .frame(width: 319, height: 50)
+                            .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
                             
                         Rectangle()
@@ -38,7 +38,7 @@ struct ContentView: View {
 
                         SecureField("Password", text: $password)
                             .padding()
-                            .frame(width: 319, height: 50)
+                            .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
                             
                     }
