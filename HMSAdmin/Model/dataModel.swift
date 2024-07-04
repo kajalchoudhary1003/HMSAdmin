@@ -135,40 +135,41 @@ struct Doctor: Hashable, Codable {
         self.titles = try container.decode(String.self, forKey: .titles)
     }
 }
-struct Admin: String,Codable {
-    var name: String
-    var address: String
-    var email: String
-    var phone: String
-}
 
-struct Hospital: Hashable,Codable {
-    
-    @DocumentID var id: String?
-    var name:String
-    var email:String
-    var phone:String
-    var admins:[Admin]
-    var address:String
-    var city:String
-    var country:String
-    var zipcode:String
-    init(id: String? = nil, name: String, email: String, phone: String, admins: [Admin]) {
-        self.id = id
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.admins = admins
-    }
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decodeIfPresent(String.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.email = try container.decode(String.self, forKey: .email)
-        self.phone = try container.decode(String.self, forKey: .phone)
-        self.admins = try container.decode([Admin].self, forKey: .admins)
-    }
-}
+//struct Admin: String,Codable {
+//    var name: String
+//    var address: String
+//    var email: String
+//    var phone: String
+//}
+//
+//struct Hospital: Hashable,Codable {
+//    
+//    @DocumentID var id: String?
+//    var name:String
+//    var email:String
+//    var phone:String
+//    var admins:[Admin]
+//    var address:String
+//    var city:String
+//    var country:String
+//    var zipcode:String
+//    init(id: String? = nil, name: String, email: String, phone: String, admins: [Admin]) {
+//        self.id = id
+//        self.name = name
+//        self.email = email
+//        self.phone = phone
+//        self.admins = admins
+//    }
+//    init(from decoder: any Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        self.id = try container.decodeIfPresent(String.self, forKey: .id)
+//        self.name = try container.decode(String.self, forKey: .name)
+//        self.email = try container.decode(String.self, forKey: .email)
+//        self.phone = try container.decode(String.self, forKey: .phone)
+//        self.admins = try container.decode([Admin].self, forKey: .admins)
+//    }
+//}
 
 struct Appointment: Hashable, Codable {
     @DocumentID var id: String?
