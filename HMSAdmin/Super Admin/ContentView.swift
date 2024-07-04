@@ -9,10 +9,17 @@ struct SuperAdminView: View {
     @State private var isPresentingAddHospital = false
     @State private var selectedHospital: Hospital? // Track selected hospital for editing
     
+    @State private var searchText = ""
+    private var filteredHospitals: [Hospital] {
+        hospitals.filter { hospital in
+            searchText.isEmpty || hospital.name.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+    
     var body: some View {
         NavigationView {
             List {
-                ForEach(hospitals) { hospital in
+                ForEach(filteredHospitals) { hospital in
                     NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: hospital)) {
                         HospitalCardView(hospital: hospital)
                             .onTapGesture {
@@ -35,6 +42,7 @@ struct SuperAdminView: View {
                     EditButton()
                 }
             }
+            .searchable(text: $searchText) // Add searchable modifier for search functionality
             .background(
                 NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: selectedHospital), isActive: $isPresentingAddHospital) {
                     EmptyView()
