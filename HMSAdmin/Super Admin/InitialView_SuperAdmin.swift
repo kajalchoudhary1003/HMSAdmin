@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct SuperAdminView: View {
-    @State private var hospitals: [Hospital] = [
-        Hospital(name: "John Doe", address: "Address One", phone: "123-456-7890", email: "john@example.com", type: "New"),
-        Hospital(name: "Jane Smith", address: "Address Two", phone: "987-654-3210", email: "jane@example.com", type: "Existing")
-    ]
-    
+    @State private var hospitals: [Hospital] = []
     @State private var isPresentingAddHospital = false
     
     var body: some View {
@@ -42,26 +38,42 @@ struct SuperAdminView: View {
                 }
             }
             .background(
-                            NavigationLink(destination: HospitalFormView(hospitals: $hospitals), isActive: $isPresentingAddHospital) {
-                                EmptyView()
-                            }
-                            .hidden()
-                        )
-                    }
+                NavigationLink(destination: AddHospital(hospitals: $hospitals), isActive: $isPresentingAddHospital) {
+                    EmptyView()
                 }
+                .hidden()
+            )
+        }
+        .onAppear(perform: fetchHospitals)
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("HospitalsUpdated"))) { _ in
+            self.hospitals = DataController.shared.getHospitals()
+        }
+    }
     
     private func delete(at offsets: IndexSet) {
-        hospitals.remove(atOffsets: offsets)
+        for index in offsets {
+            let hospital = hospitals[index]
+            DataController.shared.removeHospital(hospital) { error in
+                if let error = error {
+                    print("Failed to delete hospital: \(error.localizedDescription)")
+                } else {
+                    hospitals.remove(atOffsets: offsets)
+                }
+            }
+        }
+    }
+    
+    private func fetchHospitals() {
+        hospitals = DataController.shared.getHospitals()
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SuperAdminView()
     }
 }
 
-
 #Preview {
-    ContentView()
+    SuperAdminView()
 }

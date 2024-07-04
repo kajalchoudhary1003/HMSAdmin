@@ -1,7 +1,7 @@
 import Foundation
 
-struct Hospital: Identifiable {
-    let id = UUID()
+struct Hospital: Identifiable, Codable {
+    var id: String = UUID().uuidString
     var name: String
     var address: String
     var phone: String

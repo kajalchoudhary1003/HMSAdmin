@@ -1,6 +1,7 @@
 import SwiftUI
+import FirebaseDatabase
 
-struct HospitalFormView: View {
+struct AddHospital: View {
     @Binding var hospitals: [Hospital]
     @Environment(\.presentationMode) var presentationMode
     
@@ -10,7 +11,6 @@ struct HospitalFormView: View {
     @State private var email: String = ""
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
-    
     
     @State private var isNameValid = false
     @State private var isAddressValid = false
@@ -29,49 +29,47 @@ struct HospitalFormView: View {
             Section(header: Text("Hospital Details")) {
                 TextField("Name", text: $name)
                     .onChange(of: name) { newValue in
-                                            isNameValid = !newValue.isEmpty
-                                        }
+                        isNameValid = !newValue.isEmpty
+                    }
                 TextField("Address", text: $address)
                     .onChange(of: address) { newValue in
-                                           isAddressValid = !newValue.isEmpty
-                                       }
+                        isAddressValid = !newValue.isEmpty
+                    }
                 TextField("Phone", text: $phone)
                     .keyboardType(.phonePad)
                     .onChange(of: phone) { newValue in
-                                           isPhoneValid = !newValue.isEmpty
-                                       }
+                        isPhoneValid = !newValue.isEmpty
+                    }
                 TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
                     .onChange(of: email) { newValue in
-                                           isEmailValid = !newValue.isEmpty
-                                       }
+                        isEmailValid = !newValue.isEmpty
+                    }
             }
-            Section(header: Text("Admin Details")){
+            Section(header: Text("Admin Details")) {
                 Picker(selection: $selectedTypeIndex, label: Text("Type")) {
                     ForEach(0 ..< adminTypes.count) { index in
                         Text(self.adminTypes[index])
                     }
-                    
                 }
                 .pickerStyle(.menu)
             }
             if selectedTypeIndex > 0 {
-                Section() {
+                Section {
                     if adminTypes[selectedTypeIndex] == "New" {
                         TextField("Name", text: .constant(""))
-
                         TextField("Email", text: .constant(""))
                         TextField("Phone Number", text: .constant(""))
-                                } else if adminTypes[selectedTypeIndex] == "Existing" {
-                                    Picker(selection: $selectedAdminIndex, label: Text("Select")) {
-                                        ForEach(0 ..< existingAdmins.count) { index in
-                                            Text(self.existingAdmins[index])
-                                        }
-                                    }
-                                    .pickerStyle(.navigationLink)
-                                }
+                    } else if adminTypes[selectedTypeIndex] == "Existing" {
+                        Picker(selection: $selectedAdminIndex, label: Text("Select")) {
+                            ForEach(0 ..< existingAdmins.count) { index in
+                                Text(self.existingAdmins[index])
                             }
                         }
+                        .pickerStyle(.navigationLink)
+                    }
+                }
+            }
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -86,15 +84,12 @@ struct HospitalFormView: View {
     
     private func saveHospital() {
         let newHospital = Hospital(name: name, address: address, phone: phone, email: email, type: adminTypes[selectedTypeIndex])
-        hospitals.append(newHospital)
-        presentationMode.wrappedValue.dismiss()
-    }
-}
-
-struct HospitalFormView_Previews: PreviewProvider {
-    @State static var hospitals: [Hospital] = []
-    
-    static var previews: some View {
-        HospitalFormView(hospitals: $hospitals)
+        DataController.shared.addHospital(newHospital) { error in
+            if let error = error {
+                print("Failed to save hospital: \(error.localizedDescription)")
+            } else {
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
     }
 }

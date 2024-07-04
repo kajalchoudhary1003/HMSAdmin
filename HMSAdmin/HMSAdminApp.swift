@@ -11,7 +11,7 @@ struct HMSAdminApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Authentication()
         }
     }
 }
