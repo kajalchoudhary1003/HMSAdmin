@@ -21,6 +21,7 @@
 		62530F532C33D5BE001B496B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F522C33D5BE001B496B /* Preview Assets.xcassets */; };
 		62530F902C35C2ED001B496B /* demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62530F8F2C35C2ED001B496B /* demo.swift */; };
 		802159642C37296D006FF0C3 /* dataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802159632C37296D006FF0C3 /* dataModel.swift */; };
+		809112A42C372EAC009CDBEF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 809112A32C372EAC009CDBEF /* FirebaseFirestore */; };
 		812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* HospitalDataModel.swift */; };
 		812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37792C36B65400614EE9 /* AddHospital.swift */; };
 		812C377D2C36B65400614EE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* ContentView.swift */; };
@@ -61,6 +62,7 @@
 				E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */,
 				E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */,
 				E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */,
+				809112A42C372EAC009CDBEF /* FirebaseFirestore in Frameworks */,
 				E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,6 +76,7 @@
 				E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */,
 				62530F4A2C33D5BC001B496B /* HMSAdmin */,
 				62530F492C33D5BC001B496B /* Products */,
+				809112A22C372EAC009CDBEF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +118,13 @@
 				802159632C37296D006FF0C3 /* dataModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		809112A22C372EAC009CDBEF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		E9F0D9302C35C68D00C02518 /* Super Admin */ = {
@@ -170,6 +180,7 @@
 				E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */,
 				E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */,
 				E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */,
+				809112A32C372EAC009CDBEF /* FirebaseFirestore */,
 			);
 			productName = HMSAdmin;
 			productReference = 62530F482C33D5BC001B496B /* HMSAdmin.app */;
@@ -462,6 +473,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		809112A32C372EAC009CDBEF /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9F0D9252C35C4FE00C02518 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
 		E9F0D9262C35C4FE00C02518 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E9F0D9252C35C4FE00C02518 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
