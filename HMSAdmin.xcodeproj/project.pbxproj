@@ -15,6 +15,8 @@
 		812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* HospitalDataModel.swift */; };
 		812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37792C36B65400614EE9 /* AddHospital.swift */; };
 		812C377D2C36B65400614EE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* ContentView.swift */; };
+		812C377F2C36DCA300614EE9 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377E2C36DCA300614EE9 /* Analytics.swift */; };
+		812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37802C374B6900614EE9 /* HospitalCard.swift */; };
 		E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */; };
 		E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9262C35C4FE00C02518 /* FirebaseAuth */; };
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
@@ -34,6 +36,8 @@
 		812C37782C36B65400614EE9 /* HospitalDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HospitalDataModel.swift; sourceTree = "<group>"; };
 		812C37792C36B65400614EE9 /* AddHospital.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHospital.swift; sourceTree = "<group>"; };
 		812C377A2C36B65400614EE9 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		812C377E2C36DCA300614EE9 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
 		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E9F0D9312C35C70200C02518 /* InitialScreen_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialScreen_Admin.swift; sourceTree = "<group>"; };
 		E9F0D9342C35C74300C02518 /* InitialScreen_Doctor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialScreen_Doctor.swift; sourceTree = "<group>"; };
@@ -99,6 +103,8 @@
 			children = (
 				812C37792C36B65400614EE9 /* AddHospital.swift */,
 				812C377A2C36B65400614EE9 /* ContentView.swift */,
+				812C37802C374B6900614EE9 /* HospitalCard.swift */,
+				812C377E2C36DCA300614EE9 /* Analytics.swift */,
 				812C37782C36B65400614EE9 /* HospitalDataModel.swift */,
 			);
 			path = "Super Admin";
@@ -201,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9F0D9352C35C74300C02518 /* InitialScreen_Doctor.swift in Sources */,
+				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */,
@@ -208,6 +215,7 @@
 				812C377D2C36B65400614EE9 /* ContentView.swift in Sources */,
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
 				62530F902C35C2ED001B496B /* demo.swift in Sources */,
+				812C377F2C36DCA300614EE9 /* Analytics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
