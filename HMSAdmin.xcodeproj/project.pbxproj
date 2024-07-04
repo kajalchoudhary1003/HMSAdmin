@@ -15,6 +15,7 @@
 		62060ECA2C37095E00177028 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC92C37095E00177028 /* Task.swift */; };
 		62060ECC2C37097E00177028 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060ECB2C37097E00177028 /* View+Extension.swift */; };
 		62060ECE2C3709B400177028 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060ECD2C3709B400177028 /* Date+Extension.swift */; };
+		62060ED12C372BAC00177028 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 62060ED02C372BAC00177028 /* FirebaseFirestore */; };
 		62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62530F4B2C33D5BC001B496B /* HMSAdminApp.swift */; };
 		62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62530F4D2C33D5BC001B496B /* Authentication.swift */; };
 		62530F502C33D5BE001B496B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F4F2C33D5BE001B496B /* Assets.xcassets */; };
@@ -61,6 +62,7 @@
 				E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */,
 				E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */,
 				E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */,
+				62060ED12C372BAC00177028 /* FirebaseFirestore in Frameworks */,
 				E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,12 +70,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		62060ECF2C372BAC00177028 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		62530F3F2C33D5BC001B496B = {
 			isa = PBXGroup;
 			children = (
 				E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */,
 				62530F4A2C33D5BC001B496B /* HMSAdmin */,
 				62530F492C33D5BC001B496B /* Products */,
+				62060ECF2C372BAC00177028 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,6 +180,7 @@
 				E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */,
 				E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */,
 				E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */,
+				62060ED02C372BAC00177028 /* FirebaseFirestore */,
 			);
 			productName = HMSAdmin;
 			productReference = 62530F482C33D5BC001B496B /* HMSAdmin.app */;
@@ -462,6 +473,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		62060ED02C372BAC00177028 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9F0D9252C35C4FE00C02518 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
 		E9F0D9262C35C4FE00C02518 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E9F0D9252C35C4FE00C02518 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
