@@ -1,15 +1,5 @@
 import SwiftUI
-
-struct Doctor: Identifiable {
-    let id = UUID()
-    var firstName: String
-    var lastName: String
-    var email: String
-    var phoneNumber: String
-    var designation: String
-    var timeSlot: String
-    var age: Int
-}
+import FirebaseFirestoreSwift
 
 struct AddDoctors: View {
     @State private var doctors: [Doctor] = []
@@ -54,15 +44,12 @@ struct DoctorRow: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
-            Text(doctor.designation)
+            Text(doctor.designation.title)
                 .font(.subheadline)
                 .foregroundColor(.gray)
             HStack {
-                Text("Age: \(doctor.age)")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
                 Spacer()
-                Text(doctor.timeSlot)
+                Text(doctor.interval)
                     .font(.subheadline)
                     .foregroundColor(.teal)
             }
@@ -79,18 +66,18 @@ struct DoctorFormView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var email = ""
-    @State private var phoneNumber = ""
-    @State private var designation = ""
-    @State private var timeSlot = ""
-    @State private var age = ""
+    @State private var phone = ""
+    @State private var starts = Date()
+    @State private var ends = Date()
+    @State private var dob = Date()
+    @State private var designation: DoctorDesignation = .generalPractitioner
+    @State private var titles = ""
 
-    var designations = ["General Practitioner", "Pediatrician", "Cardiologist", "Dermatologist"]
-    var timeSlots = ["9:00 AM - 11:00 AM", "11:00 AM - 1:00 PM", "2:00 PM - 4:00 PM", "4:00 PM - 6:00 PM"]
-    
+    var designations = DoctorDesignation.allCases
     var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phoneNumber.isEmpty && !designation.isEmpty && !timeSlot.isEmpty && !age.isEmpty
+        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty
     }
-
+    
     init(isPresented: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
         self._isPresented = isPresented
         self._doctors = doctors
@@ -100,13 +87,15 @@ struct DoctorFormView: View {
             _firstName = State(initialValue: doctor.firstName)
             _lastName = State(initialValue: doctor.lastName)
             _email = State(initialValue: doctor.email)
-            _phoneNumber = State(initialValue: doctor.phoneNumber)
+            _phone = State(initialValue: doctor.phone)
+            _starts = State(initialValue: doctor.starts)
+            _ends = State(initialValue: doctor.ends)
+            _dob = State(initialValue: doctor.dob)
             _designation = State(initialValue: doctor.designation)
-            _timeSlot = State(initialValue: doctor.timeSlot)
-            _age = State(initialValue: String(doctor.age))
+            _titles = State(initialValue: doctor.titles)
         }
     }
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -114,22 +103,19 @@ struct DoctorFormView: View {
                     TextField("First Name", text: $firstName)
                     TextField("Last Name", text: $lastName)
                     TextField("Email", text: $email)
-                    TextField("Phone Number", text: $phoneNumber)
-                    TextField("Age", text: $age)
-                        .keyboardType(.numberPad)
+                    TextField("Phone Number", text: $phone)
+                    DatePicker("Date of Birth", selection: $dob, displayedComponents: .date)
                 }
                 
                 Section(header: Text("Professional Information")) {
                     Picker("Designation", selection: $designation) {
                         ForEach(designations, id: \.self) {
-                            Text($0)
+                            Text($0.title)
                         }
                     }
-                    Picker("Time Slot", selection: $timeSlot) {
-                        ForEach(timeSlots, id: \.self) {
-                            Text($0)
-                        }
-                    }
+                    DatePicker("Starts", selection: $starts, displayedComponents: .hourAndMinute)
+                    DatePicker("Ends", selection: $ends, displayedComponents: .hourAndMinute)
+                    TextField("Titles", text: $titles)
                 }
             }
             .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor")
@@ -148,10 +134,12 @@ struct DoctorFormView: View {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            phoneNumber: phoneNumber,
+            phone: phone,
+            starts: starts,
+            ends: ends,
+            dob: dob,
             designation: designation,
-            timeSlot: timeSlot,
-            age: Int(age) ?? 0
+            titles: titles
         )
         
         if let index = doctors.firstIndex(where: { $0.id == doctorToEdit?.id }) {
@@ -169,3 +157,5 @@ struct AddDoctors_Previews: PreviewProvider {
         }
     }
 }
+
+

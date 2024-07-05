@@ -9,130 +9,109 @@ import FirebaseFirestoreSwift
 
 
 //Patient Model
-struct Patient: Hashable, Codable {
-    @DocumentID var id: String?
-    var firstName: String
-    var lastName: String
-    var email: String
-    var dob: Date
-    var sex: String
-    var bloodtype: String
-    @ServerTimestamp var lastUpdated: Timestamp?
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case firstName
-        case lastName
-        case email
-        case dob
-        case sex
-        case bloodtype
-        case lastUpdated
-    }
-    
-    init(firstName: String, lastName: String, email: String, dob: Date, sex: String, bloodtype: String, lastUpdated: Timestamp? = nil) {
-        self.firstName = firstName
-        self.lastName = lastName
-        self.email = email
-        self.dob = dob
-        self.sex = sex
-        self.bloodtype = bloodtype
-        self.lastUpdated = lastUpdated
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decodeIfPresent(String.self, forKey: .id)
-        firstName = try values.decode(String.self, forKey: .firstName)
-        lastName = try values.decode(String.self, forKey: .lastName)
-        email = try values.decode(String.self, forKey: .email)
-        dob = try values.decode(Date.self, forKey: .dob)
-        sex = try values.decode(String.self, forKey: .sex)
-        bloodtype = try values.decode(String.self, forKey: .bloodtype)
-        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
-    }
-}
-enum DoctorDesignation: String, Codable {
+//struct Patient: Hashable, Codable, Identifiable {
+//    @DocumentID var id: String?
+//    var firstName: String
+//    var lastName: String
+//    var email: String
+//    var dob: Date
+//    var sex: String
+//    var bloodtype: String
+//    @ServerTimestamp var lastUpdated: Timestamp?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case id
+//        case firstName
+//        case lastName
+//        case email
+//        case dob
+//        case sex
+//        case bloodtype
+//        case lastUpdated
+//    }
+//    
+//    init(firstName: String, lastName: String, email: String, dob: Date, sex: String, bloodtype: String, lastUpdated: Timestamp? = nil) {
+//        self.firstName = firstName
+//        self.lastName = lastName
+//        self.email = email
+//        self.dob = dob
+//        self.sex = sex
+//        self.bloodtype = bloodtype
+//        self.lastUpdated = lastUpdated
+//    }
+//    
+//    init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        id = try values.decodeIfPresent(String.self, forKey: .id)
+//        firstName = try values.decode(String.self, forKey: .firstName)
+//        lastName = try values.decode(String.self, forKey: .lastName)
+//        email = try values.decode(String.self, forKey: .email)
+//        dob = try values.decode(Date.self, forKey: .dob)
+//        sex = try values.decode(String.self, forKey: .sex)
+//        bloodtype = try values.decode(String.self, forKey: .bloodtype)
+//        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
+//    }
+//}
+enum DoctorDesignation: String, Codable, CaseIterable {
     case generalPractitioner = "General Practitioner"
     case pediatrician = "Pediatrician"
     case cardiologist = "Cardiologist"
     case dermatologist = "Dermatologist"
-    case neurologist = "Neurologist"
+
+    var title: String {
+        return self.rawValue
+    }
+
+    var fees: String {
+        switch self {
+        case .generalPractitioner: return "$100"
+        case .pediatrician: return "$120"
+        case .cardiologist: return "$150"
+        case .dermatologist: return "$130"
+        }
+    }
 
     var interval: String {
         switch self {
-        case .generalPractitioner:
-            return "15 minutes"
-        case .pediatrician:
-            return "20 minutes"
-        case .cardiologist:
-            return "30 minutes"
-        case .dermatologist:
-            return "25 minutes"
-        case .neurologist:
-            return "30 minutes"
-        }
-    }
-    
-    var fees: String {
-        switch self  {
-        case .generalPractitioner:
-            return "600"
-        case .pediatrician:
-            return "400"
-        case .cardiologist:
-            return "600"
-        case .dermatologist:
-            return "300"
-        case .neurologist:
-            return "200"
+        case .generalPractitioner: return "9:00 AM - 11:00 AM"
+        case .pediatrician: return "11:00 AM - 1:00 PM"
+        case .cardiologist: return "2:00 PM - 4:00 PM"
+        case .dermatologist: return "4:00 PM - 6:00 PM"
         }
     }
 }
 
-struct Doctor: Hashable, Codable {
+struct Doctor: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
-    var name:String
-    var email:String
-    var address:String
-    var phone:String
-    var sex:String
-    var starts:Date
-    var ends:Date
+    var firstName: String
+    var lastName: String
+    var email: String
+    var phone: String
+    var starts: Date
+    var ends: Date
+    var dob: Date
+    var designation: DoctorDesignation
+    var titles: String
     var interval: String {
-            return designation.interval
-        }
-    var designation:DoctorDesignation
-    var titles:String
+        return designation.interval
+    }
     var fees: String {
         return designation.fees
     }
-    init(id: String? = nil, name: String, email: String, address: String, phone: String, sex: String, starts: Date, ends: Date, designation: DoctorDesignation, titles: String) {
+
+    init(id: String? = nil, firstName: String, lastName: String, email: String, phone: String, starts: Date, ends: Date, dob: Date, designation: DoctorDesignation, titles: String) {
         self.id = id
-        self.name = name
+        self.firstName = firstName
+        self.lastName = lastName
         self.email = email
-        self.address = address
         self.phone = phone
-        self.sex = sex
         self.starts = starts
         self.ends = ends
+        self.dob = dob
         self.designation = designation
         self.titles = titles
     }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decodeIfPresent(String.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.email = try container.decode(String.self, forKey: .email)
-        self.address = try container.decode(String.self, forKey: .address)
-        self.phone = try container.decode(String.self, forKey: .phone)
-        self.sex = try container.decode(String.self, forKey: .sex)
-        self.starts = try container.decode(Date.self, forKey: .starts)
-        self.ends = try container.decode(Date.self, forKey: .ends)
-        self.designation = try container.decode(DoctorDesignation.self, forKey: .designation)
-        self.titles = try container.decode(String.self, forKey: .titles)
-    }
+
 }
 
 struct Admin: Codable, Identifiable {
