@@ -17,8 +17,11 @@ struct AddHospital: View {
     @State private var isPhoneValid = false
     @State private var isEmailValid = false
     
-    let adminTypes = ["Select","New", "Existing"]
-    let existingAdmins = ["Ansh", "Madhav", "Sharma"]
+
+    let adminTypes = ["Select", "New", "Existing"]
+    let existingAdmins = ["Select", "Ansh", "Madhav", "John", "Jane", "Michael", "Emily", "David", "Sarah", "Robert"]
+
+   
     
     var isSaveDisabled: Bool {
         return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid
@@ -66,7 +69,16 @@ struct AddHospital: View {
                                 Text(self.existingAdmins[index])
                             }
                         }
+
+                    
+                    // Integrate AdminPickerView here
+                    AdminPickerView(existingAdmins: existingAdmins, selectedAdminIndex: $selectedAdminIndex)
+                } else if selectedTypeIndex == 2 {
+                    NavigationLink(destination: AdminPickerView(existingAdmins: existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
+                        Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
+
                         .pickerStyle(.navigationLink)
+
                     }
                 }
             }
@@ -83,6 +95,20 @@ struct AddHospital: View {
     }
     
     private func saveHospital() {
+
+        let newHospital = Hospital(name: name, address: address, city: city, country: country, zipCode: zipCode, phone: phone, email: email, type: "", admin: nil)
+        
+        if let index = hospitals.firstIndex(where: { $0.name == newHospital.name }) {
+            // Update existing hospital
+            hospitals[index] = newHospital
+        } else {
+            // Add new hospital
+            hospitals.append(newHospital)
+        }
+        
+        // Dismiss the form
+        presentationMode.wrappedValue.dismiss()
+
         let newHospital = Hospital(name: name, address: address, phone: phone, email: email, type: adminTypes[selectedTypeIndex])
         DataController.shared.addHospital(newHospital) { error in
             if let error = error {
@@ -91,5 +117,6 @@ struct AddHospital: View {
                 presentationMode.wrappedValue.dismiss()
             }
         }
+
     }
 }
