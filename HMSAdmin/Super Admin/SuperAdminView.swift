@@ -2,12 +2,38 @@ import SwiftUI
 
 struct SuperAdminView: View {
     @State private var hospitals: [Hospital] = [
-        Hospital(name: "City Hospital", address: "123 Main St", city: "Springfield", country: "USA", zipCode: "12345", phone: "123-456-7890", email: "info@cityhospital.com", type: "General", admin: Hospital.Admin(name: "John Doe", email: "john.doe@cityhospital.com", phone: "321-654-0987")),
-        Hospital(name: "County Hospital", address: "456 Elm St", city: "Shelbyville", country: "USA", zipCode: "67890", phone: "987-654-3210", email: "contact@countyhospital.com", type: "Specialty", admin: Hospital.Admin(name: "Jane Smith", email: "jane.smith@countyhospital.com", phone: "654-321-0987"))
+        Hospital(
+            name: "Hospital A",
+            email: "hospitala@example.com",
+            phone: "123-456-7890",
+            admins: [
+                Admin(name: "Admin A", address: "Admin Address A", email: "admina@example.com", phone: "111-222-3333"),
+                Admin(name: "Admin B", address: "Admin Address B", email: "adminb@example.com", phone: "444-555-6666")
+            ],
+            address: "123 Main St",
+            city: "City A",
+            country: "Country A",
+            zipCode: "12345",
+            type: "New"
+        ),
+        Hospital(
+            name: "Hospital B",
+            email: "hospitalb@example.com",
+            phone: "987-654-3210",
+            admins: [
+                Admin(name: "Admin C", address: "Admin Address C", email: "adminc@example.com", phone: "777-888-9999")
+            ],
+            address: "456 Elm St",
+            city: "City B",
+            country: "Country B",
+            zipCode: "54321",
+            type: "Existing"
+        )
     ]
+
     
     @State private var isPresentingAddHospital = false
-    @State private var selectedHospital: Hospital? // Track selected hospital for editing
+//    @State private var selectedHospital: Hospital? // Track selected hospital for editing
     
     @State private var searchText = ""
     private var filteredHospitals: [Hospital] {
@@ -21,11 +47,9 @@ struct SuperAdminView: View {
             VStack {
                 List {
                     ForEach(filteredHospitals) { hospital in
-                        NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: hospital)) {
+                        NavigationLink(destination: 
+                                        ShowHospital(hospital: hospital)) {
                             HospitalCardView(hospital: hospital)
-                                .onTapGesture {
-                                    selectedHospital = hospital
-                                }
                         }
                     }
                     .onDelete(perform: delete)
@@ -33,9 +57,7 @@ struct SuperAdminView: View {
                 .navigationTitle("Hospitals")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            isPresentingAddHospital = true
-                        }) {
+                        NavigationLink(destination: AddHospital(hospitals: $hospitals)) {
                             Image(systemName: "plus")
                         }
                     }
@@ -44,12 +66,9 @@ struct SuperAdminView: View {
                     }
                 }
                 .searchable(text: $searchText) // Add searchable modifier for search functionality
-                .background(
-                    NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: selectedHospital), isActive: $isPresentingAddHospital) {
-                        EmptyView()
-                    }
-                    .hidden()
-                )
+//                .sheet(isPresented: $isPresentingAddHospital) {
+//                                   AddHospital(hospitals: $hospitals)
+//                               }
             }
         }
     }
