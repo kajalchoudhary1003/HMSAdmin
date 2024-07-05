@@ -9,49 +9,49 @@ import FirebaseFirestoreSwift
 
 
 //Patient Model
-struct Patient: Hashable, Codable {
-    @DocumentID var id: String?
-    var firstName: String
-    var lastName: String
-    var email: String
-    var dob: Date
-    var sex: String
-    var bloodtype: String
-    @ServerTimestamp var lastUpdated: Timestamp?
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case firstName
-        case lastName
-        case email
-        case dob
-        case sex
-        case bloodtype
-        case lastUpdated
-    }
-    
-    init(firstName: String, lastName: String, email: String, dob: Date, sex: String, bloodtype: String, lastUpdated: Timestamp? = nil) {
-        self.firstName = firstName
-        self.lastName = lastName
-        self.email = email
-        self.dob = dob
-        self.sex = sex
-        self.bloodtype = bloodtype
-        self.lastUpdated = lastUpdated
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decodeIfPresent(String.self, forKey: .id)
-        firstName = try values.decode(String.self, forKey: .firstName)
-        lastName = try values.decode(String.self, forKey: .lastName)
-        email = try values.decode(String.self, forKey: .email)
-        dob = try values.decode(Date.self, forKey: .dob)
-        sex = try values.decode(String.self, forKey: .sex)
-        bloodtype = try values.decode(String.self, forKey: .bloodtype)
-        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
-    }
-}
+//struct Patient: Hashable, Codable, Identifiable {
+//    @DocumentID var id: String?
+//    var firstName: String
+//    var lastName: String
+//    var email: String
+//    var dob: Date
+//    var sex: String
+//    var bloodtype: String
+//    @ServerTimestamp var lastUpdated: Timestamp?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case id
+//        case firstName
+//        case lastName
+//        case email
+//        case dob
+//        case sex
+//        case bloodtype
+//        case lastUpdated
+//    }
+//    
+//    init(firstName: String, lastName: String, email: String, dob: Date, sex: String, bloodtype: String, lastUpdated: Timestamp? = nil) {
+//        self.firstName = firstName
+//        self.lastName = lastName
+//        self.email = email
+//        self.dob = dob
+//        self.sex = sex
+//        self.bloodtype = bloodtype
+//        self.lastUpdated = lastUpdated
+//    }
+//    
+//    init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        id = try values.decodeIfPresent(String.self, forKey: .id)
+//        firstName = try values.decode(String.self, forKey: .firstName)
+//        lastName = try values.decode(String.self, forKey: .lastName)
+//        email = try values.decode(String.self, forKey: .email)
+//        dob = try values.decode(Date.self, forKey: .dob)
+//        sex = try values.decode(String.self, forKey: .sex)
+//        bloodtype = try values.decode(String.self, forKey: .bloodtype)
+//        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
+//    }
+//}
 enum DoctorDesignation: String, Codable {
     case generalPractitioner = "General Practitioner"
     case pediatrician = "Pediatrician"
