@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
+		07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */; };
 		62060EC42C37086000177028 /* DoctorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC32C37086000177028 /* DoctorView.swift */; };
 		62060EC62C37087000177028 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC52C37087000177028 /* AdminView.swift */; };
 		62060EC82C3708F800177028 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC72C3708F800177028 /* Home.swift */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
+		07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctors.swift; sourceTree = "<group>"; };
 		62060EC32C37086000177028 /* DoctorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorView.swift; sourceTree = "<group>"; };
 		62060EC52C37087000177028 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		62060EC72C3708F800177028 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				62060EC52C37087000177028 /* AdminView.swift */,
+				07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */,
 				07938CF52C3711E300A4FA96 /* ChangePassword.swift */,
 			);
 			path = Admin;
@@ -241,6 +244,7 @@
 				E9B9739D2C3728EE00F1C854 /* DataController.swift in Sources */,
 				62060ECC2C37097E00177028 /* View+Extension.swift in Sources */,
 				62530F902C35C2ED001B496B /* demo.swift in Sources */,
+				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
 			);

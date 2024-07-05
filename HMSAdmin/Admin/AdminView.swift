@@ -6,117 +6,75 @@ struct AdminView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Analytics").font(.title2).fontWeight(.bold))  {
+                Section(header: Text("Analytics").font(.headline).foregroundColor(.gray)) {
                     HStack {
-                        VStack(alignment: .leading) {
-                            Text("Bookings")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                                .foregroundColor(Color.init(hex: "#006666"))
-                            Text("46")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.init(hex: "#006666"))
-                        }
+                        Text("Bookings")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "#006666"))
                         Spacer()
+                        Text("46")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "#006666"))
                     }
                     .padding()
-                    .background(Color(.white))
-                    .cornerRadius(22)
+                    .background(Color.white)
+                    .cornerRadius(10)
                 }
 
-                Section(header: Text("Hospital Data").font(.title2).fontWeight(.bold)) {
-                    VStack {
-                        HStack {
-                            Image(systemName: "stethoscope")
-                                    .font(.title)
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                                VStack(alignment: .leading) {
-                                    Text("Doctors")
-                                        .font(.title2)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(Color.init(hex: "#006666"))
-                                    Text("80")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color.init(hex: "#006666"))
-                                }
-                            Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                            }
-                            .padding()
-                            .background(Color(.white))
-                            .cornerRadius(22)
+                Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
+                    VStack(spacing: 16) {
+                        NavigationLink(destination: AddDoctors()) {
+                            HospitalDataRow(icon: "stethoscope", title: "Doctors", count: "80")
                         }
-                    
-                }
-
-                Section(header: Text("")) {
-                    VStack {
-                        HStack {
-                            Image(systemName: "person.crop.circle")
-                                .font(.title)
-                                .foregroundColor(Color.init(hex: "#006666"))
-                            VStack(alignment: .leading) {
-                                Text("Staffs")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                                Text("120")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(Color.init(hex: "#006666"))
-                        }
-                        .padding()
-                        .background(Color(.white))
-                        .cornerRadius(14)
+                        HospitalDataRow(icon: "syringe", title: "Staffs", count: "120")
+                        HospitalDataRow(icon: "gift", title: "Offers", count: "05")
                     }
-                }
-
-                Section(header: Text("")) {
-                    VStack {
-                        HStack {
-                            Image(systemName: "gift")
-                                .font(.title)
-                                .foregroundColor(Color.init(hex: "#006666"))
-                            VStack(alignment: .leading) {
-                                Text("Offers")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                                Text("05")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.init(hex: "#006666"))
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(Color.init(hex: "#006666"))
-                        }
-                        .padding()
-                        .background(Color(.white))
-                        .cornerRadius(14)
-                    }
+                    .listRowInsets(EdgeInsets())
+                    .background(Color.clear)
                 }
             }
-            .searchable(text: $searchText)
+            .listStyle(InsetGroupedListStyle())
+            .searchable(text: $searchText, prompt: "Search")
             .navigationTitle("Hi, Admin")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "person.crop.circle")
+                    Image(systemName: "person.crop.circle.fill")
+                        .foregroundColor(Color(hex: "#006666"))
                 }
             }
         }
     }
 }
 
-#Preview{
+struct HospitalDataRow: View {
+    let icon: String
+    let title: String
+    let count: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(Color(hex: "#006666"))
+            Text(title)
+                .font(.title3)
+                .fontWeight(.semibold)
+            Spacer()
+            Text(count)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(Color.black)
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+    }
+}
+
+#Preview {
     AdminView()
 }
