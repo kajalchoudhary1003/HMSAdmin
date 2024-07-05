@@ -1,11 +1,10 @@
 import SwiftUI
 import Firebase
 
-struct ContentView: View {
+struct Authentication: View {
     @State private var username = ""
     @State private var password = ""
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @State private var errorMessage = ""
     
     var body: some View {
         NavigationView {
@@ -31,7 +30,9 @@ struct ContentView: View {
                             .padding()
                             .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
-                            
+                            .autocapitalization(.none)
+                            .keyboardType(.emailAddress)
+                        
                         Rectangle()
                             .frame(width:319, height: 1)
                             .foregroundColor(Color.black.opacity(0.2))
@@ -40,17 +41,18 @@ struct ContentView: View {
                             .padding()
                             .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
-                            
                     }
                     .cornerRadius(14)
                    
-                    
-                    Spacer().frame(height: 50)
+                    if !errorMessage.isEmpty {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .padding(.top, 5)
+                    }
                     
                     Button("Login") {
                         if username.isEmpty || password.isEmpty {
-                            alertMessage = "Please enter both email and password"
-                            showingAlert = true
+                            errorMessage = "Please enter both email and password"
                         } else {
                             authenticateUser(email: username, password: password)
                         }
@@ -61,11 +63,9 @@ struct ContentView: View {
                     .cornerRadius(14)
                     .fontWeight(.semibold)
                     .font(.system(size: 20))
-                    .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                    }
+                    .opacity(isValidEmail(username) && !password.isEmpty ? 1.0 : 0.6)
+                    .disabled(!isValidEmail(username) || password.isEmpty)
                 }
-                
                 Spacer()
             }
             .navigationBarHidden(true)
@@ -74,15 +74,13 @@ struct ContentView: View {
     
     func authenticateUser(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                alertMessage = error.localizedDescription
-                showingAlert = true
+            if error != nil {
+                errorMessage = "Invalid credentials. Please try again."
                 return
             }
             
             guard (authResult?.user) != nil else {
-                alertMessage = "Authentication failed"
-                showingAlert = true
+                errorMessage = "Authentication failed"
                 return
             }
             
@@ -100,8 +98,7 @@ struct ContentView: View {
                 navigateToScreen(screen: DoctorView())
                 
             default:
-                alertMessage = "Invalid email domain"
-                showingAlert = true
+                errorMessage = "Invalid email domain"
             }
         }
     }
@@ -113,6 +110,12 @@ struct ContentView: View {
                 window.makeKeyAndVisible()
             }
         }
+    }
+    
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
 }
 
@@ -130,5 +133,5 @@ extension Color {
 }
 
 #Preview {
-    ContentView()
+    Authentication()
 }

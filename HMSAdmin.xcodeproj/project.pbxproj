@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
-		07938CFA2C3750B800A4FA96 /* AddDoctor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF92C3750B800A4FA96 /* AddDoctor.swift */; };
 		62060EC42C37086000177028 /* DoctorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC32C37086000177028 /* DoctorView.swift */; };
 		62060EC62C37087000177028 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC52C37087000177028 /* AdminView.swift */; };
 		62060EC82C3708F800177028 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC72C3708F800177028 /* Home.swift */; };
@@ -21,12 +20,10 @@
 		62530F502C33D5BE001B496B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F4F2C33D5BE001B496B /* Assets.xcassets */; };
 		62530F532C33D5BE001B496B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F522C33D5BE001B496B /* Preview Assets.xcassets */; };
 		62530F902C35C2ED001B496B /* demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62530F8F2C35C2ED001B496B /* demo.swift */; };
-		809112A92C37BCA0009CDBEF /* dataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112A82C37BCA0009CDBEF /* dataModel.swift */; };
-		812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* HospitalDataModel.swift */; };
+		812C377B2C36B65400614EE9 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* DataModel.swift */; };
 		812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37792C36B65400614EE9 /* AddHospital.swift */; };
-		812C377D2C36B65400614EE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* ContentView.swift */; };
-		812C377F2C36DCA300614EE9 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377E2C36DCA300614EE9 /* Analytics.swift */; };
-		812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37802C374B6900614EE9 /* HospitalCard.swift */; };
+		812C377D2C36B65400614EE9 /* InitialView_SuperAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* InitialView_SuperAdmin.swift */; };
+		E9B9739D2C3728EE00F1C854 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B9739C2C3728EE00F1C854 /* DataController.swift */; };
 		E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */; };
 		E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9262C35C4FE00C02518 /* FirebaseAuth */; };
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
@@ -36,7 +33,6 @@
 
 /* Begin PBXFileReference section */
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
-		07938CF92C3750B800A4FA96 /* AddDoctor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctor.swift; sourceTree = "<group>"; };
 		62060EC32C37086000177028 /* DoctorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorView.swift; sourceTree = "<group>"; };
 		62060EC52C37087000177028 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		62060EC72C3708F800177028 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -49,12 +45,10 @@
 		62530F4F2C33D5BE001B496B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		62530F522C33D5BE001B496B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		62530F8F2C35C2ED001B496B /* demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demo.swift; sourceTree = "<group>"; };
-		809112A82C37BCA0009CDBEF /* dataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = dataModel.swift; path = HMSAdmin/dataModel.swift; sourceTree = SOURCE_ROOT; };
-		812C37782C36B65400614EE9 /* HospitalDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HospitalDataModel.swift; sourceTree = "<group>"; };
+		812C37782C36B65400614EE9 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		812C37792C36B65400614EE9 /* AddHospital.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHospital.swift; sourceTree = "<group>"; };
-		812C377A2C36B65400614EE9 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		812C377E2C36DCA300614EE9 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
-		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
+		812C377A2C36B65400614EE9 /* InitialView_SuperAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialView_SuperAdmin.swift; sourceTree = "<group>"; };
+		E9B9739C2C3728EE00F1C854 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +98,8 @@
 			children = (
 				62530F4B2C33D5BC001B496B /* HMSAdminApp.swift */,
 				62530F4D2C33D5BC001B496B /* Authentication.swift */,
+				812C37782C36B65400614EE9 /* DataModel.swift */,
+				E9B9739C2C3728EE00F1C854 /* DataController.swift */,
 				E9F0D9362C35C77100C02518 /* Doctor */,
 				E9F0D9332C35C71500C02518 /* Admin */,
 				E9F0D9302C35C68D00C02518 /* Super Admin */,
@@ -126,7 +122,6 @@
 		802159652C372977006FF0C3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				809112A82C37BCA0009CDBEF /* dataModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -135,10 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				812C37792C36B65400614EE9 /* AddHospital.swift */,
-				812C377A2C36B65400614EE9 /* ContentView.swift */,
-				812C37802C374B6900614EE9 /* HospitalCard.swift */,
-				812C377E2C36DCA300614EE9 /* Analytics.swift */,
-				812C37782C36B65400614EE9 /* HospitalDataModel.swift */,
+				812C377A2C36B65400614EE9 /* InitialView_SuperAdmin.swift */,
 			);
 			path = "Super Admin";
 			sourceTree = "<group>";
@@ -147,7 +139,6 @@
 			isa = PBXGroup;
 			children = (
 				62060EC52C37087000177028 /* AdminView.swift */,
-				07938CF92C3750B800A4FA96 /* AddDoctor.swift */,
 				07938CF52C3711E300A4FA96 /* ChangePassword.swift */,
 			);
 			path = Admin;
@@ -246,21 +237,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
-				812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */,
-				812C377D2C36B65400614EE9 /* ContentView.swift in Sources */,
-				07938CFA2C3750B800A4FA96 /* AddDoctor.swift in Sources */,
+				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
+				812C377D2C36B65400614EE9 /* InitialView_SuperAdmin.swift in Sources */,
 				62060ECE2C3709B400177028 /* Date+Extension.swift in Sources */,
 				62060EC82C3708F800177028 /* Home.swift in Sources */,
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
+				E9B9739D2C3728EE00F1C854 /* DataController.swift in Sources */,
 				62060ECC2C37097E00177028 /* View+Extension.swift in Sources */,
-				809112A92C37BCA0009CDBEF /* dataModel.swift in Sources */,
 				62530F902C35C2ED001B496B /* demo.swift in Sources */,
-				812C377F2C36DCA300614EE9 /* Analytics.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
 			);
