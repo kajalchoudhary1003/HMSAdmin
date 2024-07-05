@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
+		07938CFA2C3750B800A4FA96 /* AddDoctor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF92C3750B800A4FA96 /* AddDoctor.swift */; };
 		62060EC42C37086000177028 /* DoctorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC32C37086000177028 /* DoctorView.swift */; };
 		62060EC62C37087000177028 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC52C37087000177028 /* AdminView.swift */; };
 		62060EC82C3708F800177028 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC72C3708F800177028 /* Home.swift */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
+		07938CF92C3750B800A4FA96 /* AddDoctor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctor.swift; sourceTree = "<group>"; };
 		62060EC32C37086000177028 /* DoctorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorView.swift; sourceTree = "<group>"; };
 		62060EC52C37087000177028 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		62060EC72C3708F800177028 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				62060EC52C37087000177028 /* AdminView.swift */,
+				07938CF92C3750B800A4FA96 /* AddDoctor.swift */,
 				07938CF52C3711E300A4FA96 /* ChangePassword.swift */,
 			);
 			path = Admin;
@@ -240,6 +243,7 @@
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */,
 				812C377D2C36B65400614EE9 /* ContentView.swift in Sources */,
+				07938CFA2C3750B800A4FA96 /* AddDoctor.swift in Sources */,
 				62060ECE2C3709B400177028 /* Date+Extension.swift in Sources */,
 				62060EC82C3708F800177028 /* Home.swift in Sources */,
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
