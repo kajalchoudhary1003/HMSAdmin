@@ -30,7 +30,7 @@ struct HospitalFormView: View {
     @State private var isAdminPhoneValid = false
     
     let adminTypes = ["Select", "New", "Existing"]
-    let existingAdmins = ["Select", "Ansh", "Madhav"]
+    let existingAdmins = ["Select", "Ansh", "Madhav", "John", "Jane", "Michael", "Emily", "David", "Sarah", "Robert"]
     
     var isSaveDisabled: Bool {
         let isAdminDetailsValid = (selectedTypeIndex == 1 && isAdminNameValid && isAdminEmailValid && isAdminPhoneValid) || (selectedTypeIndex == 2 && selectedAdminIndex != 0)
@@ -119,6 +119,9 @@ struct HospitalFormView: View {
                         .onChange(of: adminPhone) { newValue in
                             isAdminPhoneValid = !newValue.isEmpty
                         }
+                    
+                    // Integrate AdminPickerView here
+                    AdminPickerView(existingAdmins: existingAdmins, selectedAdminIndex: $selectedAdminIndex)
                 } else if selectedTypeIndex == 2 {
                     NavigationLink(destination: AdminPickerView(existingAdmins: existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
                         Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
@@ -151,41 +154,4 @@ struct HospitalFormView: View {
         // Dismiss the form
         presentationMode.wrappedValue.dismiss()
     }
-    
-    struct AdminPickerView: View {
-        var existingAdmins: [String]
-        @Binding var selectedAdminIndex: Int
-        @Environment(\.presentationMode) var presentationMode
-        @State private var searchText = ""
-        
-        var filteredAdmins: [String] {
-            if searchText.isEmpty {
-                return existingAdmins
-            } else {
-                return existingAdmins.filter { $0.lowercased().contains(searchText.lowercased()) }
-            }
-        }
-        
-        var body: some View {
-            List {
-                ForEach(filteredAdmins.indices, id: \.self) { index in
-                    Button(action: {
-                        selectedAdminIndex = index
-                        presentationMode.wrappedValue.dismiss()  // Dismiss the view on selection
-                    }) {
-                        HStack {
-                            Text(filteredAdmins[index])
-                            if selectedAdminIndex == index {
-                                Spacer()
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                }
-            }
-            .searchable(text: $searchText, prompt: "Search Admin")
-            .navigationTitle("Select Admin")
-        }
-    }
-    
 }

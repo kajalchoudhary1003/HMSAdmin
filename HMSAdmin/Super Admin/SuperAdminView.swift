@@ -18,37 +18,39 @@ struct SuperAdminView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(filteredHospitals) { hospital in
-                    NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: hospital)) {
-                        HospitalCardView(hospital: hospital)
-                            .onTapGesture {
-                                selectedHospital = hospital
-                            }
+            VStack {
+                List {
+                    ForEach(filteredHospitals) { hospital in
+                        NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: hospital)) {
+                            HospitalCardView(hospital: hospital)
+                                .onTapGesture {
+                                    selectedHospital = hospital
+                                }
+                        }
+                    }
+                    .onDelete(perform: delete)
+                }
+                .navigationTitle("Hospitals")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            isPresentingAddHospital = true
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        EditButton()
                     }
                 }
-                .onDelete(perform: delete)
-            }
-            .navigationTitle("Hospitals")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        isPresentingAddHospital = true
-                    }) {
-                        Image(systemName: "plus")
+                .searchable(text: $searchText) // Add searchable modifier for search functionality
+                .background(
+                    NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: selectedHospital), isActive: $isPresentingAddHospital) {
+                        EmptyView()
                     }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
-                }
+                    .hidden()
+                )
             }
-            .searchable(text: $searchText) // Add searchable modifier for search functionality
-            .background(
-                NavigationLink(destination: HospitalFormView(hospitals: $hospitals, hospital: selectedHospital), isActive: $isPresentingAddHospital) {
-                    EmptyView()
-                }
-                .hidden()
-            )
         }
     }
     
