@@ -104,7 +104,6 @@
 				E9F0D9332C35C71500C02518 /* Admin */,
 				E9F0D9302C35C68D00C02518 /* Super Admin */,
 				62530F8F2C35C2ED001B496B /* demo.swift */,
-				802159652C372977006FF0C3 /* Model */,
 				62530F4F2C33D5BE001B496B /* Assets.xcassets */,
 				62530F512C33D5BE001B496B /* Preview Content */,
 			);
@@ -117,13 +116,6 @@
 				62530F522C33D5BE001B496B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		802159652C372977006FF0C3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		E9F0D9302C35C68D00C02518 /* Super Admin */ = {
