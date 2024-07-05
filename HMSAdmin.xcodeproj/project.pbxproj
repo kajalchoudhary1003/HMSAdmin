@@ -21,6 +21,7 @@
 		62530F502C33D5BE001B496B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F4F2C33D5BE001B496B /* Assets.xcassets */; };
 		62530F532C33D5BE001B496B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62530F522C33D5BE001B496B /* Preview Assets.xcassets */; };
 		62530F902C35C2ED001B496B /* demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62530F8F2C35C2ED001B496B /* demo.swift */; };
+		809112A92C37BCA0009CDBEF /* dataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112A82C37BCA0009CDBEF /* dataModel.swift */; };
 		812C377B2C36B65400614EE9 /* HospitalDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* HospitalDataModel.swift */; };
 		812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37792C36B65400614EE9 /* AddHospital.swift */; };
 		812C377D2C36B65400614EE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* ContentView.swift */; };
@@ -48,6 +49,7 @@
 		62530F4F2C33D5BE001B496B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		62530F522C33D5BE001B496B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		62530F8F2C35C2ED001B496B /* demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demo.swift; sourceTree = "<group>"; };
+		809112A82C37BCA0009CDBEF /* dataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = dataModel.swift; path = HMSAdmin/dataModel.swift; sourceTree = SOURCE_ROOT; };
 		812C37782C36B65400614EE9 /* HospitalDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HospitalDataModel.swift; sourceTree = "<group>"; };
 		812C37792C36B65400614EE9 /* AddHospital.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHospital.swift; sourceTree = "<group>"; };
 		812C377A2C36B65400614EE9 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 		802159652C372977006FF0C3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				809112A82C37BCA0009CDBEF /* dataModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -243,10 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
-				E9F0D9352C35C74300C02518 /* InitialScreen_Doctor.swift in Sources */,
 				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
-
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
@@ -258,13 +258,11 @@
 				62060EC82C3708F800177028 /* Home.swift in Sources */,
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
 				62060ECC2C37097E00177028 /* View+Extension.swift in Sources */,
+				809112A92C37BCA0009CDBEF /* dataModel.swift in Sources */,
 				62530F902C35C2ED001B496B /* demo.swift in Sources */,
-
 				812C377F2C36DCA300614EE9 /* Analytics.swift in Sources */,
-
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
