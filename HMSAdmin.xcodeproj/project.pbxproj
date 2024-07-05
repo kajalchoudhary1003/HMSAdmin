@@ -30,6 +30,7 @@
 		812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37802C374B6900614EE9 /* HospitalCard.swift */; };
 		812C37832C37CB2100614EE9 /* AdminPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37822C37CB2100614EE9 /* AdminPickerView.swift */; };
 		812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */; };
+		E94E68D92C38195900ED9F1C /* mailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E68D82C38195900ED9F1C /* mailView.swift */; };
 		E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */; };
 		E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9262C35C4FE00C02518 /* FirebaseAuth */; };
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
@@ -61,6 +62,7 @@
 		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
 		812C37822C37CB2100614EE9 /* AdminPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPickerView.swift; sourceTree = "<group>"; };
 		812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetSidebarView.swift; sourceTree = "<group>"; };
+		E94E68D82C38195900ED9F1C /* mailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mailView.swift; sourceTree = "<group>"; };
 		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +142,7 @@
 				812C377A2C36B65400614EE9 /* SuperAdminView.swift */,
 				812C37802C374B6900614EE9 /* HospitalCard.swift */,
 				812C377E2C36DCA300614EE9 /* Analytics.swift */,
+				E94E68D82C38195900ED9F1C /* mailView.swift */,
 			);
 			path = "Super Admin";
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
+				E94E68D92C38195900ED9F1C /* mailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
