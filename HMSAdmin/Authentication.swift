@@ -7,66 +7,83 @@ struct Authentication: View {
     @State private var errorMessage = ""
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                Spacer().frame(height: 100) // Adjust the height to position the entire VStack from the top
-                
-                VStack {
-                    Image("HMSLogo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 190, height: 132) // Set the width and height to 190x132
-                    
-                    Spacer().frame(height: 10) // Adjust the height to create distance between the image and text
-                    
-                    Text("MediFlex")
-                        .font(.system(size: 32))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(hex: "#006666")) // Set the font color to hex: 006666
-                    Spacer().frame(height: 50)
-                    
-                    VStack (spacing: 0){
+                VStack(alignment: .leading) {
+                    Text("Welcome to")
+                        .font(.title3)
+                        .padding(.top, 10)
+                    Text("Mediflex")
+                        .font(.largeTitle)
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.49, blue: 0.45))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 30)
+
+                Spacer()
+
+                Image("Doctor 3D")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 400) // Adjust the height as needed
+                    .padding(.bottom, 10)
+
+                VStack(alignment: .leading) {
+                    Text("Enter your credentials")
+                        .font(.headline)
+                        .padding(.bottom, 5)
+
+                    Text("Please enter your email and password to proceed")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 10)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 30)
+
+                VStack(spacing: 15) {
+                    VStack(alignment: .leading) {
                         TextField("Email", text: $username)
                             .padding()
-                            .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
+                            .cornerRadius(10)
                             .autocapitalization(.none)
                             .keyboardType(.emailAddress)
-                        
-                        Rectangle()
-                            .frame(width:319, height: 1)
-                            .foregroundColor(Color.black.opacity(0.2))
-
+                    }
+                    .padding(.horizontal, 30)
+                    
+                    VStack(alignment: .leading) {
                         SecureField("Password", text: $password)
                             .padding()
-                            .frame(width: 319, height: 45)
                             .background(Color.black.opacity(0.05))
+                            .cornerRadius(10)
                     }
-                    .cornerRadius(14)
-                   
-                    if !errorMessage.isEmpty {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .padding(.top, 5)
-                    }
-                    
-                    Button("Login") {
-                        if username.isEmpty || password.isEmpty {
-                            errorMessage = "Please enter both email and password"
-                        } else {
-                            authenticateUser(email: username, password: password)
-                        }
-                    }
-                    .foregroundColor(.white)
-                    .frame(width: 317, height: 50)
-                    .background(Color(hex: "#006666"))
-                    .cornerRadius(14)
-                    .fontWeight(.semibold)
-                    .font(.system(size: 20))
-                    .opacity(isValidEmail(username) && !password.isEmpty ? 1.0 : 0.6)
-                    .disabled(!isValidEmail(username) || password.isEmpty)
+                    .padding(.horizontal, 30)
                 }
-                Spacer()
+                .padding(.bottom, 20)
+               
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding(.top, 5)
+                }
+                
+                Button("Login") {
+                    if username.isEmpty || password.isEmpty {
+                        errorMessage = "Please enter both email and password"
+                    } else {
+                        authenticateUser(email: username, password: password)
+                    }
+                }
+                .foregroundColor(.white)
+                .frame(width: 317, height: 50)
+                .background(Color(hex: "#006666"))
+                .cornerRadius(14)
+                .fontWeight(.semibold)
+                .font(.system(size: 20))
+                .opacity(isValidEmail(username) && !password.isEmpty ? 1.0 : 0.6)
+                .disabled(!isValidEmail(username) || password.isEmpty)
             }
             .navigationBarHidden(true)
         }
