@@ -42,20 +42,26 @@ struct AddHospital: View {
         Form {
             Section(header: Text("Hospital Details")) {
                 TextField("Name", text: $name)
+                    .keyboardType(.default)
+                    .autocapitalization(.words)
                     .onChange(of: name) { newValue in
                         isNameValid = !newValue.isEmpty
                     }
                 TextField("Address", text: $address)
+                    .keyboardType(.default)
+                    .autocapitalization(.words)
                     .onChange(of: address) { newValue in
                         isAddressValid = !newValue.isEmpty
                     }
                 TextField("Phone", text: $phone)
                     .keyboardType(.phonePad)
+                    .autocapitalization(.none)
                     .onChange(of: phone) { newValue in
                         isPhoneValid = !newValue.isEmpty
                     }
                 TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
                     .onChange(of: email) { newValue in
                         isEmailValid = !newValue.isEmpty
                     }
@@ -63,14 +69,20 @@ struct AddHospital: View {
             
             Section() {
                 TextField("City", text: $city)
+                    .keyboardType(.default)
+                    .autocapitalization(.words)
                     .onChange(of: city) { newValue in
                         isCityValid = !newValue.isEmpty
                     }
                 TextField("Country", text: $country)
+                    .keyboardType(.default)
+                    .autocapitalization(.words)
                     .onChange(of: country) { newValue in
                         isCountryValid = !newValue.isEmpty
                     }
                 TextField("Zip Code", text: $zipCode)
+                    .keyboardType(.numbersAndPunctuation)
+                    .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
                         isZipCodeValid = !newValue.isEmpty
                     }
@@ -87,8 +99,14 @@ struct AddHospital: View {
                 if selectedTypeIndex > 0 {
                     if adminTypes[selectedTypeIndex] == "New" {
                         TextField("Name", text: .constant(""))
+                            .keyboardType(.default)
+                            .autocapitalization(.words)
                         TextField("Email", text: $recipientEmail)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
                         TextField("Phone Number", text: .constant(""))
+                            .keyboardType(.phonePad)
+                            .autocapitalization(.none)
                     } else if adminTypes[selectedTypeIndex] == "Existing" {
                         Picker(selection: $selectedAdminIndex, label: Text("Select")) {
                             ForEach(0 ..< existingAdmins.count) { index in
@@ -153,10 +171,20 @@ struct AddHospital: View {
     func mailBody() -> String {
         """
         Hello,
-        
+
         Here are the login credentials for the new admin:
+        
         Email: \(newAdminEmail)
         Password: \(newPassword)
+        
+        Hospital Details:
+        Name: \(name)
+        Address: \(address)
+        Phone: \(phone)
+        Email: \(email)
+        City: \(city)
+        Country: \(country)
+        Zip Code: \(zipCode)
         
         Please use these credentials to access the admin portal.
         
@@ -180,4 +208,3 @@ struct AddHospital: View {
         }
     }
 }
-

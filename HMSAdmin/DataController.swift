@@ -16,12 +16,16 @@ class DataController {
     func fetchHospitals() {
         let ref = database.child("hospitals")
         ref.observe(.value) { snapshot in
-            self.hospitals = [:]
+            self.hospitals = [:] // Clear the hospitals dictionary
+            print("Snapshot has \(snapshot.childrenCount) children.")
             for child in snapshot.children {
                 if let childSnapshot = child as? DataSnapshot,
                    let hospitalData = childSnapshot.value as? [String: Any],
-                   let hospital = Hospital(from: hospitalData) {
+                   let hospital = Hospital(from: hospitalData, id: childSnapshot.key) {
                     self.hospitals[hospital.id ?? UUID().uuidString] = hospital
+                    print("Added hospital: \(hospital.name) with ID: \(hospital.id ?? "unknown")")
+                } else {
+                    print("Failed to parse hospital data from snapshot.")
                 }
             }
             NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
@@ -65,69 +69,5 @@ class DataController {
             NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
             completion(nil)
         }
-    }
-}
-
-extension Hospital {
-    func toDictionary() -> [String: Any] {
-        return [
-            "id": id ?? UUID().uuidString,
-            "name": name,
-            "address": address,
-            "phone": phone,
-            "email": email,
-            "type": type,
-            "city": city,
-            "country": country,
-            "zipCode": zipCode,
-            "admins": admins.map { $0.toDictionary() }
-        ]
-    }
-    
-    init?(from dictionary: [String: Any]) {
-        guard let name = dictionary["name"] as? String,
-              let address = dictionary["address"] as? String,
-              let phone = dictionary["phone"] as? String,
-              let email = dictionary["email"] as? String,
-              let type = dictionary["type"] as? String,
-              let city = dictionary["city"] as? String,
-              let country = dictionary["country"] as? String,
-              let zipCode = dictionary["zipCode"] as? String,
-              let adminsData = dictionary["admins"] as? [[String: Any]] else {
-            return nil
-        }
-        self.name = name
-        self.address = address
-        self.phone = phone
-        self.email = email
-        self.type = type
-        self.city = city
-        self.country = country
-        self.zipCode = zipCode
-        self.admins = adminsData.compactMap { Admin(from: $0) }
-    }
-}
-
-extension Admin {
-    func toDictionary() -> [String: Any] {
-        return [
-            "name": name,
-            "address": address,
-            "email": email,
-            "phone": phone
-        ]
-    }
-    
-    init?(from dictionary: [String: Any]) {
-        guard let name = dictionary["name"] as? String,
-              let address = dictionary["address"] as? String,
-              let email = dictionary["email"] as? String,
-              let phone = dictionary["phone"] as? String else {
-            return nil
-        }
-        self.name = name
-        self.address = address
-        self.email = email
-        self.phone = phone
     }
 }

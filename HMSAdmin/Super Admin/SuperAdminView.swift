@@ -1,41 +1,14 @@
 import SwiftUI
+import Firebase
 
 struct SuperAdminView: View {
-    @State private var hospitals: [Hospital] = [
-        Hospital(
-            name: "Hospital A",
-            email: "hospitala@example.com",
-            phone: "123-456-7890",
-            admins: [
-                Admin(name: "Admin A", address: "Admin Address A", email: "admina@example.com", phone: "111-222-3333"),
-                Admin(name: "Admin B", address: "Admin Address B", email: "adminb@example.com", phone: "444-555-6666")
-            ],
-            address: "123 Main St",
-            city: "City A",
-            country: "Country A",
-            zipCode: "12345",
-            type: "New"
-        ),
-        Hospital(
-            name: "Hospital B",
-            email: "hospitalb@example.com",
-            phone: "987-654-3210",
-            admins: [
-                Admin(name: "Admin C", address: "Admin Address C", email: "adminc@example.com", phone: "777-888-9999")
-            ],
-            address: "456 Elm St",
-            city: "City B",
-            country: "Country B",
-            zipCode: "54321",
-            type: "Existing"
-        )
-    ]
-
-    
+    @State private var hospitals: [Hospital] = []
     @State private var isPresentingAddHospital = false
-//    @State private var selectedHospital: Hospital? // Track selected hospital for editing
-    
+    @State private var selectedHospital: Hospital? // Track selected hospital for editing
+    @State private var showDeleteConfirmation = false
     @State private var searchText = ""
+    @State private var isLoading = true
+    
     private var filteredHospitals: [Hospital] {
         hospitals.filter { hospital in
             searchText.isEmpty || hospital.name.localizedCaseInsensitiveContains(searchText)
@@ -45,41 +18,98 @@ struct SuperAdminView: View {
     var body: some View {
         NavigationView {
             VStack {
-                List {
-                    ForEach(filteredHospitals) { hospital in
-                        NavigationLink(destination: 
-                                        ShowHospital(hospital: hospital)) {
-                            HospitalCardView(hospital: hospital)
+                if isLoading {
+                    ProgressView("Loading hospitals...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .onAppear {
+                            fetchHospitals()
                         }
+                } else if hospitals.isEmpty {
+                    VStack {
+                        Image(systemName: "building.2.crop.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.gray)
+                        Text("No Hospitals Available")
+                            .font(.title)
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                        Text("Please add hospitals to manage them here.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .padding(.top, 4)
                     }
-                    .onDelete(perform: delete)
-                }
-                .navigationTitle("Hospitals")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink(destination: AddHospital(hospitals: $hospitals)) {
-                            Image(systemName: "plus")
+                } else {
+                    List {
+                        ForEach(filteredHospitals) { hospital in
+                            NavigationLink(destination: ShowHospital(hospital: hospital)) {
+                                HospitalCardView(hospital: hospital)
+                            }
                         }
+                        .onDelete(perform: confirmDelete)
                     }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        EditButton()
+                    .searchable(text: $searchText)
+                }
+            }
+            .navigationTitle("Hospitals")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: AddHospital(hospitals: $hospitals)) {
+                        Image(systemName: "plus")
                     }
                 }
-                .searchable(text: $searchText) // Add searchable modifier for search functionality
-//                .sheet(isPresented: $isPresentingAddHospital) {
-//                                   AddHospital(hospitals: $hospitals)
-//                               }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
+            }
+            .alert(isPresented: $showDeleteConfirmation) {
+                Alert(
+                    title: Text("Confirm Deletion"),
+                    message: Text("Are you sure you want to delete this hospital?"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let selectedHospital = selectedHospital {
+                            delete(hospital: selectedHospital)
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
             }
         }
     }
     
-    private func delete(at offsets: IndexSet) {
-        hospitals.remove(atOffsets: offsets)
+    private func fetchHospitals() {
+        DataController.shared.fetchHospitals()
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("HospitalsUpdated"), object: nil, queue: .main) { _ in
+            self.hospitals = DataController.shared.getHospitals()
+            print("Fetched \(self.hospitals.count) hospitals.")
+            self.isLoading = false
+        }
+    }
+    
+    private func confirmDelete(at offsets: IndexSet) {
+        if let index = offsets.first {
+            selectedHospital = hospitals[index]
+            showDeleteConfirmation = true
+        }
+    }
+    
+    private func delete(hospital: Hospital) {
+        DataController.shared.removeHospital(hospital) { error in
+            if let error = error {
+                print("Failed to delete hospital: \(error.localizedDescription)")
+            } else {
+                if let index = hospitals.firstIndex(of: hospital) {
+                    hospitals.remove(at: index)
+                    print("Deleted hospital: \(hospital.name) with ID: \(hospital.id ?? "unknown")")
+                }
+            }
+        }
     }
 }
 
 struct SuperAdminView_Previews: PreviewProvider {
-    static var previews: some View {
+    static var previews: SuperAdminView {
         SuperAdminView()
     }
 }
