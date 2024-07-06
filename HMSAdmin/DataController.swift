@@ -7,6 +7,7 @@ class DataController {
     
     private var database: DatabaseReference
     private var hospitals: [String: Hospital] = [:]
+    private var doctors: [String: Doctor] = [:]
     
     private init() {
         self.database = Database.database(url: "https://hms-team02-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
@@ -48,6 +49,22 @@ class DataController {
             completion(nil)
         }
     }
+    func addDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
+            let id = doctor.id ?? database.child("doctors").childByAutoId().key ?? UUID().uuidString
+            var doctorWithID = doctor
+            doctorWithID.id = id
+            
+            let ref = database.child("doctors").child(id)
+            ref.setValue(doctorWithID.toDictionary()) { error, _ in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                self.doctors[id] = doctorWithID
+                NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
+                completion(nil)
+            }
+        }
     
     func getHospitals() -> [Hospital] {
         return Array(hospitals.values)
@@ -71,3 +88,45 @@ class DataController {
         }
     }
 }
+
+extension Doctor {
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id ?? UUID().uuidString,
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "phone": phone,
+            "starts": starts.timeIntervalSince1970,
+            "ends": ends.timeIntervalSince1970,
+            "dob": dob.timeIntervalSince1970,
+            "designation": designation.rawValue,
+            "titles": titles
+        ]
+    }
+    
+    init?(from dictionary: [String: Any]) {
+        guard let firstName = dictionary["firstName"] as? String,
+              let lastName = dictionary["lastName"] as? String,
+              let email = dictionary["email"] as? String,
+              let phone = dictionary["phone"] as? String,
+              let starts = dictionary["starts"] as? TimeInterval,
+              let ends = dictionary["ends"] as? TimeInterval,
+              let dob = dictionary["dob"] as? TimeInterval,
+              let designationRaw = dictionary["designation"] as? String,
+              let designation = DoctorDesignation(rawValue: designationRaw),
+              let titles = dictionary["titles"] as? String else {
+            return nil
+        }
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+        self.phone = phone
+        self.starts = Date(timeIntervalSince1970: starts)
+        self.ends = Date(timeIntervalSince1970: ends)
+        self.dob = Date(timeIntervalSince1970: dob)
+        self.designation = designation
+        self.titles = titles
+    }
+}
+
