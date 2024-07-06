@@ -62,7 +62,7 @@ struct DoctorFormView: View {
     @Binding var isPresented: Bool
     @Binding var doctors: [Doctor]
     var doctorToEdit: Doctor?
-    
+    @Environment(\.presentationMode) var presentationMode
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var email = ""
@@ -130,24 +130,40 @@ struct DoctorFormView: View {
     }
     
     private func saveDoctor() {
-        let newDoctor = Doctor(
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            starts: starts,
-            ends: ends,
-            dob: dob,
-            designation: designation,
-            titles: titles
-        )
-        
-        if let index = doctors.firstIndex(where: { $0.id == doctorToEdit?.id }) {
-            doctors[index] = newDoctor
-        } else {
-            doctors.append(newDoctor)
+            let newDoctor = Doctor(
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                starts: starts,
+                ends: ends,
+                dob: dob,
+                designation: designation,
+                titles: titles
+            )
+            
+            if let doctorToEdit = doctorToEdit, let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
+                var updatedDoctor = newDoctor
+                updatedDoctor.id = doctorToEdit.id
+                doctors[index] = updatedDoctor
+                DataController.shared.addDoctor(updatedDoctor) { error in
+                    if let error = error {
+                        print("Failed to save doctor: \(error.localizedDescription)")
+                    } else {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            } else {
+                DataController.shared.addDoctor(newDoctor) { error in
+                    if let error = error {
+                        print("Failed to save doctor: \(error.localizedDescription)")
+                    } else {
+                        doctors.append(newDoctor)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
         }
-    }
 }
 
 struct AddDoctors_Previews: PreviewProvider {
