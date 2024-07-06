@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct AdminView: View {
+    
     @State private var searchText: String = ""
-
+    @State private var doctors: [Doctor] = []
+    @State private var isLoading = true
+    
+    
     var body: some View {
         NavigationView {
             List {
@@ -25,7 +29,7 @@ struct AdminView: View {
 
                 Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
                     VStack(spacing: 16) {
-                        NavigationLink(destination: AddDoctors()) {
+                        NavigationLink(destination: showDoctors()) {
                             HospitalDataRow(icon: "stethoscope", title: "Doctors", count: "80")
                         }
                         HospitalDataRow(icon: "syringe", title: "Staffs", count: "120")
@@ -46,7 +50,9 @@ struct AdminView: View {
             }
         }
     }
+    
 }
+
 
 struct HospitalDataRow: View {
     let icon: String

@@ -76,7 +76,7 @@ enum DoctorDesignation: String, Codable, CaseIterable {
     }
 }
 
-struct Doctor: Hashable, Codable, Identifiable {
+struct Doctor: Codable, Identifiable,Equatable {
     @DocumentID var id: String?
     var firstName: String
     var lastName: String
@@ -105,6 +105,9 @@ struct Doctor: Hashable, Codable, Identifiable {
         self.dob = dob
         self.designation = designation
         self.titles = titles
+    }
+    static func == (lhs: Doctor, rhs: Doctor) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
