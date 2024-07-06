@@ -12,6 +12,7 @@ class DataController {
     private init() {
         self.database = Database.database(url: "https://hms-team02-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
         fetchHospitals()
+        fetchDoctors()
     }
     
     func fetchHospitals() {
@@ -49,25 +50,49 @@ class DataController {
             completion(nil)
         }
     }
+    
     func addDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
-            let id = doctor.id ?? database.child("doctors").childByAutoId().key ?? UUID().uuidString
-            var doctorWithID = doctor
-            doctorWithID.id = id
-            
-            let ref = database.child("doctors").child(id)
-            ref.setValue(doctorWithID.toDictionary()) { error, _ in
-                if let error = error {
-                    completion(error)
-                    return
-                }
-                self.doctors[id] = doctorWithID
-                NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
-                completion(nil)
+        let id = doctor.id ?? database.child("doctors").childByAutoId().key ?? UUID().uuidString
+        var doctorWithID = doctor
+        doctorWithID.id = id
+        
+        let ref = database.child("doctors").child(id)
+        ref.setValue(doctorWithID.toDictionary()) { error, _ in
+            if let error = error {
+                completion(error)
+                return
             }
+            self.doctors[id] = doctorWithID
+            NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
+            completion(nil)
         }
+    }
+    
+    func fetchDoctors() {
+        let ref = database.child("doctors")
+        ref.observe(.value) { snapshot in
+            self.doctors = [:] // Clear the doctors dictionary
+            print("Snapshot has \(snapshot.childrenCount) children.")
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let doctorData = childSnapshot.value as? [String: Any],
+                   let doctor = Doctor(from: doctorData, id: childSnapshot.key) {
+                    self.doctors[doctor.id ?? UUID().uuidString] = doctor
+                    print("Added doctor: \(doctor.firstName) \(doctor.lastName) with ID: \(doctor.id ?? "unknown")")
+                } else {
+                    print("Failed to parse doctor data from snapshot.")
+                }
+            }
+            NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
+        }
+    }
     
     func getHospitals() -> [Hospital] {
         return Array(hospitals.values)
+    }
+    
+    func getDoctors() -> [Doctor] {
+        return Array(doctors.values)
     }
     
     func removeHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
@@ -87,6 +112,9 @@ class DataController {
             completion(nil)
         }
     }
+    func removeDoctor(){
+        
+    }
 }
 
 extension Doctor {
@@ -105,7 +133,7 @@ extension Doctor {
         ]
     }
     
-    init?(from dictionary: [String: Any]) {
+    init?(from dictionary: [String: Any], id: String) {
         guard let firstName = dictionary["firstName"] as? String,
               let lastName = dictionary["lastName"] as? String,
               let email = dictionary["email"] as? String,
@@ -127,6 +155,6 @@ extension Doctor {
         self.dob = Date(timeIntervalSince1970: dob)
         self.designation = designation
         self.titles = titles
+        self.id = id
     }
 }
-

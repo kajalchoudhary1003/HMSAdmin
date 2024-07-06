@@ -1,7 +1,10 @@
 import SwiftUI
 
 struct AdminView: View {
+    
     @State private var searchText: String = ""
+    @State private var doctors: [Doctor] = []
+    @State private var isLoading = true
     
     var body: some View {
         NavigationView {
@@ -44,9 +47,9 @@ struct AdminView: View {
     
     private var hospitalDataSection: some View {
         Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
-            dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(AddDoctors()))
-            dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
-            dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
+                dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(showDoctors()))
+                dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
+                dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
         }
     }
     
@@ -69,13 +72,12 @@ struct AdminView: View {
             }
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 100)
-            
         }
-        .padding(EdgeInsets(top:2,leading: 10, bottom:2,trailing: 20))
-        .background(Color.white)
-        .cornerRadius(10)
+        .padding(EdgeInsets(top: 2, leading: 10, bottom: 2, trailing: 20))
         .listRowInsets(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
         .listRowBackground(Color.clear)
+        .background(Color.white)
+        .cornerRadius(10)
     }
 }
 
