@@ -6,38 +6,11 @@ struct AdminView: View {
     @State private var doctors: [Doctor] = []
     @State private var isLoading = true
     
-    
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Analytics").font(.headline).foregroundColor(.gray)) {
-                    HStack {
-                        Text("Bookings")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(hex: "#006666"))
-                        Spacer()
-                        Text("46")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(hex: "#006666"))
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                }
-
-                Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
-                    VStack(spacing: 16) {
-                        NavigationLink(destination: showDoctors()) {
-                            HospitalDataRow(icon: "stethoscope", title: "Doctors", count: "80")
-                        }
-                        HospitalDataRow(icon: "syringe", title: "Staffs", count: "120")
-                        HospitalDataRow(icon: "gift", title: "Offers", count: "05")
-                    }
-                    .listRowInsets(EdgeInsets())
-                    .background(Color.clear)
-                }
+                analyticsSection
+                hospitalDataSection
             }
             .listStyle(InsetGroupedListStyle())
             .searchable(text: $searchText, prompt: "Search")
@@ -74,9 +47,9 @@ struct AdminView: View {
     
     private var hospitalDataSection: some View {
         Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
-            dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(AddDoctors()))
-            dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
-            dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
+                dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(showDoctors()))
+                dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
+                dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
         }
     }
     
@@ -99,13 +72,12 @@ struct AdminView: View {
             }
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 100)
-            
         }
-        .padding(EdgeInsets(top:2,leading: 10, bottom:2,trailing: 20))
-        .background(Color.white)
-        .cornerRadius(10)
+        .padding(EdgeInsets(top: 2, leading: 10, bottom: 2, trailing: 20))
         .listRowInsets(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
         .listRowBackground(Color.clear)
+        .background(Color.white)
+        .cornerRadius(10)
     }
 }
 
