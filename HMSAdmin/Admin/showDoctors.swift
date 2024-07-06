@@ -1,7 +1,6 @@
 import SwiftUI
-import FirebaseFirestoreSwift
 
-struct showDoctors: View {
+struct ShowDoctors: View {
     @State private var doctors: [Doctor] = []
     @State private var searchText = ""
     @State private var showingDoctorModal = false
@@ -23,15 +22,17 @@ struct showDoctors: View {
                         fetchDoctors()
                     }
             } else {
-                List(filteredDoctors) { doctor in
-                    DoctorCard(doctor: doctor)
-                        .onTapGesture {
-                            selectedDoctor = doctor
-                            showingDoctorModal = true
-                        }
+                ScrollView {
+                    ForEach(filteredDoctors, id: \.id) { doctor in
+                        DoctorCard(doctor: doctor)
+                            .onTapGesture {
+                                selectedDoctor = doctor
+                                showingDoctorModal = true
+                            }
+                    }
                 }
-                .listStyle(PlainListStyle())
                 .navigationTitle("Doctors")
+                .padding(.vertical,10)
                 .navigationBarItems(trailing: Button(action: {
                     selectedDoctor = nil
                     showingDoctorModal = true
@@ -57,10 +58,10 @@ struct showDoctors: View {
     }
 }
 
-struct AddDoctors_Previews: PreviewProvider {
+struct ShowDoctors_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            showDoctors()
+            ShowDoctors()
         }
     }
 }
