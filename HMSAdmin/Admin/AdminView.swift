@@ -47,7 +47,7 @@ struct AdminView: View {
     
     private var hospitalDataSection: some View {
         Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
-                dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(showDoctors()))
+                dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(ShowDoctors()))
                 dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
                 dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
         }

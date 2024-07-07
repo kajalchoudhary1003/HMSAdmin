@@ -12,23 +12,35 @@ struct DoctorCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
-                Text("\(doctor.firstName) \(doctor.lastName)")
-                    .font(.largeTitle)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(doctor.firstName) \(doctor.lastName)")
+                        .font(.headline)
+                        .foregroundColor(.black)
+                    Text(doctor.designation.title)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("Age: \(doctor.fees)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
+                VStack(alignment: .trailing) {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                    Text(doctor.interval)
+                        .font(.headline)
+                        .foregroundColor(Color(hex: "#006666"))
+                        .padding(.top, 10)
+                }
             }
-            Text(doctor.designation.title)
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            HStack {
-                Spacer()
-                Text(doctor.interval)
-                    .font(.subheadline)
-                    .foregroundColor(.teal)
-            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(8)
+            .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
         }
         .padding(.vertical, 8)
+        .padding(.horizontal,20)
+        
     }
 }
 
