@@ -24,10 +24,13 @@ struct DoctorFormView: View {
         @State private var newPassword: String = ""
 
     var designations = DoctorDesignation.allCases
+    
+    // Form validation check
     var isFormValid: Bool {
         !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty
     }
     
+    // Initializer to set up the form with existing doctor details if editing
     init(isPresented: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
         self._isPresented = isPresented
         self._doctors = doctors
@@ -49,6 +52,7 @@ struct DoctorFormView: View {
     var body: some View {
         NavigationView {
             Form {
+                // Personal information section
                 Section(header: Text("Personal Information")) {
                     TextField("First Name", text: $firstName)
                     TextField("Last Name", text: $lastName)
@@ -57,6 +61,7 @@ struct DoctorFormView: View {
                     DatePicker("Date of Birth", selection: $dob, displayedComponents: .date)
                 }
                 
+                // Professional information section
                 Section(header: Text("Professional Information")) {
                     Picker("Designation", selection: $designation) {
                         ForEach(designations, id: \.self) {
@@ -68,14 +73,14 @@ struct DoctorFormView: View {
                     TextField("Titles", text: $titles)
                 }
             }
-            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor")
+            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
                 saveDoctor()
                 isPresented = false
             }
-            .disabled(!isFormValid))
+            .disabled(!isFormValid)) // Disable save button if form is not valid
         }
         // Added alert for email error
                .alert(isPresented: $showMailError) {
@@ -111,6 +116,7 @@ struct DoctorFormView: View {
             titles: titles
         )
         
+        // If editing an existing doctor, update the doctor details
         if let doctorToEdit = doctorToEdit, let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
             var updatedDoctor = newDoctor
             updatedDoctor.id = doctorToEdit.id
@@ -123,6 +129,7 @@ struct DoctorFormView: View {
                 }
             }
         } else {
+            // If adding a new doctor, append to the doctors list
             DataController.shared.addDoctor(newDoctor) { error in
                 if let error = error {
                     print("Failed to save doctor: \(error.localizedDescription)")
@@ -167,4 +174,7 @@ struct DoctorFormView: View {
                }
            }
        }
+}
+#Preview {
+    DoctorFormView(isPresented: .constant(true), doctors: .constant([]), doctorToEdit: nil)
 }

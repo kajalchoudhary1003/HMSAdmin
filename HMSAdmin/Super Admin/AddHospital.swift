@@ -31,15 +31,18 @@ struct AddHospital: View {
     @State private var newAdminEmail: String = ""
     @State private var newPassword: String = ""
     
+    // Admin types and existing admins for selection
     let adminTypes = ["Select", "New", "Existing"]
     let existingAdmins = ["Select", "Ansh", "Madhav", "John", "Jane", "Michael", "Emily", "David", "Sarah", "Robert"]
     
+    // Check if all fields are valid to enable Save button
     var isSaveDisabled: Bool {
         return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid
     }
     
     var body: some View {
         Form {
+            // Section for hospital details
             Section(header: Text("Hospital Details")) {
                 TextField("Name", text: $name)
                     .keyboardType(.default)
@@ -67,6 +70,7 @@ struct AddHospital: View {
                     }
             }
             
+            // Section for location details
             Section() {
                 TextField("City", text: $city)
                     .keyboardType(.default)
@@ -88,6 +92,7 @@ struct AddHospital: View {
                     }
             }
             
+            // Section for admin details
             Section(header: Text("Admin Details")) {
                 Picker(selection: $selectedTypeIndex, label: Text("Type")) {
                     ForEach(0 ..< adminTypes.count) { index in
@@ -117,7 +122,7 @@ struct AddHospital: View {
                 }
             }
         }
-        .toolbar {
+        .toolbar { // Toolbar with Save button
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { saveHospital() }) {
                     Text("Save")
@@ -125,9 +130,11 @@ struct AddHospital: View {
                 .disabled(isSaveDisabled)
             }
         }
+        // Alert for mail error
         .alert(isPresented: $showMailError) {
             Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
         }
+        // Sheet for showing email composer
         .sheet(isPresented: $showingMailView) {
             MailView(recipient: recipientEmail, subject: "Admin Credentials for New Hospital", body: mailBody(), completion: { result in
                 if result == .sent {
@@ -140,6 +147,7 @@ struct AddHospital: View {
         .navigationTitle("New Hospital")
     }
     
+    // Function to save hospital details
     func saveHospital() {
         var admins: [Admin] = []
         if selectedTypeIndex == 1 {
@@ -168,6 +176,7 @@ struct AddHospital: View {
         }
     }
     
+    // Function to generate email body
     func mailBody() -> String {
         """
         Hello,
@@ -193,11 +202,13 @@ struct AddHospital: View {
         """
     }
     
+    // Function to generate random password
     func generateRandomPassword(length: Int) -> String {
         let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0..<length).map { _ in characters.randomElement()! })
     }
     
+    // Function to perform Firebase signup for new admin
     func performFirebaseSignup() {
         Auth.auth().createUser(withEmail: newAdminEmail, password: newPassword) { authResult, error in
             if let error = error {
@@ -207,4 +218,9 @@ struct AddHospital: View {
             }
         }
     }
+}
+
+#Preview {
+    // Provide a sample data binding for preview
+    AddHospital(hospitals: .constant([Hospital(name: "Sample Hospital", email: "sample@hospital.com", phone: "1234567890", admins: [], address: "123 Sample Street", city: "Sample City", country: "Sample Country", zipCode: "123456", type: "New")]))
 }
