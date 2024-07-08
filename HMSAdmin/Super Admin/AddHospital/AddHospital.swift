@@ -25,10 +25,16 @@ struct AddHospital: View {
     @State private var countryErrorMessage: String? = nil
     @State private var zipCodeErrorMessage: String? = nil
     
+    @State private var newAdminName: String = ""
+    @State private var newAdminEmail: String = ""
+    @State private var newAdminPhone: String = ""
+    @State private var newAdminNameErrorMessage: String? = nil
+    @State private var newAdminEmailErrorMessage: String? = nil
+    @State private var newAdminPhoneErrorMessage: String? = nil
+    
     @State private var recipientEmail: String = ""
     @State private var showMailError = false
     @State private var showingMailView = false
-    @State private var newAdminEmail: String = ""
     @State private var newPassword: String = ""
     
     // Admin types and existing admins for selection
@@ -37,7 +43,7 @@ struct AddHospital: View {
     
     // Check if all fields are valid to enable Save button
     var isSaveDisabled: Bool {
-        return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid
+        return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid || (selectedTypeIndex == 1 && (!isNewAdminNameValid || !isNewAdminEmailValid || !isNewAdminPhoneValid))
     }
     
     var isNameValid: Bool {
@@ -66,6 +72,18 @@ struct AddHospital: View {
     
     var isZipCodeValid: Bool {
         validateZipCode(zipCode)
+    }
+    
+    var isNewAdminNameValid: Bool {
+        validateNewAdminName(newAdminName)
+    }
+    
+    var isNewAdminEmailValid: Bool {
+        validateNewAdminEmail(newAdminEmail)
+    }
+    
+    var isNewAdminPhoneValid: Bool {
+        validateNewAdminPhone(newAdminPhone)
     }
     
     var body: some View {
@@ -152,15 +170,33 @@ struct AddHospital: View {
                 
                 if selectedTypeIndex > 0 {
                     if adminTypes[selectedTypeIndex] == "New" {
-                        TextField("Name", text: .constant(""))
+                        TextField("Name", text: $newAdminName)
                             .keyboardType(.default)
                             .autocapitalization(.words)
+                            .onChange(of: newAdminName) { newValue in
+                                _ = validateNewAdminName(newValue)
+                            }
+                        if let errorMessage = newAdminNameErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
                         TextField("Email", text: $recipientEmail)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
-                        TextField("Phone Number", text: .constant(""))
+                            .onChange(of: recipientEmail) { newValue in
+                                _ = validateNewAdminEmail(newValue)
+                            }
+                        if let errorMessage = newAdminEmailErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
+                        TextField("Phone Number", text: $newAdminPhone)
                             .keyboardType(.phonePad)
                             .autocapitalization(.none)
+                            .onChange(of: newAdminPhone) { newValue in
+                                _ = validateNewAdminPhone(newValue)
+                            }
+                        if let errorMessage = newAdminPhoneErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
                     } else if adminTypes[selectedTypeIndex] == "Existing" {
                         Picker(selection: $selectedAdminIndex, label: Text("Select")) {
                             ForEach(0 ..< existingAdmins.count) { index in
@@ -202,7 +238,7 @@ struct AddHospital: View {
         if selectedTypeIndex == 1 {
             newAdminEmail = "\(UUID().uuidString.prefix(6))@admin.com"
             newPassword = generateRandomPassword(length: 6)
-            let newAdmin = Admin(name: "New Admin", address: "Admin Address", email: newAdminEmail, phone: "1234567890")
+            let newAdmin = Admin(name: newAdminName, address: "Admin Address", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
             
             showingMailView = true
@@ -294,7 +330,7 @@ struct AddHospital: View {
     }
     
     func validateEmail(_ email: String) -> Bool {
-        let emailFormat = "^[a-z][A-Z0-9a-z._%+-]*@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}$"
+        let emailFormat = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
         let isValid = emailPredicate.evaluate(with: email)
         emailErrorMessage = isValid ? nil : "Invalid email format"
@@ -319,6 +355,33 @@ struct AddHospital: View {
         }
         zipCodeErrorMessage = nil
         return !zipCode.isEmpty
+    }
+    
+    func validateNewAdminName(_ name: String) -> Bool {
+        if name.count > 25 {
+            newAdminNameErrorMessage = "Name should not exceed 25 characters"
+            return false
+        }
+        newAdminNameErrorMessage = nil
+        return !name.isEmpty
+    }
+    
+    func validateNewAdminEmail(_ email: String) -> Bool {
+        let emailFormat = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,64}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
+        let isValid = emailPredicate.evaluate(with: email)
+        newAdminEmailErrorMessage = isValid ? nil : "Invalid email format"
+        return isValid
+    }
+    
+    func validateNewAdminPhone(_ phone: String) -> Bool {
+        let filtered = phone.filter { "0123456789".contains($0) }
+        if phone != filtered || phone.count > 10 {
+            newAdminPhoneErrorMessage = "Phone number should be numeric and not exceed 10 digits"
+            return false
+        }
+        newAdminPhoneErrorMessage = nil
+        return !phone.isEmpty
     }
 }
 

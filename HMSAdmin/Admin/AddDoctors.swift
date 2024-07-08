@@ -17,6 +17,7 @@ struct DoctorFormView: View {
     @State private var dob = Date()
     @State private var designation: DoctorDesignation = .generalPractitioner
     @State private var titles = ""
+    @State private var zipCode = ""
     
     @State private var showMailError = false
     @State private var showingMailView = false
@@ -27,8 +28,8 @@ struct DoctorFormView: View {
     
     // Form validation check
     var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
-        firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) &&
+        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty && !zipCode.isEmpty &&
+        firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) && isValidZipCode(zipCode) &&
         dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
     }
     
@@ -83,6 +84,7 @@ struct DoctorFormView: View {
                             alignment: .trailing
                         )
                     TextField("Email", text: $email)
+                        .keyboardType(.emailAddress)
                     TextField("Phone Number", text: $phone)
                         .keyboardType(.numberPad)
                         .onChange(of: phone) { newValue in
@@ -90,8 +92,36 @@ struct DoctorFormView: View {
                             if phone != filtered {
                                 phone = filtered
                             }
+                            if phone.count > 10 {
+                                phone = String(phone.prefix(10))
+                            }
                         }
+                        .overlay(
+                            Text("\(phone.count)/10")
+                                .font(.caption)
+                                .foregroundColor(phone.count > 10 ? .red : .gray)
+                                .padding(.trailing, 8),
+                            alignment: .trailing
+                        )
                     DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
+                    TextField("Zip Code", text: $zipCode)
+                        .keyboardType(.numberPad)
+                        .onChange(of: zipCode) { newValue in
+                            let filtered = newValue.filter { "0123456789".contains($0) }
+                            if zipCode != filtered {
+                                zipCode = filtered
+                            }
+                            if zipCode.count > 6 {
+                                zipCode = String(zipCode.prefix(6))
+                            }
+                        }
+                        .overlay(
+                            Text("\(zipCode.count)/6")
+                                .font(.caption)
+                                .foregroundColor(zipCode.count > 6 ? .red : .gray)
+                                .padding(.trailing, 8),
+                            alignment: .trailing
+                        )
                 }
                 
                 // Professional information section
@@ -232,16 +262,23 @@ struct DoctorFormView: View {
     
     // Function to validate email
     private func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "^[a-z][A-Z0-9a-z._%+-]*@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
+        let emailRegEx = "^[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
     }
     
     // Function to validate phone number
     private func isValidPhone(_ phone: String) -> Bool {
-        let phoneRegEx = "^[0-9]{10,15}$"
+        let phoneRegEx = "^[0-9]{10}$"
         let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegEx)
         return phoneTest.evaluate(with: phone)
+    }
+    
+    // Function to validate zip code
+    private func isValidZipCode(_ zipCode: String) -> Bool {
+        let zipCodeRegEx = "^[0-9]{6}$"
+        let zipCodeTest = NSPredicate(format: "SELF MATCHES %@", zipCodeRegEx)
+        return zipCodeTest.evaluate(with: zipCode)
     }
 }
 

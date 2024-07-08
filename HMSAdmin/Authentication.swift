@@ -5,6 +5,7 @@ struct Authentication: View {
     @State private var username = ""
     @State private var password = ""
     @State private var errorMessage = ""
+    @State private var error = ""
 
     var body: some View {
         NavigationStack {
@@ -42,50 +43,56 @@ struct Authentication: View {
                         .foregroundColor(.gray)
                         .padding(.bottom, 10)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 30)
+                .padding(.horizontal, 10)
 
-                // Input fields
-                VStack(spacing: 15) {
-                    // Email input with validation
-                    VStack(alignment: .leading) {
-                        TextField("Email", text: $username)
-                            .padding()
-                            .background(Color.black.opacity(0.05))
-                            .cornerRadius(10)
-                            .autocapitalization(.none)
-                            .keyboardType(.emailAddress)
+                // Input fields and login button within ScrollView
+                    VStack(spacing: 15) {
+                        // Email input with validation
+                        VStack(alignment: .leading) {
+                            TextField("Email", text: $username)
+                                .padding()
+                                .background(Color.black.opacity(0.05))
+                                .cornerRadius(10)
+                                .autocapitalization(.none)
+                                .keyboardType(.emailAddress)
+                            Text(!isValidEmail(username) && !username.isEmpty ? "Please enter a valid email address" : " ")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .padding(.top, 5)
+                        }
+                        .padding(.horizontal, 30)
+                        
+                        // Password input with validation
+                        VStack(alignment: .leading) {
+                            SecureField("Password", text: $password)
+                                .padding()
+                                .background(Color.black.opacity(0.05))
+                                .cornerRadius(10)
+                            Text(password.count < 6 && !password.isEmpty ? "Password must be at least 6 characters" : " ")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .padding(.top, 5)
+                        }
+                        .padding(.horizontal, 30)
+                        
+                        if !errorMessage.isEmpty {
+                            Text(errorMessage)
+                                .foregroundColor(.red)
+                                .padding(.top, 5)
+                        }
+
+                        // Login button
+                        Button("Login") {
+                            // Validate inputs on button tap
+                            validateInputs()
+                        }
+                        .foregroundColor(.white)
+                        .frame(width: 317, height: 50)
+                        .background(Color(hex: "#006666"))
+                        .cornerRadius(14)
+                        .font(.system(size: 20))
                     }
-                    .padding(.horizontal, 30)
-
-                    // Password input with validation
-                    VStack(alignment: .leading) {
-                        SecureField("Password", text: $password)
-                            .padding()
-                            .background(Color.black.opacity(0.05))
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal, 30)
-                }
-                .padding(.bottom, 20)
-
-                // Error message
-                if !errorMessage.isEmpty {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .padding(.top, 5)
-                }
-
-                // Login button
-                Button("Login") {
-                    // Validate inputs on button tap
-                    validateInputs()
-                }
-                .foregroundColor(.white)
-                .frame(width: 317, height: 50)
-                .background(Color(hex: "#006666"))
-                .cornerRadius(14)
-                .font(.system(size: 20))
+                    .padding(.bottom, 20)
             }
             .navigationBarHidden(true)
         }
@@ -156,7 +163,8 @@ struct Authentication: View {
 
     // Function to validate email format
     func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
+        // Updated regex to check for repetition of characters and specific domains
+        let emailRegEx = "^[A-Z0-9a-z._%+-]+@(?:(?:superadmin\\.com)|(?:admin\\.com)|(?:doctor\\.com))$"
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
