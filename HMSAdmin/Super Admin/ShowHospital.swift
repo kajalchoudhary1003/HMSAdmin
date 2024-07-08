@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct ShowHospital: View {
-    let hospital: Hospital
+    let hospital: Hospital // The hospital object to display
 
     var body: some View {
         Form {
+            // Section to display hospital details
             Section(header: Text("Hospital Details")) {
                 Text("Name: \(hospital.name)")
                 Text("Address: \(hospital.address)")
@@ -15,6 +16,7 @@ struct ShowHospital: View {
                 Text("Zip Code: \(hospital.zipCode)")
             }
 
+            // Section to display admin details
             Section(header: Text("Admin Details")) {
                 ForEach(hospital.admins) { admin in
                     VStack(alignment: .leading) {
@@ -29,3 +31,5 @@ struct ShowHospital: View {
         .navigationTitle(hospital.name)
     }
 }
+
+

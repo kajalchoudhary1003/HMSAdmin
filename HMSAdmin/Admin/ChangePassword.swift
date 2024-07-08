@@ -54,6 +54,7 @@ struct ChangePassword: View {
                 }
                 .padding(.horizontal)
                 
+                // Display error message if any
                 if let errorMessage = errorMessage {
                     Text(errorMessage)
                         .font(.caption)
@@ -61,6 +62,7 @@ struct ChangePassword: View {
                         .padding(.horizontal)
                 }
                 
+                // Display success message if any
                 if let successMessage = successMessage {
                     Text(successMessage)
                         .font(.caption)
@@ -68,6 +70,7 @@ struct ChangePassword: View {
                         .padding(.horizontal)
                 }
                 
+                // Button to trigger password reset
                 Button(action: handlePasswordReset) {
                     Text("Reset")
                         .font(.headline)
@@ -80,6 +83,7 @@ struct ChangePassword: View {
                 .padding(.horizontal)
                 .padding(.top, 20)
                 
+                // Navigation link to redirect to home view on success
                 NavigationLink("", destination: AdminView().navigationBarBackButtonHidden(true), isActive: $navigateToHome)
             }
             .padding()
@@ -87,24 +91,30 @@ struct ChangePassword: View {
         }
     }
     
+    // Function to handle password reset logic
     func handlePasswordReset() {
+        // Ensure passwords match
         guard newPassword == confirmPassword else {
             errorMessage = "Passwords do not match"
             return
         }
         
+        // Ensure password length requirement is met
         guard newPassword.count >= 8 else {
             errorMessage = "Password must be at least 8 characters"
             return
         }
         
+        // Ensure user is authenticated
         guard let user = Auth.auth().currentUser, let email = user.email else {
             errorMessage = "User not found"
             return
         }
         
+        // Re-authenticate user with old password
         let credential = EmailAuthProvider.credential(withEmail: email, password: oldPassword)
         
+        // Update password to new password
         user.reauthenticate(with: credential) { authResult, error in
             if let error = error {
                 errorMessage = "Authentication Failed: \(error.localizedDescription)"
@@ -117,15 +127,13 @@ struct ChangePassword: View {
                 } else {
                     successMessage = "Password Successfully Modified"
                     errorMessage = nil
-                    navigateToHome = true // Trigger navigation
+                    navigateToHome = true // Trigger navigation to home
                 }
             }
         }
     }
 }
 
-struct ChangePassword_Previews: PreviewProvider {
-    static var previews: some View {
-        ChangePassword()
-    }
+#Preview{
+    ChangePassword()
 }
