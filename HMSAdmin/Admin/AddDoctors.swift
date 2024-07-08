@@ -27,7 +27,9 @@ struct DoctorFormView: View {
     
     // Form validation check
     var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty
+        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
+        firstName.count <= 50 && lastName.count <= 50 && isValidEmail(email) && isValidPhone(phone) &&
+        dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
     }
     
     // Initializer to set up the form with existing doctor details if editing
@@ -55,10 +57,20 @@ struct DoctorFormView: View {
                 // Personal information section
                 Section(header: Text("Personal Information")) {
                     TextField("First Name", text: $firstName)
+                        .onChange(of: firstName) { newValue in
+                            if newValue.count > 50 {
+                                firstName = String(newValue.prefix(50))
+                            }
+                        }
                     TextField("Last Name", text: $lastName)
+                        .onChange(of: lastName) { newValue in
+                            if newValue.count > 50 {
+                                lastName = String(newValue.prefix(50))
+                            }
+                        }
                     TextField("Email", text: $email)
                     TextField("Phone Number", text: $phone)
-                    DatePicker("Date of Birth", selection: $dob, displayedComponents: .date)
+                    DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
                 }
                 
                 // Professional information section
@@ -195,6 +207,20 @@ struct DoctorFormView: View {
                 print("User signed up successfully")
             }
         }
+    }
+    
+    // Function to validate email
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: email)
+    }
+    
+    // Function to validate phone number
+    private func isValidPhone(_ phone: String) -> Bool {
+        let phoneRegEx = "^[0-9]{10,15}$"
+        let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegEx)
+        return phoneTest.evaluate(with: phone)
     }
 }
 
