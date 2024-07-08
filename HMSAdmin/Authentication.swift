@@ -55,10 +55,25 @@ struct Authentication: View {
                                 .cornerRadius(10)
                                 .autocapitalization(.none)
                                 .keyboardType(.emailAddress)
-                            Text(!isValidEmail(username) && !username.isEmpty ? "Please enter a valid email address" : " ")
-                                .foregroundColor(.red)
-                                .font(.caption)
-                                .padding(.top, 5)
+                                .textInputAutocapitalization(.never)
+                                .onChange(of: username) { newValue in
+                                    if newValue.count > 100 {
+                                        username = String(newValue.prefix(100))
+                                    }
+                                }
+                            if username.isEmpty {
+                                Text(" ")
+                            } else if isValidEmail(username) {
+                                Text("Yeah, Looks Valid Email Address")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                    .padding(.top, 5)
+                            } else {
+                                Text("Enter a valid email address")
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                    .padding(.top, 5)
+                            }
                         }
                         .padding(.horizontal, 30)
                         
@@ -68,10 +83,19 @@ struct Authentication: View {
                                 .padding()
                                 .background(Color.black.opacity(0.05))
                                 .cornerRadius(10)
-                            Text(password.count < 6 && !password.isEmpty ? "Password must be at least 6 characters" : " ")
-                                .foregroundColor(.red)
-                                .font(.caption)
-                                .padding(.top, 5)
+                            if password.isEmpty {
+                                Text(" ")
+                            } else if password.count >= 6 {
+                                Text("Seems Valid!")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                    .padding(.top, 5)
+                            } else {
+                                Text("Password must be at least 6 characters")
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                    .padding(.top, 5)
+                            }
                         }
                         .padding(.horizontal, 30)
                         
