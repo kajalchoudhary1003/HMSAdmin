@@ -16,7 +16,7 @@ struct AdminView: View {
             .searchable(text: $searchText, prompt: "Search")
             .navigationTitle("Hi, Admin")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem() {
                     Image(systemName: "person.crop.circle.fill")
                         .foregroundColor(Color(hex: "#006666"))
                 }
