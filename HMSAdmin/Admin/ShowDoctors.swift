@@ -49,7 +49,7 @@ struct ShowDoctors: View {
                     })
                     .searchable(text: $searchText, prompt: "Search")
                     .sheet(isPresented: $showingDoctorModal) {
-                        DoctorFormView(isPresented: $showingDoctorModal, doctors: $doctors, doctorToEdit: selectedDoctor)
+                        DoctorFormView(isPresent: $showingDoctorModal, doctors: $doctors, doctorToEdit: selectedDoctor)
                     }
             } else {
                 ScrollView {

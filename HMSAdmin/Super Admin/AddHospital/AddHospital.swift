@@ -25,6 +25,12 @@ struct AddHospital: View {
     @State private var isCountryValid = false
     @State private var isZipCodeValid = false
     
+    @State private var nameError = ""
+    @State private var addressError = ""
+    @State private var emailError = ""
+    @State private var cityError = ""
+    @State private var countryError = ""
+    
     @State private var recipientEmail: String = ""
     @State private var showMailError = false
     @State private var showingMailView = false
@@ -48,26 +54,41 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: name) { newValue in
-                        isNameValid = !newValue.isEmpty
+                        validateName(newValue)
                     }
+                if !nameError.isEmpty {
+                    Text(nameError).foregroundColor(.red)
+                }
+                
                 TextField("Address", text: $address)
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: address) { newValue in
-                        isAddressValid = !newValue.isEmpty
+                        validateAddress(newValue)
                     }
+                if !addressError.isEmpty {
+                    Text(addressError).foregroundColor(.red)
+                }
+                
                 TextField("Phone", text: $phone)
                     .keyboardType(.phonePad)
                     .autocapitalization(.none)
                     .onChange(of: phone) { newValue in
-                        isPhoneValid = !newValue.isEmpty
+                        if newValue.count <= 10 {
+                            phone = newValue
+                        }
+                        validatePhone(newValue)
                     }
+                
                 TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .onChange(of: email) { newValue in
-                        isEmailValid = !newValue.isEmpty
+                        validateEmail(newValue)
                     }
+                if !emailError.isEmpty {
+                    Text(emailError).foregroundColor(.red)
+                }
             }
             
             // Section for location details
@@ -76,19 +97,30 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: city) { newValue in
-                        isCityValid = !newValue.isEmpty
+                        validateCity(newValue)
                     }
+                if !cityError.isEmpty {
+                    Text(cityError).foregroundColor(.red)
+                }
+                
                 TextField("Country", text: $country)
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: country) { newValue in
-                        isCountryValid = !newValue.isEmpty
+                        validateCountry(newValue)
                     }
+                if !countryError.isEmpty {
+                    Text(countryError).foregroundColor(.red)
+                }
+                
                 TextField("Zip Code", text: $zipCode)
                     .keyboardType(.numbersAndPunctuation)
                     .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
-                        isZipCodeValid = !newValue.isEmpty
+                        if newValue.count <= 6 {
+                            zipCode = newValue
+                        }
+                        validateZipCode(newValue)
                     }
             }
             
@@ -138,9 +170,9 @@ struct AddHospital: View {
         .sheet(isPresented: $showingMailView) {
             MailView(recipient: recipientEmail, subject: "Admin Credentials for New Hospital", body: mailBody(), completion: { result in
                 if result == .sent {
-                    performFirebaseSignup()
+                    saveHospitalData()
                 } else {
-                    presentationMode.wrappedValue.dismiss()
+                    showMailError = true
                 }
             })
         }
@@ -149,14 +181,22 @@ struct AddHospital: View {
     
     // Function to save hospital details
     func saveHospital() {
-        var admins: [Admin] = []
         if selectedTypeIndex == 1 {
             newAdminEmail = "\(UUID().uuidString.prefix(6))@admin.com"
             newPassword = generateRandomPassword(length: 6)
+            showingMailView = true
+        } else {
+            saveHospitalData()
+        }
+    }
+    
+    // Function to save hospital data
+    func saveHospitalData() {
+        var admins: [Admin] = []
+        
+        if selectedTypeIndex == 1 {
             let newAdmin = Admin(name: "New Admin", address: "Admin Address", email: newAdminEmail, phone: "1234567890")
             admins.append(newAdmin)
-            
-            showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
             let selectedAdminName = existingAdmins[selectedAdminIndex]
             let existingAdmin = Admin(name: selectedAdminName, address: "Admin Address", email: "admin@example.com", phone: "1234567890")
@@ -173,6 +213,78 @@ struct AddHospital: View {
             } else {
                 presentationMode.wrappedValue.dismiss()
             }
+        }
+    }
+    
+    // Validation functions
+    func validateName(_ value: String) {
+        if value.isEmpty {
+            isNameValid = false
+            nameError = "Name cannot be empty"
+        } else if value.count > 25 {
+            isNameValid = false
+            nameError = "Name cannot exceed 25 characters"
+        } else {
+            isNameValid = true
+            nameError = ""
+        }
+    }
+    
+    func validateAddress(_ value: String) {
+        if value.isEmpty {
+            isAddressValid = false
+            addressError = "Address cannot be empty"
+        } else {
+            isAddressValid = true
+            addressError = ""
+        }
+    }
+    
+    func validatePhone(_ value: String) {
+        if value.count > 10 || Int(value) == nil {
+            isPhoneValid = false
+        } else {
+            isPhoneValid = true
+        }
+    }
+    
+    func validateEmail(_ value: String) {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        if !emailPred.evaluate(with: value) {
+            isEmailValid = false
+            emailError = "Invalid email format"
+        } else {
+            isEmailValid = true
+            emailError = ""
+        }
+    }
+    
+    func validateCity(_ value: String) {
+        if value.isEmpty {
+            isCityValid = false
+            cityError = "City cannot be empty"
+        } else {
+            isCityValid = true
+            cityError = ""
+        }
+    }
+    
+    func validateCountry(_ value: String) {
+        if value.isEmpty {
+            isCountryValid = false
+            countryError = "Country cannot be empty"
+        } else {
+            isCountryValid = true
+            countryError = ""
+        }
+    }
+    
+    func validateZipCode(_ value: String) {
+        if value.count > 6 {
+            isZipCodeValid = false
+        } else {
+            isZipCodeValid = true
         }
     }
     
