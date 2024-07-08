@@ -4,7 +4,7 @@ import FirebaseFirestoreSwift
 import MessageUI
 
 struct DoctorFormView: View {
-    @Binding var isPresented: Bool
+    @Binding var isPresent: Bool
     @Binding var doctors: [Doctor]
     var doctorToEdit: Doctor?
     @Environment(\.presentationMode) var presentationMode
@@ -31,8 +31,8 @@ struct DoctorFormView: View {
     }
     
     // Initializer to set up the form with existing doctor details if editing
-    init(isPresented: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
-        self._isPresented = isPresented
+    init(isPresent: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
+        self._isPresent = isPresent
         self._doctors = doctors
         self.doctorToEdit = doctorToEdit
         
@@ -85,27 +85,26 @@ struct DoctorFormView: View {
             }
             .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
             .navigationBarItems(leading: Button("Cancel") {
-                isPresented = false
+                isPresent = false
             }, trailing: Button("Save") {
                 saveDoctor()
-                isPresented = false
             }
                 .disabled(!isFormValid)) // Disable save button if form is not valid
-        }
-        // Added alert for email error
-        .alert(isPresented: $showMailError) {
-            Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
-        }
-        
-        // Added sheet for showing email composer
-        .sheet(isPresented: $showingMailView) {
-            MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
-                if result == .sent {
-                    performFirebaseSignup()
-                } else {
-                    presentationMode.wrappedValue.dismiss()
-                }
-            })
+            // Added alert for email error
+            .alert(isPresented: $showMailError) {
+                Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
+            }
+            
+            // Added sheet for showing email composer
+            .sheet(isPresented: $showingMailView) {
+                MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
+                    if result == .sent {
+                        performFirebaseSignup()
+                    }
+                    showingMailView = false
+                    isPresent = false
+                })
+            }
         }
     }
     
@@ -126,77 +125,79 @@ struct DoctorFormView: View {
             titles: titles
         )
         
-        // If editing an existing doctor, update the doctor details
-        if let doctorToEdit = doctorToEdit, let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
-            var updatedDoctor = newDoctor
-            updatedDoctor.id = doctorToEdit.id
-            doctors[index] = updatedDoctor
-            DataController.shared.addDoctor(updatedDoctor) { error in
-                if let error = error {
-                    print("Failed to save doctor: \(error.localizedDescription)")
-                } else {
-                    presentationMode.wrappedValue.dismiss()
+        if let doctorToEdit = doctorToEdit {
+            // If editing an existing doctor, update the doctor details
+            if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
+                var updatedDoctor = newDoctor
+                updatedDoctor.id = doctorToEdit.id
+                doctors[index] = updatedDoctor
+                DataController.shared.addDoctor(updatedDoctor) { error in
+                    if let error = error {
+                        print("Failed to save doctor: \(error.localizedDescription)")
+                    } else {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
         } else {
             // If adding a new doctor, append to the doctors list
+            doctors.append(newDoctor)
             DataController.shared.addDoctor(newDoctor) { error in
                 if let error = error {
                     print("Failed to save doctor: \(error.localizedDescription)")
                 } else {
                     showingMailView = true
-                    doctors.append(newDoctor)
-                    presentationMode.wrappedValue.dismiss()
                 }
             }
         }
-        
     }
+    
     private func deleteDoctor(_ doctor: Doctor) {
         DataController.shared.deleteDoctor(doctor) { error in
             if let error = error {
                 print("Failed to delete doctor: \(error.localizedDescription)")
             } else {
                 doctors.removeAll { $0.id == doctor.id }
-                isPresented = false
+                isPresent = false
             }
         }
     }
+    
+    // Function to compose email body
+    private func mailBody() -> String {
+        """
+        Hello Dr. \(firstName) \(lastName),
         
-        //function to compose email body
-        private func mailBody() -> String {
-           """
-           Hello Dr. \(firstName) \(lastName),
-           
-           Here are your login credentials:
-           
-           Email: \(newDoctorEmail)
-           Password: \(newPassword)
-           
-           Please use these credentials to access the doctor portal.
-           
-           Regards,
-           Hospital Administration
-           """
-        }
+        Here are your login credentials:
         
-        // function to generate random password
-        private func generateRandomPassword(length: Int) -> String {
-            let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-            return String((0..<length).map { _ in characters.randomElement()! })
-        }
+        Email: \(newDoctorEmail)
+        Password: \(newPassword)
         
-        // function to perform Firebase signup
-        private func performFirebaseSignup() {
-            Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
-                if let error = error {
-                    print("Error signing up: \(error.localizedDescription)")
-                } else {
-                    print("User signed up successfully")
-                }
+        Please use these credentials to access the doctor portal.
+        
+        Regards,
+        Hospital Administration
+        """
+    }
+    
+    // Function to generate random password
+    private func generateRandomPassword(length: Int) -> String {
+        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map { _ in characters.randomElement()! })
+    }
+    
+    // Function to perform Firebase signup
+    private func performFirebaseSignup() {
+        Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
+            if let error = error {
+                print("Error signing up: \(error.localizedDescription)")
+            } else {
+                print("User signed up successfully")
             }
         }
     }
-    #Preview {
-        DoctorFormView(isPresented: .constant(true), doctors: .constant([]), doctorToEdit: nil)
-    }
+}
+
+#Preview {
+    DoctorFormView(isPresent: .constant(true), doctors: .constant([]), doctorToEdit: nil)
+}
