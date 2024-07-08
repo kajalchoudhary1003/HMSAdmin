@@ -1,5 +1,7 @@
 import SwiftUI
+import FirebaseAuth
 import FirebaseFirestoreSwift
+import MessageUI
 
 struct DoctorFormView: View {
     @Binding var isPresented: Bool
@@ -15,6 +17,11 @@ struct DoctorFormView: View {
     @State private var dob = Date()
     @State private var designation: DoctorDesignation = .generalPractitioner
     @State private var titles = ""
+    
+    @State private var showMailError = false
+        @State private var showingMailView = false
+        @State private var newDoctorEmail: String = ""
+        @State private var newPassword: String = ""
 
     var designations = DoctorDesignation.allCases
     var isFormValid: Bool {
@@ -70,9 +77,28 @@ struct DoctorFormView: View {
             }
             .disabled(!isFormValid))
         }
+        // Added alert for email error
+               .alert(isPresented: $showMailError) {
+                   Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
+               }
+        
+        // Added sheet for showing email composer
+                .sheet(isPresented: $showingMailView) {
+                    MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
+                        if result == .sent {
+                            performFirebaseSignup()
+                        } else {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    })
+                }
     }
     
     private func saveDoctor() {
+        //  generate random email and password
+               newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
+               newPassword = generateRandomPassword(length: 6)
+        
         let newDoctor = Doctor(
             firstName: firstName,
             lastName: lastName,
@@ -102,9 +128,43 @@ struct DoctorFormView: View {
                     print("Failed to save doctor: \(error.localizedDescription)")
                 } else {
                     doctors.append(newDoctor)
-                    presentationMode.wrappedValue.dismiss()
+                    showingMailView = true // to show email composer
                 }
             }
         }
     }
+    
+    //function to compose email body
+       private func mailBody() -> String {
+           """
+           Hello Dr. \(firstName) \(lastName),
+
+           Here are your login credentials:
+
+           Email: \(newDoctorEmail)
+           Password: \(newPassword)
+
+           Please use these credentials to access the doctor portal.
+
+           Regards,
+           Hospital Administration
+           """
+       }
+    
+    // function to generate random password
+        private func generateRandomPassword(length: Int) -> String {
+            let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            return String((0..<length).map { _ in characters.randomElement()! })
+        }
+    
+    // function to perform Firebase signup
+       private func performFirebaseSignup() {
+           Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
+               if let error = error {
+                   print("Error signing up: \(error.localizedDescription)")
+               } else {
+                   print("User signed up successfully")
+               }
+           }
+       }
 }
