@@ -27,7 +27,7 @@ struct AddHospital: View {
     
     // Admin types and existing admins for selection
     let adminTypes = ["Select", "New", "Existing"]
-    let existingAdmins = ["Select", "Ansh", "Madhav", "John", "Jane", "Michael", "Emily", "David", "Sarah", "Robert"]
+    @State private var existingAdmins = ["Select", "Michael", "Emily", "David", "Robert"]
     
     // Check if all fields are valid to enable Save button
     var isSaveDisabled: Bool {
@@ -56,6 +56,9 @@ struct AddHospital: View {
             // Section for hospital details
             Section(header: Text("Hospital Details")) {
                 TextField("Name", text: $name)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                     .onChange(of: name) { newValue in
                         if newValue.count > 25 {
                             name = String(newValue.prefix(25))
@@ -69,6 +72,9 @@ struct AddHospital: View {
                         alignment: .trailing
                     )
                 TextField("Address", text: $address)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        address = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                     .onChange(of: address) { newValue in
                         if newValue.count > 100 {
                             address = String(newValue.prefix(100))
@@ -83,6 +89,9 @@ struct AddHospital: View {
                     )
                 TextField("Phone", text: $phone)
                     .keyboardType(.numberPad)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        phone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                     .onChange(of: phone) { newValue in
                         let filtered = newValue.filter { "0123456789".contains($0) }
                         if phone != filtered {
@@ -108,6 +117,9 @@ struct AddHospital: View {
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .textInputAutocapitalization(.never)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                     .onChange(of: email) { newValue in
                         if newValue.count > 100 {
                             email = String(newValue.prefix(100))
@@ -119,9 +131,18 @@ struct AddHospital: View {
                         .font(.caption)
                 }
                 TextField("City", text: $city)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        city = city.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                 TextField("Country", text: $country)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        country = country.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                 TextField("Zip Code", text: $zipCode)
                     .keyboardType(.numberPad)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        zipCode = zipCode.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                     .onChange(of: zipCode) { newValue in
                         let filtered = newValue.filter { "0123456789".contains($0) }
                         if zipCode != filtered {
@@ -157,6 +178,9 @@ struct AddHospital: View {
                 if selectedTypeIndex > 0 {
                     if adminTypes[selectedTypeIndex] == "New" {
                         TextField("Name", text: $newAdminName)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminName = newAdminName.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }
                             .onChange(of: newAdminName) { newValue in
                                 if newValue.count > 25 {
                                     newAdminName = String(newValue.prefix(25))
@@ -178,6 +202,9 @@ struct AddHospital: View {
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .textInputAutocapitalization(.never)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }
                             .onChange(of: newAdminEmail) { newValue in
                                 if newValue.count > 100 {
                                     newAdminEmail = String(newValue.prefix(100))
@@ -190,6 +217,9 @@ struct AddHospital: View {
                         }
                         TextField("Phone Number", text: $newAdminPhone)
                             .keyboardType(.numberPad)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminPhone = newAdminPhone.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }
                             .onChange(of: newAdminPhone) { newValue in
                                 let filtered = newValue.filter { "0123456789".contains($0) }
                                 if newAdminPhone != filtered {
@@ -250,12 +280,13 @@ struct AddHospital: View {
     func saveHospital() {
         var admins: [Admin] = []
         if selectedTypeIndex == 1 {
-            // Combine admin name with 6-digit random number to generate unique email
-            let randomNumber = Int.random(in: 100000...999999)
-            newAdminEmail = "\(newAdminName.lowercased()).\(randomNumber)@admin.com"
+            newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
             newPassword = generateRandomPassword(length: 8)
             let newAdmin = Admin(name: newAdminName, address: "Admin Address", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
+            
+            // Add new admin to existing admins list
+            existingAdmins.append(newAdminName)
             
             showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
@@ -287,7 +318,9 @@ struct AddHospital: View {
         Email: \(newAdminEmail)
         Password: \(newPassword)
 
-        Hospital Details: Name: \(name), Address: \(address), Phone: \(phone), Email: \(email), City: \(city), Country: \(country), Zip Code: \(zipCode).
+        Hospital Details: \(name), \(address), \(city), \(zipCode), \(country).
+        Phone: \(phone)
+        Email: \(email)
 
         Please use these credentials to log into the admin portal at your earliest convenience. If you encounter any issues or have any questions, feel free to reach out to our support team.
 
