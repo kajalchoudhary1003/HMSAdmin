@@ -9,6 +9,7 @@ struct Authentication: View {
     var body: some View {
         NavigationStack {
             VStack {
+                //title section
                 VStack(alignment: .leading) {
                     Text("Welcome to")
                         .font(.title3)
@@ -23,12 +24,14 @@ struct Authentication: View {
 
                 Spacer()
 
+                //image section
                 Image("Doctor 3D")
                     .resizable()
                     .scaledToFit()
                     .frame(maxHeight: 400) // Adjust the height as needed
                     .padding(.bottom, 10)
 
+                //credential input instructions
                 VStack(alignment: .leading) {
                     Text("Enter your credentials")
                         .font(.headline)
@@ -42,7 +45,9 @@ struct Authentication: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 30)
 
+                //input fields
                 VStack(spacing: 15) {
+                    //email input
                     VStack(alignment: .leading) {
                         TextField("Email", text: $username)
                             .padding()
@@ -53,6 +58,7 @@ struct Authentication: View {
                     }
                     .padding(.horizontal, 30)
                     
+                    //password input
                     VStack(alignment: .leading) {
                         SecureField("Password", text: $password)
                             .padding()
@@ -63,13 +69,16 @@ struct Authentication: View {
                 }
                 .padding(.bottom, 20)
                
+                //error msg
                 if !errorMessage.isEmpty {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .padding(.top, 5)
                 }
                 
+                //login button
                 Button("Login") {
+                    //checking if both email and password is filled
                     if username.isEmpty || password.isEmpty {
                         errorMessage = "Please enter both email and password"
                     } else {
@@ -82,13 +91,15 @@ struct Authentication: View {
                 .cornerRadius(14)
                 .fontWeight(.semibold)
                 .font(.system(size: 20))
-                .opacity(isValidEmail(username) && !password.isEmpty ? 1.0 : 0.6)
-                .disabled(!isValidEmail(username) || password.isEmpty)
+                .opacity(isValidEmail(username) && !password.isEmpty ? 1.0 : 0.6) //buuton opacity based on input validity
+                .disabled(!isValidEmail(username) || password.isEmpty) //button disabled if inputs are invalid
             }
             .navigationBarHidden(true)
         }
     }
     
+    
+    //func to authenticate user with firebase
     func authenticateUser(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if error != nil {
@@ -120,6 +131,8 @@ struct Authentication: View {
         }
     }
     
+    
+    // Function to navigate to different screens based on user role
     func navigateToScreen<Screen: View>(screen: Screen) {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             if let window = windowScene.windows.first {
@@ -129,6 +142,7 @@ struct Authentication: View {
         }
     }
     
+    // Function to validate email format
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
@@ -136,6 +150,7 @@ struct Authentication: View {
     }
 }
 
+// Initialize Color from hex string
 extension Color {
     init(hex: String) {
         let scanner = Scanner(string: hex)
