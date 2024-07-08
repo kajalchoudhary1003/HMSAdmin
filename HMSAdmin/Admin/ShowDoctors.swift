@@ -21,6 +21,36 @@ struct ShowDoctors: View {
                     .onAppear {
                         fetchDoctors()
                     }
+            }
+                else if !doctors.isEmpty {
+                    VStack {
+                        Image(systemName: "stethoscope.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.gray)
+                        Text("No Doctors Available")
+                            .font(.title)
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                        Text("Please add doctors to manage them here.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .padding(.top, 4)
+                    }
+                    .navigationTitle("Doctors")
+                    .padding(.vertical,10)
+    //                .padding(.horizontal,0)
+                    .navigationBarItems(trailing: Button(action: {
+                        selectedDoctor = nil
+                        showingDoctorModal = true
+                    }) {
+                        Image(systemName: "plus")
+                    })
+                    .searchable(text: $searchText, prompt: "Search")
+                    .sheet(isPresented: $showingDoctorModal) {
+                        DoctorFormView(isPresented: $showingDoctorModal, doctors: $doctors, doctorToEdit: selectedDoctor)
+                    }
             } else {
                 ScrollView {
                     ForEach(filteredDoctors, id: \.id) { doctor in
@@ -34,7 +64,6 @@ struct ShowDoctors: View {
                 }
                 .navigationTitle("Doctors")
                 .padding(.vertical,10)
-//                .padding(.horizontal,0)
                 .navigationBarItems(trailing: Button(action: {
                     selectedDoctor = nil
                     showingDoctorModal = true
