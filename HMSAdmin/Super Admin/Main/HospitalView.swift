@@ -9,7 +9,7 @@ struct HospitalView: View {
     
     private var filteredHospitals: [Hospital] {
         hospitals.filter { hospital in
-            searchText.isEmpty || hospital.name.localizedCaseInsensitiveContains(searchText)
+            searchText.isEmpty || hospital.city.localizedCaseInsensitiveContains(searchText)
         }
     }
     
