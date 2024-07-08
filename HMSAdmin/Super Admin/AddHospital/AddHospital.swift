@@ -25,6 +25,14 @@ struct AddHospital: View {
     @State private var isCountryValid = false
     @State private var isZipCodeValid = false
     
+    @State private var nameErrorMessage: String? = nil
+    @State private var addressErrorMessage: String? = nil
+    @State private var phoneErrorMessage: String? = nil
+    @State private var emailErrorMessage: String? = nil
+    @State private var cityErrorMessage: String? = nil
+    @State private var countryErrorMessage: String? = nil
+    @State private var zipCodeErrorMessage: String? = nil
+    
     @State private var recipientEmail: String = ""
     @State private var showMailError = false
     @State private var showingMailView = false
@@ -48,26 +56,38 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: name) { newValue in
-                        isNameValid = !newValue.isEmpty
+                        isNameValid = validateName(newValue)
                     }
+                if let errorMessage = nameErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
                 TextField("Address", text: $address)
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: address) { newValue in
-                        isAddressValid = !newValue.isEmpty
+                        isAddressValid = validateAddress(newValue)
                     }
+                if let errorMessage = addressErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
                 TextField("Phone", text: $phone)
                     .keyboardType(.phonePad)
                     .autocapitalization(.none)
                     .onChange(of: phone) { newValue in
-                        isPhoneValid = !newValue.isEmpty
+                        isPhoneValid = validatePhone(newValue)
                     }
+                if let errorMessage = phoneErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
                 TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .onChange(of: email) { newValue in
-                        isEmailValid = !newValue.isEmpty
+                        isEmailValid = validateEmail(newValue)
                     }
+                if let errorMessage = emailErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
             }
             
             // Section for location details
@@ -76,20 +96,29 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: city) { newValue in
-                        isCityValid = !newValue.isEmpty
+                        isCityValid = validateCity(newValue)
                     }
+                if let errorMessage = cityErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
                 TextField("Country", text: $country)
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: country) { newValue in
-                        isCountryValid = !newValue.isEmpty
+                        isCountryValid = validateCountry(newValue)
                     }
+                if let errorMessage = countryErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
                 TextField("Zip Code", text: $zipCode)
                     .keyboardType(.numbersAndPunctuation)
                     .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
-                        isZipCodeValid = !newValue.isEmpty
+                        isZipCodeValid = validateZipCode(newValue)
                     }
+                if let errorMessage = zipCodeErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).font(.caption)
+                }
             }
             
             // Section for admin details
@@ -217,6 +246,57 @@ struct AddHospital: View {
                 print("User signed up successfully")
             }
         }
+    }
+    
+    // Validation functions
+    func validateName(_ name: String) -> Bool {
+        if name.count > 25 {
+            nameErrorMessage = "Name should not exceed 25 characters"
+            return false
+        }
+        nameErrorMessage = nil
+        return !name.isEmpty
+    }
+    
+    func validateAddress(_ address: String) -> Bool {
+        addressErrorMessage = address.isEmpty ? "Address cannot be empty" : nil
+        return !address.isEmpty
+    }
+    
+    func validatePhone(_ phone: String) -> Bool {
+        if phone.count > 10 {
+            phoneErrorMessage = "Phone number should not exceed 10 digits"
+            return false
+        }
+        phoneErrorMessage = nil
+        return !phone.isEmpty && phone.allSatisfy { $0.isNumber }
+    }
+    
+    func validateEmail(_ email: String) -> Bool {
+        let emailFormat = "^[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
+        let isValid = emailPredicate.evaluate(with: email)
+        emailErrorMessage = isValid ? nil : "Invalid email format"
+        return isValid
+    }
+    
+    func validateCity(_ city: String) -> Bool {
+        cityErrorMessage = city.isEmpty ? "City cannot be empty" : nil
+        return !city.isEmpty
+    }
+    
+    func validateCountry(_ country: String) -> Bool {
+        countryErrorMessage = country.isEmpty ? "Country cannot be empty" : nil
+        return !country.isEmpty
+    }
+    
+    func validateZipCode(_ zipCode: String) -> Bool {
+        if zipCode.count > 6 {
+            zipCodeErrorMessage = "Zip Code should not exceed 6 digits"
+            return false
+        }
+        zipCodeErrorMessage = nil
+        return !zipCode.isEmpty && zipCode.allSatisfy { $0.isNumber }
     }
 }
 
