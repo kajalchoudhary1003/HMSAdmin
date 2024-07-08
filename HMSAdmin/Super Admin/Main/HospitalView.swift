@@ -4,8 +4,6 @@ import Firebase
 struct HospitalView: View {
     @State private var hospitals: [Hospital] = []
     @State private var isPresentingAddHospital = false
-    @State private var selectedHospital: Hospital? // Track selected hospital for editing
-    @State private var showDeleteConfirmation = false
     @State private var searchText = ""
     @State private var isLoading = true
     
@@ -46,16 +44,16 @@ struct HospitalView: View {
                             ForEach(filteredHospitals) { hospital in
                                 NavigationLink(destination: ShowHospital(hospital: hospital)) {
                                     HospitalCardView(hospital: hospital)
-                                        .cornerRadius(10)                                }
+                                        .cornerRadius(10)
+                                }
                             }
-                            .onDelete(perform: confirmDelete)
                         }
                         .padding()
                     }
                     .background(Color(hex: "ECEEEE"))
-                    .searchable(text: $searchText)
                 }
             }
+            .searchable(text: $searchText)
             .navigationTitle("Hospitals")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -64,18 +62,11 @@ struct HospitalView: View {
                     }
                 }
             }
-            .alert(isPresented: $showDeleteConfirmation) {
-                Alert(
-                    title: Text("Confirm Deletion"),
-                    message: Text("Are you sure you want to delete this hospital?"),
-                    primaryButton: .destructive(Text("Delete")) {
-                        if let selectedHospital = selectedHospital {
-                            delete(hospital: selectedHospital)
-                        }
-                    },
-                    secondaryButton: .cancel()
-                )
-            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("HospitalsUpdated"))) { _ in
+            // Refresh hospitals when notification received
+            self.hospitals = DataController.shared.getHospitals()
+            print("Fetched \(self.hospitals.count) hospitals.")
         }
     }
     
@@ -87,30 +78,10 @@ struct HospitalView: View {
             self.isLoading = false
         }
     }
-    
-    private func confirmDelete(at offsets: IndexSet) {
-        if let index = offsets.first {
-            selectedHospital = hospitals[index]
-            showDeleteConfirmation = true
-        }
-    }
-    
-    private func delete(hospital: Hospital) {
-        DataController.shared.removeHospital(hospital) { error in
-            if let error = error {
-                print("Failed to delete hospital: \(error.localizedDescription)")
-            } else {
-                if let index = hospitals.firstIndex(of: hospital) {
-                    hospitals.remove(at: index)
-                    print("Deleted hospital: \(hospital.name) with ID: \(hospital.id ?? "unknown")")
-                }
-            }
-        }
-    }
 }
 
 struct HospitalView_Previews: PreviewProvider {
-    static var previews: HospitalView {
+    static var previews: some View {
         HospitalView()
     }
 }
