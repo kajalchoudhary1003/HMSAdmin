@@ -29,10 +29,12 @@ struct ShowDoctors: View {
                                 selectedDoctor = doctor
                                 showingDoctorModal = true
                             }
+                            .listRowInsets(EdgeInsets())
                     }
                 }
                 .navigationTitle("Doctors")
                 .padding(.vertical,10)
+//                .padding(.horizontal,0)
                 .navigationBarItems(trailing: Button(action: {
                     selectedDoctor = nil
                     showingDoctorModal = true
@@ -56,6 +58,7 @@ struct ShowDoctors: View {
             self.isLoading = false
         }
     }
+    
 }
 
 struct ShowDoctors_Previews: PreviewProvider {
