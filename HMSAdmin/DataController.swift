@@ -92,23 +92,24 @@ class DataController {
             NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
         }
     }
+    
     func deleteDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
-            guard let doctorID = doctor.id else {
-                completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Doctor ID is nil"]))
-                return
-            }
-            let ref = database.child("doctors").child(doctorID)
-            ref.removeValue { error, _ in
-                if let error = error {
-                    print("Error deleting doctor: \(error.localizedDescription)")
-                    completion(error)
-                } else {
-                    self.doctors.removeValue(forKey: doctorID)
-                    NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
-                    completion(nil)
-                }
+        guard let doctorID = doctor.id else {
+            completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Doctor ID is nil"]))
+            return
+        }
+        let ref = database.child("doctors").child(doctorID)
+        ref.removeValue { error, _ in
+            if let error = error {
+                print("Error deleting doctor: \(error.localizedDescription)")
+                completion(error)
+            } else {
+                self.doctors.removeValue(forKey: doctorID)
+                NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
+                completion(nil)
             }
         }
+    }
     
     // Get all hospitals
     func getHospitals() -> [Hospital] {
