@@ -144,12 +144,13 @@ struct DoctorFormView: View {
                 if let error = error {
                     print("Failed to save doctor: \(error.localizedDescription)")
                 } else {
+                    showingMailView = true
                     doctors.append(newDoctor)
                     presentationMode.wrappedValue.dismiss()
                 }
             }
         }
-        showingMailView = true
+        
     }
     private func deleteDoctor(_ doctor: Doctor) {
         DataController.shared.deleteDoctor(doctor) { error in
