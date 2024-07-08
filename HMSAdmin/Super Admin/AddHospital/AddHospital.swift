@@ -111,7 +111,7 @@ struct AddHospital: View {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
                 }
                 TextField("Zip Code", text: $zipCode)
-                    .keyboardType(.numbersAndPunctuation)
+                    .keyboardType(.numberPad)
                     .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
                         isZipCodeValid = validateZipCode(newValue)
@@ -264,16 +264,17 @@ struct AddHospital: View {
     }
     
     func validatePhone(_ phone: String) -> Bool {
-        if phone.count > 10 {
-            phoneErrorMessage = "Phone number should not exceed 10 digits"
+        let filtered = phone.filter { "0123456789".contains($0) }
+        if phone != filtered || phone.count > 10 {
+            phoneErrorMessage = "Phone number should be numeric and not exceed 10 digits"
             return false
         }
         phoneErrorMessage = nil
-        return !phone.isEmpty && phone.allSatisfy { $0.isNumber }
+        return !phone.isEmpty
     }
     
     func validateEmail(_ email: String) -> Bool {
-        let emailFormat = "^[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}$"
+        let emailFormat = "^[a-z][A-Z0-9a-z._%+-]*@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
         let isValid = emailPredicate.evaluate(with: email)
         emailErrorMessage = isValid ? nil : "Invalid email format"
@@ -291,12 +292,13 @@ struct AddHospital: View {
     }
     
     func validateZipCode(_ zipCode: String) -> Bool {
-        if zipCode.count > 6 {
-            zipCodeErrorMessage = "Zip Code should not exceed 6 digits"
+        let filtered = zipCode.filter { "0123456789".contains($0) }
+        if zipCode != filtered || zipCode.count > 6 {
+            zipCodeErrorMessage = "Zip Code should be numeric and not exceed 6 digits"
             return false
         }
         zipCodeErrorMessage = nil
-        return !zipCode.isEmpty && zipCode.allSatisfy { $0.isNumber }
+        return !zipCode.isEmpty
     }
 }
 

@@ -28,7 +28,7 @@ struct DoctorFormView: View {
     // Form validation check
     var isFormValid: Bool {
         !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
-        firstName.count <= 50 && lastName.count <= 50 && isValidEmail(email) && isValidPhone(phone) &&
+        firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) &&
         dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
     }
     
@@ -58,18 +58,39 @@ struct DoctorFormView: View {
                 Section(header: Text("Personal Information")) {
                     TextField("First Name", text: $firstName)
                         .onChange(of: firstName) { newValue in
-                            if newValue.count > 50 {
-                                firstName = String(newValue.prefix(50))
+                            if newValue.count > 25 {
+                                firstName = String(newValue.prefix(25))
                             }
                         }
+                        .overlay(
+                            Text("\(firstName.count)/25")
+                                .font(.caption)
+                                .foregroundColor(firstName.count > 25 ? .red : .gray)
+                                .padding(.trailing, 8),
+                            alignment: .trailing
+                        )
                     TextField("Last Name", text: $lastName)
                         .onChange(of: lastName) { newValue in
-                            if newValue.count > 50 {
-                                lastName = String(newValue.prefix(50))
+                            if newValue.count > 25 {
+                                lastName = String(newValue.prefix(25))
                             }
                         }
+                        .overlay(
+                            Text("\(lastName.count)/25")
+                                .font(.caption)
+                                .foregroundColor(lastName.count > 25 ? .red : .gray)
+                                .padding(.trailing, 8),
+                            alignment: .trailing
+                        )
                     TextField("Email", text: $email)
                     TextField("Phone Number", text: $phone)
+                        .keyboardType(.numberPad)
+                        .onChange(of: phone) { newValue in
+                            let filtered = newValue.filter { "0123456789".contains($0) }
+                            if phone != filtered {
+                                phone = filtered
+                            }
+                        }
                     DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
                 }
                 
@@ -211,7 +232,7 @@ struct DoctorFormView: View {
     
     // Function to validate email
     private func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailRegEx = "^[a-z][A-Z0-9a-z._%+-]*@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
     }
