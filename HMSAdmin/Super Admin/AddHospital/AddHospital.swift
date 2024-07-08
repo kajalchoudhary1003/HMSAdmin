@@ -250,8 +250,10 @@ struct AddHospital: View {
     func saveHospital() {
         var admins: [Admin] = []
         if selectedTypeIndex == 1 {
-            newAdminEmail = "\(UUID().uuidString.prefix(6))@admin.com"
-            newPassword = generateRandomPassword(length: 6)
+            // Combine admin name with 6-digit random number to generate unique email
+            let randomNumber = Int.random(in: 100000...999999)
+            newAdminEmail = "\(newAdminName.lowercased()).\(randomNumber)@admin.com"
+            newPassword = generateRandomPassword(length: 8)
             let newAdmin = Admin(name: newAdminName, address: "Admin Address", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
             
@@ -278,26 +280,22 @@ struct AddHospital: View {
     // Function to generate email body
     func mailBody() -> String {
         """
-        Hello,
+        Dear \(newAdminName),
 
-        Here are the login credentials for the new admin:
-        
+        I hope this message finds you well. We are pleased to inform you that you have been appointed as an admin for our new hospital. Below, you will find your login credentials for accessing the admin portal:
+
         Email: \(newAdminEmail)
         Password: \(newPassword)
-        
-        Hospital Details:
-        Name: \(name)
-        Address: \(address)
-        Phone: \(phone)
-        Email: \(email)
-        City: \(city)
-        Country: \(country)
-        Zip Code: \(zipCode)
-        
-        Please use these credentials to access the admin portal.
-        
-        Regards,
-        Your Hospital Team
+
+        Hospital Details: Name: \(name), Address: \(address), Phone: \(phone), Email: \(email), City: \(city), Country: \(country), Zip Code: \(zipCode).
+
+        Please use these credentials to log into the admin portal at your earliest convenience. If you encounter any issues or have any questions, feel free to reach out to our support team.
+
+        We look forward to working with you and are confident that your contributions will greatly benefit our hospital.
+
+        Best regards,
+
+        \(name)
         """
     }
     
