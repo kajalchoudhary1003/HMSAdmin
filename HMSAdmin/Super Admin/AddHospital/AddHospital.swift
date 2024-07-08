@@ -17,14 +17,6 @@ struct AddHospital: View {
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
     
-    @State private var isNameValid = false
-    @State private var isAddressValid = false
-    @State private var isPhoneValid = false
-    @State private var isEmailValid = false
-    @State private var isCityValid = false
-    @State private var isCountryValid = false
-    @State private var isZipCodeValid = false
-    
     @State private var nameErrorMessage: String? = nil
     @State private var addressErrorMessage: String? = nil
     @State private var phoneErrorMessage: String? = nil
@@ -33,10 +25,16 @@ struct AddHospital: View {
     @State private var countryErrorMessage: String? = nil
     @State private var zipCodeErrorMessage: String? = nil
     
+    @State private var newAdminName: String = ""
+    @State private var newAdminEmail: String = ""
+    @State private var newAdminPhone: String = ""
+    @State private var newAdminNameErrorMessage: String? = nil
+    @State private var newAdminEmailErrorMessage: String? = nil
+    @State private var newAdminPhoneErrorMessage: String? = nil
+    
     @State private var recipientEmail: String = ""
     @State private var showMailError = false
     @State private var showingMailView = false
-    @State private var newAdminEmail: String = ""
     @State private var newPassword: String = ""
     
     // Admin types and existing admins for selection
@@ -45,7 +43,47 @@ struct AddHospital: View {
     
     // Check if all fields are valid to enable Save button
     var isSaveDisabled: Bool {
-        return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid
+        return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid || (selectedTypeIndex == 1 && (!isNewAdminNameValid || !isNewAdminEmailValid || !isNewAdminPhoneValid))
+    }
+    
+    var isNameValid: Bool {
+        validateName(name)
+    }
+    
+    var isAddressValid: Bool {
+        validateAddress(address)
+    }
+    
+    var isPhoneValid: Bool {
+        validatePhone(phone)
+    }
+    
+    var isEmailValid: Bool {
+        validateEmail(email)
+    }
+    
+    var isCityValid: Bool {
+        validateCity(city)
+    }
+    
+    var isCountryValid: Bool {
+        validateCountry(country)
+    }
+    
+    var isZipCodeValid: Bool {
+        validateZipCode(zipCode)
+    }
+    
+    var isNewAdminNameValid: Bool {
+        validateNewAdminName(newAdminName)
+    }
+    
+    var isNewAdminEmailValid: Bool {
+        validateNewAdminEmail(newAdminEmail)
+    }
+    
+    var isNewAdminPhoneValid: Bool {
+        validateNewAdminPhone(newAdminPhone)
     }
     
     var body: some View {
@@ -56,7 +94,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: name) { newValue in
-                        isNameValid = validateName(newValue)
+                        _ = validateName(newValue)
                     }
                 if let errorMessage = nameErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -65,7 +103,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: address) { newValue in
-                        isAddressValid = validateAddress(newValue)
+                        _ = validateAddress(newValue)
                     }
                 if let errorMessage = addressErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -74,7 +112,7 @@ struct AddHospital: View {
                     .keyboardType(.phonePad)
                     .autocapitalization(.none)
                     .onChange(of: phone) { newValue in
-                        isPhoneValid = validatePhone(newValue)
+                        _ = validatePhone(newValue)
                     }
                 if let errorMessage = phoneErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -83,7 +121,7 @@ struct AddHospital: View {
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .onChange(of: email) { newValue in
-                        isEmailValid = validateEmail(newValue)
+                        _ = validateEmail(newValue)
                     }
                 if let errorMessage = emailErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -96,7 +134,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: city) { newValue in
-                        isCityValid = validateCity(newValue)
+                        _ = validateCity(newValue)
                     }
                 if let errorMessage = cityErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -105,16 +143,16 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: country) { newValue in
-                        isCountryValid = validateCountry(newValue)
+                        _ = validateCountry(newValue)
                     }
                 if let errorMessage = countryErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
                 }
                 TextField("Zip Code", text: $zipCode)
-                    .keyboardType(.numbersAndPunctuation)
+                    .keyboardType(.numberPad)
                     .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
-                        isZipCodeValid = validateZipCode(newValue)
+                        _ = validateZipCode(newValue)
                     }
                 if let errorMessage = zipCodeErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -132,15 +170,33 @@ struct AddHospital: View {
                 
                 if selectedTypeIndex > 0 {
                     if adminTypes[selectedTypeIndex] == "New" {
-                        TextField("Name", text: .constant(""))
+                        TextField("Name", text: $newAdminName)
                             .keyboardType(.default)
                             .autocapitalization(.words)
+                            .onChange(of: newAdminName) { newValue in
+                                _ = validateNewAdminName(newValue)
+                            }
+                        if let errorMessage = newAdminNameErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
                         TextField("Email", text: $recipientEmail)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
-                        TextField("Phone Number", text: .constant(""))
+                            .onChange(of: recipientEmail) { newValue in
+                                _ = validateNewAdminEmail(newValue)
+                            }
+                        if let errorMessage = newAdminEmailErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
+                        TextField("Phone Number", text: $newAdminPhone)
                             .keyboardType(.phonePad)
                             .autocapitalization(.none)
+                            .onChange(of: newAdminPhone) { newValue in
+                                _ = validateNewAdminPhone(newValue)
+                            }
+                        if let errorMessage = newAdminPhoneErrorMessage {
+                            Text(errorMessage).foregroundColor(.red).font(.caption)
+                        }
                     } else if adminTypes[selectedTypeIndex] == "Existing" {
                         Picker(selection: $selectedAdminIndex, label: Text("Select")) {
                             ForEach(0 ..< existingAdmins.count) { index in
@@ -182,7 +238,7 @@ struct AddHospital: View {
         if selectedTypeIndex == 1 {
             newAdminEmail = "\(UUID().uuidString.prefix(6))@admin.com"
             newPassword = generateRandomPassword(length: 6)
-            let newAdmin = Admin(name: "New Admin", address: "Admin Address", email: newAdminEmail, phone: "1234567890")
+            let newAdmin = Admin(name: newAdminName, address: "Admin Address", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
             
             showingMailView = true
@@ -264,16 +320,17 @@ struct AddHospital: View {
     }
     
     func validatePhone(_ phone: String) -> Bool {
-        if phone.count > 10 {
-            phoneErrorMessage = "Phone number should not exceed 10 digits"
+        let filtered = phone.filter { "0123456789".contains($0) }
+        if phone != filtered || phone.count > 10 {
+            phoneErrorMessage = "Phone number should be numeric and not exceed 10 digits"
             return false
         }
         phoneErrorMessage = nil
-        return !phone.isEmpty && phone.allSatisfy { $0.isNumber }
+        return !phone.isEmpty
     }
     
     func validateEmail(_ email: String) -> Bool {
-        let emailFormat = "^[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}$"
+        let emailFormat = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
         let isValid = emailPredicate.evaluate(with: email)
         emailErrorMessage = isValid ? nil : "Invalid email format"
@@ -291,12 +348,40 @@ struct AddHospital: View {
     }
     
     func validateZipCode(_ zipCode: String) -> Bool {
-        if zipCode.count > 6 {
-            zipCodeErrorMessage = "Zip Code should not exceed 6 digits"
+        let filtered = zipCode.filter { "0123456789".contains($0) }
+        if zipCode != filtered || zipCode.count > 6 {
+            zipCodeErrorMessage = "Zip Code should be numeric and not exceed 6 digits"
             return false
         }
         zipCodeErrorMessage = nil
-        return !zipCode.isEmpty && zipCode.allSatisfy { $0.isNumber }
+        return !zipCode.isEmpty
+    }
+    
+    func validateNewAdminName(_ name: String) -> Bool {
+        if name.count > 25 {
+            newAdminNameErrorMessage = "Name should not exceed 25 characters"
+            return false
+        }
+        newAdminNameErrorMessage = nil
+        return !name.isEmpty
+    }
+    
+    func validateNewAdminEmail(_ email: String) -> Bool {
+        let emailFormat = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,64}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
+        let isValid = emailPredicate.evaluate(with: email)
+        newAdminEmailErrorMessage = isValid ? nil : "Invalid email format"
+        return isValid
+    }
+    
+    func validateNewAdminPhone(_ phone: String) -> Bool {
+        let filtered = phone.filter { "0123456789".contains($0) }
+        if phone != filtered || phone.count > 10 {
+            newAdminPhoneErrorMessage = "Phone number should be numeric and not exceed 10 digits"
+            return false
+        }
+        newAdminPhoneErrorMessage = nil
+        return !phone.isEmpty
     }
 }
 
