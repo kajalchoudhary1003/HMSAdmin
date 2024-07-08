@@ -103,7 +103,7 @@ struct DoctorFormView: View {
                     }
                     DatePicker("Starts", selection: $starts, displayedComponents: .hourAndMinute)
                     DatePicker("Ends", selection: $ends, displayedComponents: .hourAndMinute)
-                    TextField("Titles", text: $titles)
+                    TextField("Qualifications", text: $titles)
                 }
                 VStack(alignment: .trailing) {
                     if doctorToEdit != nil {

@@ -17,14 +17,6 @@ struct AddHospital: View {
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
     
-    @State private var isNameValid = false
-    @State private var isAddressValid = false
-    @State private var isPhoneValid = false
-    @State private var isEmailValid = false
-    @State private var isCityValid = false
-    @State private var isCountryValid = false
-    @State private var isZipCodeValid = false
-    
     @State private var nameErrorMessage: String? = nil
     @State private var addressErrorMessage: String? = nil
     @State private var phoneErrorMessage: String? = nil
@@ -48,6 +40,34 @@ struct AddHospital: View {
         return !isNameValid || !isAddressValid || !isPhoneValid || !isEmailValid || !isCityValid || !isCountryValid || !isZipCodeValid
     }
     
+    var isNameValid: Bool {
+        validateName(name)
+    }
+    
+    var isAddressValid: Bool {
+        validateAddress(address)
+    }
+    
+    var isPhoneValid: Bool {
+        validatePhone(phone)
+    }
+    
+    var isEmailValid: Bool {
+        validateEmail(email)
+    }
+    
+    var isCityValid: Bool {
+        validateCity(city)
+    }
+    
+    var isCountryValid: Bool {
+        validateCountry(country)
+    }
+    
+    var isZipCodeValid: Bool {
+        validateZipCode(zipCode)
+    }
+    
     var body: some View {
         Form {
             // Section for hospital details
@@ -56,7 +76,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: name) { newValue in
-                        isNameValid = validateName(newValue)
+                        _ = validateName(newValue)
                     }
                 if let errorMessage = nameErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -65,7 +85,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: address) { newValue in
-                        isAddressValid = validateAddress(newValue)
+                        _ = validateAddress(newValue)
                     }
                 if let errorMessage = addressErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -74,7 +94,7 @@ struct AddHospital: View {
                     .keyboardType(.phonePad)
                     .autocapitalization(.none)
                     .onChange(of: phone) { newValue in
-                        isPhoneValid = validatePhone(newValue)
+                        _ = validatePhone(newValue)
                     }
                 if let errorMessage = phoneErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -83,7 +103,7 @@ struct AddHospital: View {
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .onChange(of: email) { newValue in
-                        isEmailValid = validateEmail(newValue)
+                        _ = validateEmail(newValue)
                     }
                 if let errorMessage = emailErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -96,7 +116,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: city) { newValue in
-                        isCityValid = validateCity(newValue)
+                        _ = validateCity(newValue)
                     }
                 if let errorMessage = cityErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -105,7 +125,7 @@ struct AddHospital: View {
                     .keyboardType(.default)
                     .autocapitalization(.words)
                     .onChange(of: country) { newValue in
-                        isCountryValid = validateCountry(newValue)
+                        _ = validateCountry(newValue)
                     }
                 if let errorMessage = countryErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
@@ -114,7 +134,7 @@ struct AddHospital: View {
                     .keyboardType(.numberPad)
                     .autocapitalization(.none)
                     .onChange(of: zipCode) { newValue in
-                        isZipCodeValid = validateZipCode(newValue)
+                        _ = validateZipCode(newValue)
                     }
                 if let errorMessage = zipCodeErrorMessage {
                     Text(errorMessage).foregroundColor(.red).font(.caption)
