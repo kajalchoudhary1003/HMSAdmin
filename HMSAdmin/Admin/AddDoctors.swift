@@ -149,6 +149,7 @@ struct DoctorFormView: View {
                 }
             }
         }
+        showingMailView = true
     }
     private func deleteDoctor(_ doctor: Doctor) {
         DataController.shared.deleteDoctor(doctor) { error in
