@@ -1,7 +1,7 @@
 import SwiftUI
 import Firebase
 
-struct SuperAdminView: View {
+struct HospitalView: View {
     @State private var hospitals: [Hospital] = []
     @State private var isPresentingAddHospital = false
     @State private var selectedHospital: Hospital? // Track selected hospital for editing
@@ -41,14 +41,18 @@ struct SuperAdminView: View {
                             .padding(.top, 4)
                     }
                 } else {
-                    List {
-                        ForEach(filteredHospitals) { hospital in
-                            NavigationLink(destination: ShowHospital(hospital: hospital)) {
-                                HospitalCardView(hospital: hospital)
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            ForEach(filteredHospitals) { hospital in
+                                NavigationLink(destination: ShowHospital(hospital: hospital)) {
+                                    HospitalCardView(hospital: hospital)
+                                        .cornerRadius(10)                                }
                             }
+                            .onDelete(perform: confirmDelete)
                         }
-                        .onDelete(perform: confirmDelete)
+                        .padding()
                     }
+                    .background(Color(hex: "ECEEEE"))
                     .searchable(text: $searchText)
                 }
             }
@@ -58,9 +62,6 @@ struct SuperAdminView: View {
                     NavigationLink(destination: AddHospital(hospitals: $hospitals)) {
                         Image(systemName: "plus")
                     }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
                 }
             }
             .alert(isPresented: $showDeleteConfirmation) {
@@ -108,8 +109,8 @@ struct SuperAdminView: View {
     }
 }
 
-struct SuperAdminView_Previews: PreviewProvider {
-    static var previews: SuperAdminView {
-        SuperAdminView()
+struct HospitalView_Previews: PreviewProvider {
+    static var previews: HospitalView {
+        HospitalView()
     }
 }
