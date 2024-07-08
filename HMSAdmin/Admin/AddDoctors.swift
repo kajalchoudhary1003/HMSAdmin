@@ -19,10 +19,10 @@ struct DoctorFormView: View {
     @State private var titles = ""
     
     @State private var showMailError = false
-        @State private var showingMailView = false
-        @State private var newDoctorEmail: String = ""
-        @State private var newPassword: String = ""
-
+    @State private var showingMailView = false
+    @State private var newDoctorEmail: String = ""
+    @State private var newPassword: String = ""
+    
     var designations = DoctorDesignation.allCases
     
     // Form validation check
@@ -72,6 +72,16 @@ struct DoctorFormView: View {
                     DatePicker("Ends", selection: $ends, displayedComponents: .hourAndMinute)
                     TextField("Titles", text: $titles)
                 }
+                VStack(alignment: .trailing) {
+                    if doctorToEdit != nil {
+                        Button(action: {
+                            deleteDoctor(doctorToEdit!)
+                        }) {
+                            Text("Delete Doctor")
+                                .foregroundColor(.red)
+                        }
+                    }
+                }
             }
             .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
             .navigationBarItems(leading: Button("Cancel") {
@@ -80,29 +90,29 @@ struct DoctorFormView: View {
                 saveDoctor()
                 isPresented = false
             }
-            .disabled(!isFormValid)) // Disable save button if form is not valid
+                .disabled(!isFormValid)) // Disable save button if form is not valid
         }
         // Added alert for email error
-               .alert(isPresented: $showMailError) {
-                   Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
-               }
+        .alert(isPresented: $showMailError) {
+            Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
+        }
         
         // Added sheet for showing email composer
-                .sheet(isPresented: $showingMailView) {
-                    MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
-                        if result == .sent {
-                            performFirebaseSignup()
-                        } else {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    })
+        .sheet(isPresented: $showingMailView) {
+            MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
+                if result == .sent {
+                    performFirebaseSignup()
+                } else {
+                    presentationMode.wrappedValue.dismiss()
                 }
+            })
+        }
     }
     
     private func saveDoctor() {
         //  generate random email and password
-               newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
-               newPassword = generateRandomPassword(length: 6)
+        newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
+        newPassword = generateRandomPassword(length: 6)
         
         let newDoctor = Doctor(
             firstName: firstName,
@@ -135,46 +145,56 @@ struct DoctorFormView: View {
                     print("Failed to save doctor: \(error.localizedDescription)")
                 } else {
                     doctors.append(newDoctor)
-                    showingMailView = true // to show email composer
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
         }
     }
-    
-    //function to compose email body
-       private func mailBody() -> String {
+    private func deleteDoctor(_ doctor: Doctor) {
+        DataController.shared.deleteDoctor(doctor) { error in
+            if let error = error {
+                print("Failed to delete doctor: \(error.localizedDescription)")
+            } else {
+                doctors.removeAll { $0.id == doctor.id }
+                isPresented = false
+            }
+        }
+    }
+        
+        //function to compose email body
+        private func mailBody() -> String {
            """
            Hello Dr. \(firstName) \(lastName),
-
+           
            Here are your login credentials:
-
+           
            Email: \(newDoctorEmail)
            Password: \(newPassword)
-
+           
            Please use these credentials to access the doctor portal.
-
+           
            Regards,
            Hospital Administration
            """
-       }
-    
-    // function to generate random password
+        }
+        
+        // function to generate random password
         private func generateRandomPassword(length: Int) -> String {
             let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             return String((0..<length).map { _ in characters.randomElement()! })
         }
-    
-    // function to perform Firebase signup
-       private func performFirebaseSignup() {
-           Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
-               if let error = error {
-                   print("Error signing up: \(error.localizedDescription)")
-               } else {
-                   print("User signed up successfully")
-               }
-           }
-       }
-}
-#Preview {
-    DoctorFormView(isPresented: .constant(true), doctors: .constant([]), doctorToEdit: nil)
-}
+        
+        // function to perform Firebase signup
+        private func performFirebaseSignup() {
+            Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
+                if let error = error {
+                    print("Error signing up: \(error.localizedDescription)")
+                } else {
+                    print("User signed up successfully")
+                }
+            }
+        }
+    }
+    #Preview {
+        DoctorFormView(isPresented: .constant(true), doctors: .constant([]), doctorToEdit: nil)
+    }

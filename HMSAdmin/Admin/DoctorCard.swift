@@ -19,7 +19,7 @@ struct DoctorCard: View {
                     Text(doctor.designation.title)
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                    Text("Age: \(doctor.fees)")
+                    Text("Fees: \(doctor.fees)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
