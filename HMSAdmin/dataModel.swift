@@ -47,16 +47,21 @@ import FirebaseFirestoreSwift
 //        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
 //    }
 //}
+
+
+// Enumeration for Doctor's Designation with associated properties
 enum DoctorDesignation: String, Codable, CaseIterable {
     case generalPractitioner = "General Practitioner"
     case pediatrician = "Pediatrician"
     case cardiologist = "Cardiologist"
     case dermatologist = "Dermatologist"
 
+    // Returns the title of the designation
     var title: String {
         return self.rawValue
     }
 
+    // Returns the fees associated with the designation
     var fees: String {
         switch self {
         case .generalPractitioner: return "$100"
@@ -66,6 +71,7 @@ enum DoctorDesignation: String, Codable, CaseIterable {
         }
     }
 
+    // Returns the consultation interval associated with the designation
     var interval: String {
         switch self {
         case .generalPractitioner: return "9:00 AM - 11:00 AM"
@@ -76,6 +82,7 @@ enum DoctorDesignation: String, Codable, CaseIterable {
     }
 }
 
+// Struct to represent a Doctor
 struct Doctor: Codable, Identifiable,Equatable {
     @DocumentID var id: String?
     var firstName: String
@@ -87,9 +94,13 @@ struct Doctor: Codable, Identifiable,Equatable {
     var dob: Date
     var designation: DoctorDesignation
     var titles: String
+    
+    // Computed property to return the consultation interval based on the designation
     var interval: String {
         return designation.interval
     }
+    
+    // Computed property to return the fees based on the designation
     var fees: String {
         return designation.fees
     }
@@ -106,11 +117,14 @@ struct Doctor: Codable, Identifiable,Equatable {
         self.designation = designation
         self.titles = titles
     }
+    
+    // Equatable conformance to compare two Doctor instances
     static func == (lhs: Doctor, rhs: Doctor) -> Bool {
         return lhs.id == rhs.id
     }
 }
 
+// Struct to represent an Admin
 struct Admin: Codable, Identifiable {
     var id: UUID = UUID()
     var name: String
@@ -119,6 +133,7 @@ struct Admin: Codable, Identifiable {
     var phone: String
 }
 
+// Struct to represent a Hospital
 struct Hospital: Codable, Identifiable, Equatable {
     @DocumentID var id: String?
     var name: String
@@ -131,6 +146,7 @@ struct Hospital: Codable, Identifiable, Equatable {
     var zipCode: String
     var type: String
     
+    // Initializer for the Hospital struct
     init(id: String? = nil, name: String, email: String, phone: String, admins: [Admin], address: String, city: String, country: String, zipCode: String, type: String) {
         self.id = id
         self.name = name
@@ -144,10 +160,12 @@ struct Hospital: Codable, Identifiable, Equatable {
         self.type = type
     }
 
+    // Equatable conformance to compare two Hospital instances
     static func == (lhs: Hospital, rhs: Hospital) -> Bool {
         return lhs.id == rhs.id
     }
     
+    // Converts the Hospital instance to a dictionary
     func toDictionary() -> [String: Any] {
         return [
             "id": id ?? UUID().uuidString,
@@ -163,6 +181,7 @@ struct Hospital: Codable, Identifiable, Equatable {
         ]
     }
     
+    // Initializes a Hospital instance from a dictionary
     init?(from dictionary: [String: Any], id: String) {
         guard let name = dictionary["name"] as? String,
               let address = dictionary["address"] as? String,
@@ -188,6 +207,7 @@ struct Hospital: Codable, Identifiable, Equatable {
     }
 }
 
+// Struct to represent an Appointment
 struct Appointment: Hashable, Codable {
     @DocumentID var id: String?
     var patientID: String
@@ -200,6 +220,7 @@ struct Appointment: Hashable, Codable {
         case id, patientID, doctorID, date, startTime, endTime
     }
     
+    // Initializer for the Appointment struct
     init(patientID: String, doctorID: String, date: Date, startTime: Date, endTime: Date, id: String? = nil) {
         self.id = id
         self.patientID = patientID
@@ -209,6 +230,7 @@ struct Appointment: Hashable, Codable {
         self.endTime = endTime
     }
     
+    // Initializer to decode Appointment instance from a decoder
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -220,7 +242,9 @@ struct Appointment: Hashable, Codable {
     }
 }
 
+// Extension to convert Admin instances to dictionary and initialize from dictionary
 extension Admin {
+    // Converts the Admin instance to a dictionary
     func toDictionary() -> [String: Any] {
         return [
             "name": name,
@@ -230,6 +254,7 @@ extension Admin {
         ]
     }
     
+    // Initializes an Admin instance from a dictionary
     init?(from dictionary: [String: Any]) {
         guard let name = dictionary["name"] as? String,
               let address = dictionary["address"] as? String,

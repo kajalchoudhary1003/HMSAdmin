@@ -3,6 +3,7 @@ import FirebaseDatabase
 
 class DataController {
     
+    // Singleton instance of DataController
     static let shared = DataController()
     
     private var database: DatabaseReference
@@ -10,11 +11,13 @@ class DataController {
     private var doctors: [String: Doctor] = [:]
     
     private init() {
+        // Initialize the Firebase database reference
         self.database = Database.database(url: "https://hms-team02-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
         fetchHospitals()
         fetchDoctors()
     }
     
+    // Fetch hospitals data from Firebase
     func fetchHospitals() {
         let ref = database.child("hospitals")
         ref.observe(.value) { snapshot in
@@ -34,6 +37,7 @@ class DataController {
         }
     }
     
+    // Add a hospital to Firebase
     func addHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
         let id = hospital.id ?? database.child("hospitals").childByAutoId().key ?? UUID().uuidString
         var hospitalWithID = hospital
@@ -51,6 +55,7 @@ class DataController {
         }
     }
     
+    // Add a doctor to Firebase
     func addDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
         let id = doctor.id ?? database.child("doctors").childByAutoId().key ?? UUID().uuidString
         var doctorWithID = doctor
@@ -68,6 +73,7 @@ class DataController {
         }
     }
     
+    // Fetch doctors data from Firebase
     func fetchDoctors() {
         let ref = database.child("doctors")
         ref.observe(.value) { snapshot in
@@ -87,14 +93,17 @@ class DataController {
         }
     }
     
+    // Get all hospitals
     func getHospitals() -> [Hospital] {
         return Array(hospitals.values)
     }
     
+    // Get all doctors
     func getDoctors() -> [Doctor] {
         return Array(doctors.values)
     }
     
+    // Remove a hospital from Firebase
     func removeHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
         guard let id = hospital.id else {
             completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Hospital ID is nil"]))
@@ -112,12 +121,15 @@ class DataController {
             completion(nil)
         }
     }
+    
+    // Remove a doctor from Firebase (to be implemented)
     func removeDoctor(){
         
     }
 }
 
 extension Doctor {
+    // Convert Doctor object to dictionary for Firebase
     func toDictionary() -> [String: Any] {
         return [
             "id": id ?? UUID().uuidString,
@@ -133,6 +145,7 @@ extension Doctor {
         ]
     }
     
+    // Initialize Doctor object from dictionary
     init?(from dictionary: [String: Any], id: String) {
         guard let firstName = dictionary["firstName"] as? String,
               let lastName = dictionary["lastName"] as? String,
