@@ -17,35 +17,37 @@ struct PatientRow: View {
     let patient: Patient
     
     var body: some View {
-        VStack {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(patient.name)
-                        .font(.headline)
-                        .foregroundColor(.black)
-                    Text("Type: \(patient.type)")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text("Age: \(patient.age)")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+        NavigationLink(destination: PatientDetailsView(patient: patient)) {
+            VStack {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(patient.name)
+                            .font(.headline)
+                            .foregroundColor(.black)
+                        Text("Type: \(patient.type)")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("Age: \(patient.age)")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                        Text(timeRangeString)
+                            .font(.headline)
+                            .foregroundColor(Color(hex: "#006666"))
+                            .padding(.top, 10)
+                    }
                 }
-                Spacer()
-                VStack(alignment: .trailing) {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
-                    Text(timeRangeString)
-                        .font(.headline)
-                        .foregroundColor(Color(hex: "#006666"))
-                        .padding(.top, 10)
-                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(8)
+                .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
             }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
     
     private var timeRangeString: String {
@@ -73,35 +75,37 @@ struct Home: View {
     @Namespace private var animation
     
     var body: some View {
-        ZStack {
-            Color(uiColor: .systemGray6)
-                .ignoresSafeArea()
-            
-            VStack(alignment: .leading, spacing: 0) {
-                HeaderView()
-                ScrollView {
-                    HStack {
-                        Text("Active:")
-                            .padding(.trailing, 250)
-                            .fontWeight(.bold)
-                        Text("\(todaysPatients.count)/\(patients.count)")
-                    }
-                    .padding(.bottom, 20)
-                    .padding(.horizontal)
-                    
-                    ForEach(todaysPatients.sorted { $0.startTime < $1.startTime }) { patient in
-                        PatientRow(patient: patient)
+        NavigationView {
+            ZStack {
+                Color(uiColor: .systemGray6)
+                    .ignoresSafeArea()
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    HeaderView()
+                    ScrollView {
+                        HStack {
+                            Text("Active:")
+                                .padding(.trailing, 250)
+                                .fontWeight(.bold)
+                            Text("\(todaysPatients.count)/\(patients.count)")
+                        }
+                        .padding(.bottom, 20)
+                        .padding(.horizontal)
+                        
+                        ForEach(todaysPatients.sorted { $0.startTime < $1.startTime }) { patient in
+                            PatientRow(patient: patient)
+                        }
                     }
                 }
             }
-        }
-        .vSpacing(.top)
-        .onAppear {
-            if weekSlider.isEmpty {
-                let currentWeek = Date().fetchWeek()
-                weekSlider.append(currentWeek)
-                if let lastDate = currentWeek.last?.date {
-                    weekSlider.append(lastDate.createNextWeek())
+            .vSpacing(.top)
+            .onAppear {
+                if weekSlider.isEmpty {
+                    let currentWeek = Date().fetchWeek()
+                    weekSlider.append(currentWeek)
+                    if let lastDate = currentWeek.last?.date {
+                        weekSlider.append(lastDate.createNextWeek())
+                    }
                 }
             }
         }
