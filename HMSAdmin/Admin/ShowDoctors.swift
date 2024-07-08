@@ -22,7 +22,7 @@ struct ShowDoctors: View {
                         fetchDoctors()
                     }
             }
-                else if !doctors.isEmpty {
+                else if doctors.isEmpty {
                     VStack {
                         Image(systemName: "stethoscope.circle")
                             .resizable()
