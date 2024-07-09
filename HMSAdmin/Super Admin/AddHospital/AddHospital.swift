@@ -245,7 +245,7 @@ struct AddHospital: View {
                                 .foregroundColor(.red)
                                 .font(.caption)
                         }
-                        AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)
+//
                     } else if selectedTypeIndex == 2 {
                         NavigationLink(destination: AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
                             Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
