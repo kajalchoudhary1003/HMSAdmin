@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AdminPickerView: View {
-    var existingAdmins: [String] // List of existing admin names
+    @Binding var existingAdmins: [String] // List of existing admin names
     @Binding var selectedAdminIndex: Int
     @Environment(\.presentationMode) var presentationMode
     @State private var searchText = ""
@@ -26,39 +26,34 @@ struct AdminPickerView: View {
     }
     
     var body: some View {
-            List {
-                // Loop through sorted keys to create sections
-                ForEach(sortedKeys, id: \.self) { key in
-                    Section(header: Text(key)) {
-                        // Loop through admins in each section
-                        ForEach(groupedAdmins[key]!, id: \.self) { admin in
-                            Button(action: {
-                                if let index = existingAdmins.firstIndex(of: admin) {
-                                    selectedAdminIndex = index // Update selected admin index
-                                    presentationMode.wrappedValue.dismiss()  // Dismiss the view on selection
-                                }
-                            }) {
-                                HStack {
-                                    Text(admin)
-                                    // Show checkmark if the admin is selected
-                                    if selectedAdminIndex == existingAdmins.firstIndex(of: admin) {
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
+        List {
+            // Loop through sorted keys to create sections
+            ForEach(sortedKeys, id: \.self) { key in
+                Section(header: Text(key)) {
+                    // Loop through admins in each section
+                    ForEach(groupedAdmins[key]!, id: \.self) { admin in
+                        Button(action: {
+                            if let index = existingAdmins.firstIndex(of: admin) {
+                                selectedAdminIndex = index // Update selected admin index
+                                presentationMode.wrappedValue.dismiss()  // Dismiss the view on selection
+                            }
+                        }) {
+                            HStack {
+                                Text(admin)
+                                // Show checkmark if the admin is selected
+                                if selectedAdminIndex == existingAdmins.firstIndex(of: admin) {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
                                 }
                             }
                         }
                     }
                 }
             }
-            .listStyle(GroupedListStyle()) // Use GroupedListStyle to remove extra spacing
-            .navigationTitle("Select Admin")
-            .searchable(text: $searchText, prompt: "Search Admin")
         }
-}
-
-struct AdminPickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        AdminPickerView(existingAdmins: ["Ansh", "Madhav", "John", "Jane", "Michael", "Emily", "David", "Sarah", "Robert"], selectedAdminIndex: .constant(0))
+        .listStyle(GroupedListStyle()) // Use GroupedListStyle to remove extra spacing
+        .navigationTitle("Select Admin")
+        .searchable(text: $searchText, prompt: "Search Admin")
     }
 }
+
