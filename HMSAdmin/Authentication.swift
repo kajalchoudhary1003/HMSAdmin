@@ -6,6 +6,7 @@ struct Authentication: View {
     @State private var password = ""
     @State private var errorMessage = ""
     @State private var showErrorAlert = false
+    @State private var clearFields = false
     
     var body: some View {
         NavigationView {
@@ -65,6 +66,9 @@ struct Authentication: View {
                                         username = String(newValue.prefix(100))
                                     }
                                 }
+                                .onTapGesture {
+                                    clearFields = false // Ensure fields are not cleared on tap
+                                }
                             if username.isEmpty {
                                 Text(" ")
                                     .font(.caption)
@@ -88,6 +92,9 @@ struct Authentication: View {
                                 .padding()
                                 .background(Color.black.opacity(0.05))
                                 .cornerRadius(10)
+                                .onTapGesture {
+                                    clearFields = false
+                                }
                             if password.isEmpty {
                                 Text(" ")
                                     .padding(.horizontal,5)
@@ -128,7 +135,13 @@ struct Authentication: View {
         }
         .navigationBarHidden(true)
         .alert(isPresented: $showErrorAlert) {
-            Alert(title: Text("Error"), message: Text(errorMessage).font(.caption), dismissButton: .default(Text("Dismiss")))
+            Alert(title: Text("Error"), message: Text(errorMessage).font(.caption), dismissButton: .default(Text("Dismiss"))
+                  {
+                clearFields = true
+                username = ""
+                password = ""
+            }
+            )
         }
     }
     
