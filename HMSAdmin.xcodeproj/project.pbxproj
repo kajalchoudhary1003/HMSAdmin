@@ -27,6 +27,7 @@
 		809C43B22C39BC2E003AB449 /* PatientDEtails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C43B12C39BC2E003AB449 /* PatientDEtails.swift */; };
 		810406302C3BE4540009C58E /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377E2C36DCA300614EE9 /* Analytics.swift */; };
 		810406342C3BEA540009C58E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810406332C3BEA540009C58E /* Extensions.swift */; };
+		810860412C3D0B5300558934 /* Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810860402C3D0B5300558934 /* Blur.swift */; };
 		812C377B2C36B65400614EE9 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* DataModel.swift */; };
 		812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37792C36B65400614EE9 /* AddHospital.swift */; };
 		812C377D2C36B65400614EE9 /* HospitalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377A2C36B65400614EE9 /* HospitalView.swift */; };
@@ -61,6 +62,7 @@
 		809112AC2C37F707009CDBEF /* ShowHospital.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHospital.swift; sourceTree = "<group>"; };
 		809C43B12C39BC2E003AB449 /* PatientDEtails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientDEtails.swift; sourceTree = "<group>"; };
 		810406332C3BEA540009C58E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		810860402C3D0B5300558934 /* Blur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blur.swift; sourceTree = "<group>"; };
 		812C37782C36B65400614EE9 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		812C37792C36B65400614EE9 /* AddHospital.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHospital.swift; sourceTree = "<group>"; };
 		812C377A2C36B65400614EE9 /* HospitalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HospitalView.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 			children = (
 				E94E68D82C38195900ED9F1C /* MailView.swift */,
 				810406332C3BEA540009C58E /* Extensions.swift */,
+				810860402C3D0B5300558934 /* Blur.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 			files = (
 				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
+				810860412C3D0B5300558934 /* Blur.swift in Sources */,
 				812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,

@@ -5,57 +5,61 @@ struct Authentication: View {
     @State private var username = ""
     @State private var password = ""
     @State private var errorMessage = ""
-    @State private var error = ""
-
+    @State private var showErrorAlert = false
+    
     var body: some View {
-        NavigationStack {
-            VStack {
-                // Title section
-                VStack(alignment: .leading) {
-                    Text("Welcome to")
-                        .font(.title3)
-                        .padding(.top, 10)
-                    Text("Mediflex")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(Color(red: 0.0, green: 0.49, blue: 0.45))
+        NavigationView {
+            ZStack {
+                VStack {
+                    VStack(alignment: .leading) {
+                        Text("Welcome to")
+                            .font(.title3)
+                            .padding(.top, 10)
+                        Text("Mediflex")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(Color(hex: "006666"))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 10)
+                    
+                                        
+                    Spacer() // Pushes VStack content to the top
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 30)
-
-                Spacer()
-
-                // Image section
-                Image("Doctor 3D")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxHeight: 400) // Adjust the height as needed
-                    .padding(.bottom, 10)
-
-                // Credential input instructions
-                VStack(alignment: .leading) {
-                    Text("Enter your credentials")
-                        .font(.headline)
-                        .padding(.bottom, 5)
-
-                    Text("Please enter your email and password to proceed")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 10)
+                VStack(alignment: .trailing){
+                    Image("Doctor 3D")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.bottom,220)
                 }
-                .padding(.horizontal, 10)
 
-                // Input fields and login button within ScrollView
-                    VStack(spacing: 15) {
-                        // Email input with validation
-                        VStack(alignment: .leading) {
+                // Login input section at the bottom
+                VStack {
+                    Spacer() // Pushes login section to the bottom
+                    
+                    VStack(alignment: .leading) {
+                        Text("Enter your credentials")
+                            .font(.headline)
+                            .padding(5)
+                            .padding(.top,8)
+                            .padding(.horizontal,5)
+
+                        
+                        Text("Please enter your email and password to proceed")
+                            .font(.subheadline)
+                            .foregroundColor(Color(hex: "006666"))
+                            .padding(5)
+                            .padding(.bottom, 5)
+                            .padding(.horizontal,5)
+
+                        
+                        VStack(alignment: .leading){
                             TextField("Email", text: $username)
                                 .padding()
                                 .background(Color.black.opacity(0.05))
                                 .cornerRadius(10)
                                 .autocapitalization(.none)
                                 .keyboardType(.emailAddress)
-                                .textInputAutocapitalization(.never)
                                 .onChange(of: username) { newValue in
                                     if newValue.count > 100 {
                                         username = String(newValue.prefix(100))
@@ -63,118 +67,129 @@ struct Authentication: View {
                                 }
                             if username.isEmpty {
                                 Text(" ")
+                                    .font(.caption)
+                                    .padding(.horizontal,5)
+
                             } else if isValidEmail(username) {
                                 Text("Yeah, Looks Valid Email Address")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(Color(hex: "006666"))
                                     .font(.caption)
-                                    .padding(.top, 5)
+                                    .padding(.horizontal,5)
+
                             } else {
                                 Text("Enter a valid email address")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(Color(UIColor.systemRed))
                                     .font(.caption)
-                                    .padding(.top, 5)
+                                    .padding(.horizontal,5)
+
                             }
-                        }
-                        .padding(.horizontal, 30)
-                        
-                        // Password input with validation
-                        VStack(alignment: .leading) {
+                            
                             SecureField("Password", text: $password)
                                 .padding()
                                 .background(Color.black.opacity(0.05))
                                 .cornerRadius(10)
                             if password.isEmpty {
                                 Text(" ")
+                                    .padding(.horizontal,5)
+                                    .font(.caption)
                             } else if password.count >= 6 {
                                 Text("Seems Valid!")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(Color(hex: "006666"))
                                     .font(.caption)
-                                    .padding(.top, 5)
+                                    .padding(.horizontal,5)
                             } else {
                                 Text("Password must be at least 6 characters")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(Color(UIColor.systemRed))
                                     .font(.caption)
-                                    .padding(.top, 5)
-                            }
-                        }
-                        .padding(.horizontal, 30)
-                        
-                        if !errorMessage.isEmpty {
-                            Text(errorMessage)
-                                .foregroundColor(.red)
-                                .padding(.top, 5)
-                        }
+                                    .padding(.horizontal,5)
 
-                        // Login button
-                        Button("Login") {
-                            // Validate inputs on button tap
-                            validateInputs()
+                            }
+                            
+                            Button("Sign In") {
+                                    validateInputs()
+                            }
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, maxHeight: 22)
+                            .padding()
+                            .foregroundColor(Color.white)
+                            .background(Color(hex: "006666"))
+                            .cornerRadius(10)
                         }
-                        .foregroundColor(.white)
-                        .frame(width: 317, height: 50)
-                        .background(Color(hex: "#006666"))
-                        .cornerRadius(14)
-                        .font(.system(size: 20))
+                        .padding(.horizontal,5)
+                        
                     }
-                    .padding(.bottom, 20)
+                    .padding(.vertical, 5)
+                    .background(Blur())
+                    .padding(.horizontal, 6)
+                    .cornerRadius(22)                }
             }
-            .navigationBarHidden(true)
+            .padding(.bottom,10)
+        }
+        .navigationBarHidden(true)
+        .alert(isPresented: $showErrorAlert) {
+            Alert(title: Text("Error"), message: Text(errorMessage).font(.caption), dismissButton: .default(Text("Dismiss")))
         }
     }
-
+    
     // Function to validate inputs
     func validateInputs() {
         // Reset previous error message
         errorMessage = ""
-
+        
         // Check if email is empty or invalid
         if username.isEmpty || !isValidEmail(username) {
             errorMessage = "Please enter a valid email address"
+            showErrorAlert = true
             return
         }
-
+        
         // Check if password is empty or less than 6 characters
         if password.isEmpty || password.count < 6 {
             errorMessage = "Password must be at least 6 characters"
+            showErrorAlert = true
             return
         }
-
+        
         // Proceed with authentication if inputs are valid
         authenticateUser(email: username, password: password)
     }
-
+    
     // Function to authenticate user with Firebase
     func authenticateUser(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 errorMessage = "Invalid credentials. Check and try again..."
+                showErrorAlert = true
                 return
             }
-
+            
             guard (authResult?.user) != nil else {
                 errorMessage = "Authentication failed"
+                showErrorAlert = true
                 return
             }
-
+            
             // User role based on email domain
             let emailDomain = email.components(separatedBy: "@").last ?? ""
-
+            
             switch emailDomain {
             case "superadmin.com":
                 navigateToScreen(screen: HospitalView())
-
+                
             case "admin.com":
                 navigateToScreen(screen: AdminView())
-
+                
             case "doctor.com":
                 navigateToScreen(screen: DoctorView())
-
+                
             default:
                 errorMessage = "Invalid email domain"
+                showErrorAlert = true
             }
         }
     }
-
+    
     // Function to navigate to different screens based on user role
     func navigateToScreen<Screen: View>(screen: Screen) {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
@@ -184,11 +199,10 @@ struct Authentication: View {
             }
         }
     }
-
+    
     // Function to validate email format
     func isValidEmail(_ email: String) -> Bool {
-        // Updated regex to check for repetition of characters and specific domains
-        let emailRegEx = "^[A-Z0-9a-z._%+-]+@(?:(?:superadmin\\.com)|(?:admin\\.com)|(?:doctor\\.com))$"
+        let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
