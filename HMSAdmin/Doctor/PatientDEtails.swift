@@ -5,6 +5,7 @@ struct PatientDetailsView: View {
     let patient: Patient
     @State private var prescriptionText = ""
     @State private var isShowingActionSheet = false
+    @ObservedObject private var speechRecognizer = SpeechRecognizer()
     
     var body: some View {
         NavigationView {
@@ -35,7 +36,7 @@ struct PatientDetailsView: View {
                     
                     Form {
                         // Patient Information
-                        Section(header: Text("")) {
+                        Section(header: Text("").padding(.bottom, -20)) {
                             HStack {
                                 Text("First Name")
                                 Spacer()
@@ -67,28 +68,10 @@ struct PatientDetailsView: View {
                                     .foregroundColor(.blue)
                             }
                         }
-                        
-                        // Prescription Section
-                        Section(header: Text("")) {
-                            ZStack(alignment: .bottomTrailing) {
-                                TextField("Write Prescription...", text: $prescriptionText)
-                                    .padding(.bottom, 100)
-                                    .background(Color.white)
-                                Button(action: {
-                                    // Handle microphone action
-                                }) {
-                                    Image(systemName: "mic.circle.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding()
-                                }
-                                .padding(.bottom, 8)
-                                .padding(.trailing, 8)
-                            }
-                        }
+                        .padding(.bottom, -10)
                         
                         // Medical Reports
-                        Section(header: Text("")) {
+                        Section(header: Text("").padding(.bottom, -20)) {
                             HStack {
                                 Image(systemName: "pdf")
                                 Text("Pathology")
@@ -102,6 +85,35 @@ struct PatientDetailsView: View {
                                 Spacer()
                                 Text("440 Kbs")
                                     .foregroundColor(.gray)
+                            }
+                        }
+                        .padding(.bottom, -10)
+                        
+                        // Prescription Section
+                        Section(header: Text("").padding(.bottom, -20)) {
+                            ZStack(alignment: .bottomTrailing) {
+                                TextField("Write Prescription...", text: $prescriptionText)
+                                    .padding(.bottom, 100)
+                                    .background(Color.white)
+                                Button(action: {
+                                    if speechRecognizer.isRunning {
+                                        speechRecognizer.stopRecording()
+                                    } else {
+                                        speechRecognizer.startRecording()
+                                    }
+                                }) {
+                                    Image(systemName: speechRecognizer.isRunning ? "mic.circle.fill" : "mic.circle")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .padding(.top,50)
+                                        .padding(.leading,1)
+                                        
+                                }
+                                .padding(.bottom, 8)
+                                .padding(.trailing, 8)
+                            }
+                            .onChange(of: speechRecognizer.recognizedText) { newValue in
+                                prescriptionText = newValue
                             }
                         }
                     }

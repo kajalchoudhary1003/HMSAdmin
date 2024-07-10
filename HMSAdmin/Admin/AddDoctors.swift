@@ -23,6 +23,7 @@ struct DoctorFormView: View {
     @State private var showingMailView = false
     @State private var newDoctorEmail: String = ""
     @State private var newPassword: String = ""
+    @State private var isEditing = false
     
     var designations = DoctorDesignation.allCases
     
@@ -49,6 +50,7 @@ struct DoctorFormView: View {
             _dob = State(initialValue: doctor.dob)
             _designation = State(initialValue: doctor.designation)
             _titles = State(initialValue: doctor.titles)
+            //_zipCode = State(initialValue: doctor.zipCode) // Initialize zipCode
         }
     }
     
@@ -58,6 +60,7 @@ struct DoctorFormView: View {
                 // Personal information section
                 Section(header: Text("Personal Information")) {
                     TextField("First Name", text: $firstName)
+                        .disabled(!isEditing)
                         .onChange(of: firstName) { newValue in
                             if newValue.count > 25 {
                                 firstName = String(newValue.prefix(25))
@@ -71,6 +74,7 @@ struct DoctorFormView: View {
                             alignment: .trailing
                         )
                     TextField("Last Name", text: $lastName)
+                        .disabled(!isEditing)
                         .onChange(of: lastName) { newValue in
                             if newValue.count > 25 {
                                 lastName = String(newValue.prefix(25))
@@ -85,8 +89,10 @@ struct DoctorFormView: View {
                         )
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
+                        .disabled(!isEditing)
                     TextField("Phone Number", text: $phone)
                         .keyboardType(.numberPad)
+                        .disabled(!isEditing)
                         .onChange(of: phone) { newValue in
                             let filtered = newValue.filter { "0123456789".contains($0) }
                             if phone != filtered {
@@ -104,8 +110,10 @@ struct DoctorFormView: View {
                             alignment: .trailing
                         )
                     DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
+                        .disabled(!isEditing)
                     TextField("Zip Code", text: $zipCode)
                         .keyboardType(.numberPad)
+                        .disabled(!isEditing)
                         .onChange(of: zipCode) { newValue in
                             let filtered = newValue.filter { "0123456789".contains($0) }
                             if zipCode != filtered {
@@ -131,9 +139,13 @@ struct DoctorFormView: View {
                             Text($0.title)
                         }
                     }
+                    .disabled(!isEditing)
                     DatePicker("Starts", selection: $starts, displayedComponents: .hourAndMinute)
+                        .disabled(!isEditing)
                     DatePicker("Ends", selection: $ends, displayedComponents: .hourAndMinute)
+                        .disabled(!isEditing)
                     TextField("Qualifications", text: $titles)
+                        .disabled(!isEditing)
                 }
                 VStack(alignment: .trailing) {
                     if doctorToEdit != nil {
@@ -149,10 +161,14 @@ struct DoctorFormView: View {
             .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
             .navigationBarItems(leading: Button("Cancel") {
                 isPresent = false
-            }, trailing: Button("Save") {
-                saveDoctor()
+            }, trailing: Button(isEditing ? "Save" : "Edit") {
+                if isEditing {
+                    saveDoctor()
+                } else {
+                    isEditing.toggle()
+                }
             }
-                .disabled(!isFormValid)) // Disable save button if form is not valid
+                .disabled(!isEditing && doctorToEdit == nil && !isFormValid)) // Disable save button if form is not valid
             // Added alert for email error
             .alert(isPresented: $showMailError) {
                 Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
@@ -186,47 +202,35 @@ struct DoctorFormView: View {
             dob: dob,
             designation: designation,
             titles: titles
+            //zipCode: zipCode // Add zipCode here
         )
         
         if let doctorToEdit = doctorToEdit {
             // If editing an existing doctor, update the doctor details
             if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
-                var updatedDoctor = newDoctor
-                updatedDoctor.id = doctorToEdit.id
-                doctors[index] = updatedDoctor
-                DataController.shared.addDoctor(updatedDoctor) { error in
-                    if let error = error {
-                        print("Failed to save doctor: \(error.localizedDescription)")
-                    } else {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
+                doctors[index] = newDoctor
             }
         } else {
-            // If adding a new doctor, append to the doctors list
+            // If adding a new doctor, append to the doctors array
             doctors.append(newDoctor)
-            DataController.shared.addDoctor(newDoctor) { error in
-                if let error = error {
-                    print("Failed to save doctor: \(error.localizedDescription)")
-                } else {
-                    showingMailView = true
-                }
-            }
+        }
+        
+        isEditing.toggle()
+        
+        if isEditing == false {
+            showingMailView.toggle()
         }
     }
     
+    // Function to delete the doctor
     private func deleteDoctor(_ doctor: Doctor) {
-        DataController.shared.deleteDoctor(doctor) { error in
-            if let error = error {
-                print("Failed to delete doctor: \(error.localizedDescription)")
-            } else {
-                doctors.removeAll { $0.id == doctor.id }
-                isPresent = false
-            }
+        if let index = doctors.firstIndex(where: { $0.id == doctor.id }) {
+            doctors.remove(at: index)
+            isPresent = false
         }
     }
     
-    // Function to compose email body
+    // Function to construct email body
     private func mailBody() -> String {
         """
         Hello Dr. \(firstName) \(lastName),

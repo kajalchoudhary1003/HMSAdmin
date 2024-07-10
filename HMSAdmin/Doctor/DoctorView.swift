@@ -17,4 +17,5 @@ struct DoctorView: View {
 
 #Preview {
     DoctorView()
+    
 }

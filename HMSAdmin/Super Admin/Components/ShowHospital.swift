@@ -3,32 +3,183 @@ import SwiftUI
 struct ShowHospital: View {
     let hospital: Hospital // The hospital object to display
     @State private var showDeleteConfirmation = false
-
+    @State private var isEditing = false
+    @State private var editedHospital: Hospital
+    @State private var newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
+    @State private var isAddingAdmin = false
+    
+    init(hospital: Hospital) {
+        self.hospital = hospital
+        self._editedHospital = State(initialValue: hospital)
+    }
+    
     var body: some View {
         Form {
             // Section to display hospital details
             Section(header: Text("Hospital Details")) {
-                Text("Name: \(hospital.name)")
-                Text("Address: \(hospital.address)")
-                Text("Phone: \(hospital.phone)")
-                Text("Email: \(hospital.email)")
-                Text("City: \(hospital.city)")
-                Text("Country: \(hospital.country)")
-                Text("Zip Code: \(hospital.zipCode)")
-            }
-
-            // Section to display admin details
-            Section(header: Text("Admin Details")) {
-                ForEach(hospital.admins) { admin in
-                    VStack(alignment: .leading) {
-                        Text("Name: \(admin.name)")
-                        Text("Address: \(admin.address)")
-                        Text("Phone: \(admin.phone)")
-                        Text("Email: \(admin.email)")
+                if isEditing {
+                    HStack {
+                        Text("Name:")
+                        Spacer()
+                        TextField("", text: $editedHospital.name)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Email:")
+                        Spacer()
+                        TextField("", text: $editedHospital.email)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Phone:")
+                        Spacer()
+                        TextField("", text: $editedHospital.phone)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Address:")
+                        Spacer()
+                        TextField("", text: $editedHospital.address)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("City:")
+                        Spacer()
+                        TextField("", text: $editedHospital.city)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Country:")
+                        Spacer()
+                        TextField("", text: $editedHospital.country)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Zip Code:")
+                        Spacer()
+                        TextField("", text: $editedHospital.zipCode)
+                            .multilineTextAlignment(.trailing)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .foregroundColor(.gray)
+                    }
+                } else {
+                    HStack {
+                        Text("Name:")
+                        Spacer()
+                        Text(hospital.name)
+                    }
+                    HStack {
+                        Text("Email:")
+                        Spacer()
+                        Text(hospital.email)
+                    }
+                    HStack {
+                        Text("Phone:")
+                        Spacer()
+                        Text(hospital.phone)
+                    }
+                    HStack {
+                        Text("Address:")
+                        Spacer()
+                        Text(hospital.address)
+                    }
+                    HStack {
+                        Text("City:")
+                        Spacer()
+                        Text(hospital.city)
+                    }
+                    HStack {
+                        Text("Country:")
+                        Spacer()
+                        Text(hospital.country)
+                    }
+                    HStack {
+                        Text("Zip Code:")
+                        Spacer()
+                        Text(hospital.zipCode)
                     }
                 }
             }
-
+                
+            // Section to display admin details
+            Section(header: Text("Admin Details")) {
+                ForEach(editedHospital.admins) { admin in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Name:")
+                            Spacer()
+                            Text(admin.name)
+                        }
+                        HStack {
+                            Text("Address:")
+                            Spacer()
+                            Text(admin.address)
+                        }
+                        HStack {
+                            Text("Phone:")
+                            Spacer()
+                            Text(admin.phone)
+                        }
+                        HStack {
+                            Text("Email:")
+                            Spacer()
+                            Text(admin.email)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            
+            // Add Admin Section
+            if isEditing {
+                Section {
+                    if isAddingAdmin {
+                        VStack {
+                            TextField("Name", text: $newAdmin.name)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Address", text: $newAdmin.address)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Email", text: $newAdmin.email)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Phone", text: $newAdmin.phone)
+                                .padding(.vertical, 4)
+                            Divider()
+                            HStack {
+                                Spacer()
+                                Button("Cancel") {
+                                    isAddingAdmin = false
+                                    resetNewAdmin()
+                                }
+                            }
+                        }
+                    } else {
+                        Button(action: {
+                            isAddingAdmin = true
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add Admin")
+                            }
+                        }
+                    }
+                }
+            }
+            
             // Delete Hospital Button
             Section {
                 Button(action: {
@@ -40,6 +191,11 @@ struct ShowHospital: View {
             }
         }
         .navigationTitle(hospital.name)
+        .navigationBarItems(trailing: Button(action: {
+            isEditing.toggle()
+        }) {
+            Text(isEditing ? "Save" : "Edit")
+        })
         .alert(isPresented: $showDeleteConfirmation) {
             Alert(
                 title: Text("Confirm Deletion"),
@@ -51,16 +207,20 @@ struct ShowHospital: View {
             )
         }
     }
-
-    private func deleteHospital() {
+    
+    func deleteHospital() {
         DataController.shared.removeHospital(hospital) { error in
             if let error = error {
                 print("Failed to delete hospital: \(error.localizedDescription)")
             } else {
                 NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
                 // Optionally, you can navigate back or perform any additional UI updates
-                print("Deleted hospital: \(hospital.name) with ID: \(hospital.id ?? "unknown")")
+                print("Deleted hospital: \(hospital.name) with ID: \(hospital.id)")
             }
         }
+    }
+    
+    func resetNewAdmin() {
+        newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
     }
 }
