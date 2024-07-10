@@ -16,6 +16,7 @@ struct AddHospital: View {
     @State private var city: String = ""
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
+    @State private var selectedAdminName = "Select Admin"
     
     @State private var showMailError = false
     @State private var showingMailView = false
@@ -29,10 +30,13 @@ struct AddHospital: View {
     let adminTypes = ["Select", "New", "Existing"]
     @State private var existingAdmins = ["Select", "Michael", "Emily", "David", "Robert"]
     
-    // Check if all fields are valid to enable Save button
     var isSaveDisabled: Bool {
-        !isFormValid || (selectedTypeIndex == 1 && (!isNewAdminNameValid || !isNewAdminEmailValid || !isNewAdminPhoneValid))
+        selectedTypeIndex == 0 || // Disable when "Select" is chosen
+        !isFormValid ||
+        (selectedTypeIndex == 1 && (!isNewAdminNameValid || !isNewAdminEmailValid || !isNewAdminPhoneValid)) ||
+        (selectedTypeIndex == 2 && selectedAdminIndex == 0)
     }
+
     
     var isFormValid: Bool {
         !name.isEmpty && !address.isEmpty && !email.isEmpty && !phone.isEmpty && !city.isEmpty && !country.isEmpty && !zipCode.isEmpty &&
@@ -241,11 +245,10 @@ struct AddHospital: View {
                                 .foregroundColor(.red)
                                 .font(.caption)
                         }
-                    } else if adminTypes[selectedTypeIndex] == "Existing" {
-                        Picker(selection: $selectedAdminIndex, label: Text("Select")) {
-                            ForEach(0 ..< existingAdmins.count) { index in
-                                Text(self.existingAdmins[index])
-                            }
+//
+                    } else if selectedTypeIndex == 2 {
+                        NavigationLink(destination: AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
+                            Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
                         }
                     }
                 }
