@@ -4,7 +4,9 @@ struct ShowHospital: View {
     let hospital: Hospital // The hospital object to display
     @State private var showDeleteConfirmation = false
     @State private var isEditing = false
-    @State private var editedHospital = Hospital(id: nil, name: "", email: "", phone: "", admins: [], address: "", city: "", country: "", zipCode: "", type: "")
+    @State private var editedHospital: Hospital
+    @State private var newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
+    @State private var isAddingAdmin = false
     
     init(hospital: Hospital) {
         self.hospital = hospital
@@ -113,26 +115,67 @@ struct ShowHospital: View {
                 
             // Section to display admin details
             Section(header: Text("Admin Details")) {
-                ForEach(hospital.admins) { admin in
-                    HStack {
-                        Text("Name:")
-                        Spacer()
-                        Text(admin.name)
+                ForEach(editedHospital.admins) { admin in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Name:")
+                            Spacer()
+                            Text(admin.name)
+                        }
+                        HStack {
+                            Text("Address:")
+                            Spacer()
+                            Text(admin.address)
+                        }
+                        HStack {
+                            Text("Phone:")
+                            Spacer()
+                            Text(admin.phone)
+                        }
+                        HStack {
+                            Text("Email:")
+                            Spacer()
+                            Text(admin.email)
+                        }
                     }
-                    HStack {
-                        Text("Address:")
-                        Spacer()
-                        Text(admin.address)
-                    }
-                    HStack {
-                        Text("Phone:")
-                        Spacer()
-                        Text(admin.phone)
-                    }
-                    HStack {
-                        Text("Email:")
-                        Spacer()
-                        Text(admin.email)
+                    .padding(.vertical, 4)
+                }
+            }
+            
+            // Add Admin Section
+            if isEditing {
+                Section {
+                    if isAddingAdmin {
+                        VStack {
+                            TextField("Name", text: $newAdmin.name)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Address", text: $newAdmin.address)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Email", text: $newAdmin.email)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Phone", text: $newAdmin.phone)
+                                .padding(.vertical, 4)
+                            Divider()
+                            HStack {
+                                Spacer()
+                                Button("Cancel") {
+                                    isAddingAdmin = false
+                                    resetNewAdmin()
+                                }
+                            }
+                        }
+                    } else {
+                        Button(action: {
+                            isAddingAdmin = true
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add Admin")
+                            }
+                        }
                     }
                 }
             }
@@ -163,20 +206,6 @@ struct ShowHospital: View {
                 secondaryButton: .cancel()
             )
         }
-        .onChange(of: isEditing) { newValue in
-            if !newValue {
-                // Save changes when editing is done
-                // You need to implement the updateHospital function in your DataController
-                // DataController.shared.updateHospital(editedHospital) { error in
-                //     if let error = error {
-                //         print("Failed to update hospital: \(error.localizedDescription)")
-                //     } else {
-                //         NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
-                //         print("Updated hospital: \(hospital.name) with ID: \(hospital.id)")
-                //     }
-                // }
-            }
-        }
     }
     
     func deleteHospital() {
@@ -189,5 +218,9 @@ struct ShowHospital: View {
                 print("Deleted hospital: \(hospital.name) with ID: \(hospital.id)")
             }
         }
+    }
+    
+    func resetNewAdmin() {
+        newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
     }
 }
