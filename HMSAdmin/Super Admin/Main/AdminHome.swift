@@ -56,152 +56,160 @@ struct AdminHome : View {
     }
     
     var body: some View {
-        ZStack {
-            Color("bgColor").ignoresSafeArea(.all)
-            
-            VStack(alignment: .leading) {
+        
+        
+        NavigationView {
+            ZStack {
                 
-                Text("Analytics")
-                    .frame(alignment: .leading)
-                    .font(.largeTitle)
-                    .fontWeight(.semibold).padding(.leading,10)
-                
+                Color("bgColor").ignoresSafeArea(.all)
                 
                 VStack(alignment: .leading) {
-                    Text("Revenue")
-                        .fontWeight(.regular)
-                        .font(.title2)
                     
-                    Chart {
-                        ForEach(departmentRevenue) { revenue in
-                            SectorMark(
-                                angle: .value("Revenue", revenue.revenue),
-                                innerRadius: .ratio(0.55),
-                                angularInset: 1
-                            )
-                            .foregroundStyle(by: .value("Department", revenue.name))
-                            .opacity(pieSelection == nil ? 1 : (pieSelection == revenue.revenue ? 1 : 0.4))
-                        }
-                    }
-                    .chartLegend(position: .leading, alignment: .center, spacing: 45)
-                    .chartForegroundStyleScale(range: colorScheme)
-                    .frame(height: 150, alignment: .trailing)
+                    Text("Analytics")
+                        .frame(alignment: .leading)
+                        .font(.largeTitle)
+                        .fontWeight(.semibold).padding(.leading,10)
                     
-                    Picker("", selection: $timePeriod) {
-                        ForEach(TimePeriod.allCases, id: \.rawValue) { type in
-                            Text(type.rawValue)
-                                .tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .frame(width: 300)
-                    .padding(.top, 30)
-                    .padding(.horizontal)
-                }
-                .padding(15)
-                .background(Color.white)
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("\(selectedDepartment) Earnings")
+                    
+                    VStack(alignment: .leading) {
+                        Text("Revenue")
                             .fontWeight(.regular)
-                            .font(.title3)
+                            .font(.title2)
                         
-                        Spacer()
+                        Chart {
+                            ForEach(departmentRevenue) { revenue in
+                                SectorMark(
+                                    angle: .value("Revenue", revenue.revenue),
+                                    innerRadius: .ratio(0.55),
+                                    angularInset: 1
+                                )
+                                .foregroundStyle(by: .value("Department", revenue.name))
+                                .opacity(pieSelection == nil ? 1 : (pieSelection == revenue.revenue ? 1 : 0.4))
+                            }
+                        }
+                        .chartLegend(position: .leading, alignment: .center, spacing: 45)
+                        .chartForegroundStyleScale(range: colorScheme)
+                        .frame(height: 150, alignment: .trailing)
                         
-                        Menu {
-                            Button(action: { selectedDepartment = "OPD" }) {
-                                Text("OPD")
+                        Picker("", selection: $timePeriod) {
+                            ForEach(TimePeriod.allCases, id: \.rawValue) { type in
+                                Text(type.rawValue)
+                                    .tag(type)
                             }
-                            Button(action: { selectedDepartment = "Cardio" }) {
-                                Text("Cardio")
-                            }
-                            Button(action: { selectedDepartment = "Dental" }) {
-                                Text("Dental")
-                            }
-                            Button(action: { selectedDepartment = "Physio" }) {
-                                Text("Physio")
-                            }
-                        } label: {
-                            Image(systemName: "chevron.down")
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        .frame(width: 300)
+                        .padding(.top, 30)
+                        .padding(.horizontal)
+                    }
+                    .padding(15)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("\(selectedDepartment) Earnings")
+                                .fontWeight(.regular)
                                 .font(.title3)
-                        }
-                    }
-                    .padding(.top,20)
-                    .padding(.horizontal,10)
-                    
-                    Chart {
-                        ForEach(selectedDepartmentRevenue) { revenue in
-                            BarMark(
-                                x: .value("Month", revenue.month),
-                                y: .value("Revenue", revenue.revenue)
-                            )
-                            .foregroundStyle(by: .value("Month", revenue.month))
-                        }
-                        
-                        if let barSelection {
-                            RuleMark(x: .value("Month", barSelection))
-                                .foregroundStyle(.gray.opacity(0.35))
-                                .offset(yStart: -10)
-                                .annotation(
-                                    position: .top,
-                                    spacing: 0,
-                                    overflowResolution: .init(x: .fit, y: .fit)
-                                ) {
-                                    if let revenue = selectedDepartmentRevenue.findRevenue(barSelection) {
-                                        ChartPopOverView(revenue, barSelection)
-                                    }
+                            
+                            Spacer()
+                            
+                            Menu {
+                                Button(action: { selectedDepartment = "OPD" }) {
+                                    Text("OPD")
                                 }
-                                .zIndex(-10)
+                                Button(action: { selectedDepartment = "Cardio" }) {
+                                    Text("Cardio")
+                                }
+                                Button(action: { selectedDepartment = "Dental" }) {
+                                    Text("Dental")
+                                }
+                                Button(action: { selectedDepartment = "Physio" }) {
+                                    Text("Physio")
+                                }
+                            } label: {
+                                Image(systemName: "chevron.down")
+                                    .font(.title3)
+                            }
                         }
+                        .padding(.top,20)
+                        .padding(.horizontal,10)
+                        
+                        Chart {
+                            ForEach(selectedDepartmentRevenue) { revenue in
+                                BarMark(
+                                    x: .value("Month", revenue.month),
+                                    y: .value("Revenue", revenue.revenue)
+                                )
+                                .foregroundStyle(by: .value("Month", revenue.month))
+                            }
+                            
+                            if let barSelection {
+                                RuleMark(x: .value("Month", barSelection))
+                                    .foregroundStyle(.gray.opacity(0.35))
+                                    .offset(yStart: -10)
+                                    .annotation(
+                                        position: .top,
+                                        spacing: 0,
+                                        overflowResolution: .init(x: .fit, y: .fit)
+                                    ) {
+                                        if let revenue = selectedDepartmentRevenue.findRevenue(barSelection) {
+                                            ChartPopOverView(revenue, barSelection)
+                                        }
+                                    }
+                                    .zIndex(-10)
+                            }
+                        }
+                        .chartXSelection(value: $barSelection)
+                        .chartAngleSelection(value: $pieSelection)
+                        .chartLegend(position: .leading, alignment: .center, spacing: 45)
+                        .chartForegroundStyleScale(range: colorScheme)
+                        .frame(height: 150)
+                        .padding( 10)
                     }
-                    .chartXSelection(value: $barSelection)
-                    .chartAngleSelection(value: $pieSelection)
-                    .chartLegend(position: .leading, alignment: .center, spacing: 45)
-                    .chartForegroundStyleScale(range: colorScheme)
-                    .frame(height: 150)
-                    .padding( 10)
-                }
-                
-                
-                
-                HStack {
-                    Image(systemName: "plus.square.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(Color("appColor"))
-                        .padding(8)
-                        .cornerRadius(8)
                     
-                    Text("Hospitals")
-                        .font(.title2)
                     
-                    Spacer()
-                    
-                    Text("03")
-                        .foregroundColor(Color("appColor"))
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Image(systemName: "chevron.right")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 15, height: 15)
-                        .foregroundColor(Color("appColor"))
-                        .padding(8)
-                        .cornerRadius(8)
+    //                NavigationLink(destination: HospitalView()){
+                    NavigationLink(destination: HospitalView()) {
+                        HStack {
+                                Image(systemName: "plus.square.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(Color("AccentColor"))
+                                    .padding(8)
+                                    .cornerRadius(8)
+                                
+                                Text("Hospitals")
+                                    .font(.title2)
+                                
+                                Spacer()
+                                
+                                Text("03")
+                                    .foregroundColor(Color("AccentColor"))
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 15, height: 15)
+                                    .foregroundColor(Color("AccentColor"))
+                                    .padding(8)
+                                    .cornerRadius(8)
+                            }
+                            .padding()
+        //                }
+                        
+                        .background(Color.white)
+                        .cornerRadius(10)
+                    .shadow(radius: 4)
+                    }
                 }
                 .padding()
-                
-                .background(Color.white)
-                .cornerRadius(10)
-                .shadow(radius: 4)
             }
-            .padding()
         }
     }
 }
