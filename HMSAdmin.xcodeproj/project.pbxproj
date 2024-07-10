@@ -27,7 +27,6 @@
 		809112AB2C37EA67009CDBEF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AA2C37EA67009CDBEF /* DataController.swift */; };
 		809112AD2C37F707009CDBEF /* ShowHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AC2C37F707009CDBEF /* ShowHospital.swift */; };
 		809C43B22C39BC2E003AB449 /* PatientDEtails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C43B12C39BC2E003AB449 /* PatientDEtails.swift */; };
-		810406302C3BE4540009C58E /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C377E2C36DCA300614EE9 /* Analytics.swift */; };
 		810406342C3BEA540009C58E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810406332C3BEA540009C58E /* Extensions.swift */; };
 		810860412C3D0B5300558934 /* Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810860402C3D0B5300558934 /* Blur.swift */; };
 		812C377B2C36B65400614EE9 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37782C36B65400614EE9 /* DataModel.swift */; };
@@ -42,6 +41,9 @@
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
 		E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */; };
 		E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */; };
+		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
+		EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* AdminHome.swift */; };
+		EA6603342C3D6E77003540D1 /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603312C3D6E77003540D1 /* DataType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,12 +72,14 @@
 		812C37782C36B65400614EE9 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		812C37792C36B65400614EE9 /* AddHospital.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHospital.swift; sourceTree = "<group>"; };
 		812C377A2C36B65400614EE9 /* HospitalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HospitalView.swift; sourceTree = "<group>"; };
-		812C377E2C36DCA300614EE9 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
 		812C37822C37CB2100614EE9 /* AdminPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPickerView.swift; sourceTree = "<group>"; };
 		812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetSidebarView.swift; sourceTree = "<group>"; };
 		E94E68D82C38195900ED9F1C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
+		EA6603302C3D6E77003540D1 /* AdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminHome.swift; sourceTree = "<group>"; };
+		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +151,9 @@
 		8104062F2C3BE4450009C58E /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				812C377E2C36DCA300614EE9 /* Analytics.swift */,
+				EA6603312C3D6E77003540D1 /* DataType.swift */,
+				EA6603302C3D6E77003540D1 /* AdminHome.swift */,
+				EA66032F2C3D6E77003540D1 /* Revenue.swift */,
 				812C377A2C36B65400614EE9 /* HospitalView.swift */,
 			);
 			path = Main;
@@ -307,15 +313,17 @@
 				812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
+				EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */,
+				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
 				812C377D2C36B65400614EE9 /* HospitalView.swift in Sources */,
 				8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */,
 				812C37832C37CB2100614EE9 /* AdminPickerView.swift in Sources */,
+				EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */,
 				809C43B22C39BC2E003AB449 /* PatientDEtails.swift in Sources */,
 				62060ECE2C3709B400177028 /* Date+Extension.swift in Sources */,
 				809112AD2C37F707009CDBEF /* ShowHospital.swift in Sources */,
-				810406302C3BE4540009C58E /* Analytics.swift in Sources */,
 				62060EC82C3708F800177028 /* Home.swift in Sources */,
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
 				62060ECC2C37097E00177028 /* View+Extension.swift in Sources */,
