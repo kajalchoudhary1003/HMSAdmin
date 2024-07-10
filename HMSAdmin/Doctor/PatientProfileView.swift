@@ -1,8 +1,22 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Done")
+                        .foregroundColor(Color(hex: "006666"))
+                        .padding()
+                }
+            }
+            .padding(.trailing)
+            
             Text("Profile")
                 .font(.title)
                 .fontWeight(.bold)
@@ -15,7 +29,7 @@ struct ProfileView: View {
                 .scaledToFill()
                 .frame(width: 130, height: 130)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color(hex: 0x006666), lineWidth: 2))  // Updated line
+                .overlay(Circle().stroke(Color(hex: "006666"), lineWidth: 2))
                 .shadow(radius: 10)
                 .padding(.trailing, 20)
             
@@ -45,30 +59,27 @@ struct ProfileView: View {
             Spacer()
             
             VStack {
-                
-                
                 Button(action: {
                     // Logout action
                 }) {
                     Text("Log out")
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .padding(6)
                         .foregroundColor(.red)
-                        .font(.caption)
-                        .background(Color.gray)  // Updated line
+                        .font(.title)
+                        .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
-                        
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 20)
-                .padding(.leading,50)
-                .padding(.trailing,50)
+                .padding(.leading, 16)
+                .padding(.trailing, 16)
             }
             
             Spacer().frame(height: 20)
         }
-        .background(Color.white.edgesIgnoringSafeArea(.all))
+        .background(Color(.systemGray5))
     }
 }
 
@@ -88,22 +99,8 @@ struct ProfileRow: View {
         }
     }
 }
-
-extension Color {
-    init(hex: Int, alpha: Double = 1.0) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xFF) / 255.0,
-            green: Double((hex >> 8) & 0xFF) / 255.0,
-            blue: Double(hex & 0xFF) / 255.0,
-            opacity: alpha
-        )
-    }
-}
-
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileView()
     }
 }
-

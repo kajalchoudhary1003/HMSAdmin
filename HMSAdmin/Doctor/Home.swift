@@ -63,6 +63,7 @@ struct Home: View {
     @State private var currentDate: Date = .init()
     @State private var weekSlider: [[Date.WeekDay]] = []
     @State private var currentWeekIndex: Int = 1
+    @State private var isProfileSheetPresented = false
     
     @State private var patients: [Patient] = [
         Patient(name: "John Doe", age: 30, type: "Regular", startTime: Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!, appointmentDate: Date().addingTimeInterval(86400)),
@@ -108,6 +109,7 @@ struct Home: View {
                     }
                 }
             }
+            
         }
     }
     
@@ -135,13 +137,19 @@ struct Home: View {
         }
         .hSpacing(.leading)
         .overlay(alignment: .topTrailing) {
-            Button(action: {}, label: {
+            Button(action: {
+                // Show profile screen modally
+                isProfileSheetPresented = true
+            }) {
                 Image(systemName: "person.circle")
                     .resizable()
                     .foregroundColor(Color(hex: "#006666"))
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 45, height: 45)
-            })
+            }
+            .sheet(isPresented: $isProfileSheetPresented) {
+                ProfileView()
+            }
         }
         .padding(15)
     }
@@ -191,7 +199,8 @@ struct Home: View {
     }
 }
 
-#Preview {
-    Home()
+struct Home_Previews: PreviewProvider {
+    static var previews: some View {
+        Home()
+    }
 }
-
