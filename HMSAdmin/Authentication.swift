@@ -188,7 +188,7 @@ struct Authentication: View {
             
             switch emailDomain {
             case "superadmin.com":
-                navigateToScreen(screen: HospitalView())
+                navigateToScreen(screen: AdminHome())
                 
             case "admin.com":
                 navigateToScreen(screen: AdminView())
