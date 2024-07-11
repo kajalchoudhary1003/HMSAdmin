@@ -24,7 +24,7 @@
 		8018E5112C39BDAD007D5FF4 /* DoctorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */; };
 		8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */; };
 		8059DF912C3E4B360061A261 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */; };
-		8059DF952C3E68CE0061A261 /* PatientProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF942C3E68CE0061A261 /* PatientProfileView.swift */; };
+		8059DF952C3E68CE0061A261 /* Doctor_Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */; };
 		809112AB2C37EA67009CDBEF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AA2C37EA67009CDBEF /* DataController.swift */; };
 		809112AD2C37F707009CDBEF /* ShowHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AC2C37F707009CDBEF /* ShowHospital.swift */; };
 		809C43B22C39BC2E003AB449 /* PatientDEtails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C43B12C39BC2E003AB449 /* PatientDEtails.swift */; };
@@ -65,7 +65,7 @@
 		8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorCard.swift; sourceTree = "<group>"; };
 		8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDoctors.swift; sourceTree = "<group>"; };
 		8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
-		8059DF942C3E68CE0061A261 /* PatientProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientProfileView.swift; sourceTree = "<group>"; };
+		8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Doctor_Profile.swift; sourceTree = "<group>"; };
 		809112AA2C37EA67009CDBEF /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		809112AC2C37F707009CDBEF /* ShowHospital.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHospital.swift; sourceTree = "<group>"; };
 		809C43B12C39BC2E003AB449 /* PatientDEtails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientDEtails.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 				62060ECB2C37097E00177028 /* View+Extension.swift */,
 				62060ECD2C3709B400177028 /* Date+Extension.swift */,
 				8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */,
-				8059DF942C3E68CE0061A261 /* PatientProfileView.swift */,
+				8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */,
 			);
 			path = Doctor;
 			sourceTree = "<group>";
@@ -310,7 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
-				8059DF952C3E68CE0061A261 /* PatientProfileView.swift in Sources */,
+				8059DF952C3E68CE0061A261 /* Doctor_Profile.swift in Sources */,
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
 				810860412C3D0B5300558934 /* Blur.swift in Sources */,
 				812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */,

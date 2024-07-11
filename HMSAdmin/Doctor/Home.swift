@@ -109,7 +109,6 @@ struct Home: View {
                     }
                 }
             }
-            
         }
     }
     

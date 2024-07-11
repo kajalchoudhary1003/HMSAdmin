@@ -1,10 +1,3 @@
-//
-//  DoctorCard.swift
-//  HMSAdmin
-//
-//  Created by pushker yadav on 06/07/24.
-//
-
 import SwiftUI
 
 struct DoctorCard: View {
