@@ -51,11 +51,12 @@ struct StaffsView: View {
                 }
             }
             .sheet(isPresented: $isPresentingAddStaffView) {
-                AddStaffsView()
+                AddStaffsView(staffs: $staffs, isPresentingAddStaffView: $isPresentingAddStaffView)
             }
-        .navigationViewStyle(StackNavigationViewStyle()) // Add this line to force the stack style
+        }
+        //.navigationViewStyle(StackNavigationViewStyle())
     }
-}
+
 
 struct StaffCard: View {
     var staff: Staff
@@ -82,11 +83,12 @@ struct StaffCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white)
         .cornerRadius(10)
-        //.shadow(radius: 5)
     }
 }
 
 struct AddStaffsView: View {
+    @Binding var staffs: [Staff]
+    @Binding var isPresentingAddStaffView: Bool
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var dateOfBirth = Date()
@@ -99,6 +101,8 @@ struct AddStaffsView: View {
     let positions = ["Nurse", "Care Taker"]
     let departments = ["General Ward", "ICU", "Emergency"]
     let employmentStatuses = ["Full-Time", "Part-Time", "Contractor"]
+    
+    
     
     var body: some View {
         NavigationView {
@@ -135,9 +139,39 @@ struct AddStaffsView: View {
             }
             .navigationTitle("Add Staffs")
             .navigationBarItems(trailing: Button("Done") {
-                // Action to save the staff details
+                saveStaff()
+                isPresentingAddStaffView = false
             })
         }
+    }
+    
+    func saveStaff() {
+        let newStaff = Staff(
+            name: "\(firstName) \(lastName)",
+            type: selectedEmploymentStatus,
+            age: calculateAge(from: dateOfBirth),
+            position: selectedPosition,
+            department: selectedDepartment
+        )
+        staffs.append(newStaff)
+        resetForm()
+    }
+    
+    func calculateAge(from date: Date) -> Int {
+        let now = Date()
+        let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
+        return ageComponents.year ?? 0
+    }
+    
+    func resetForm() {
+        firstName = ""
+        lastName = ""
+        dateOfBirth = Date()
+        phoneNumber = ""
+        email = ""
+        selectedPosition = ""
+        selectedDepartment = ""
+        selectedEmploymentStatus = ""
     }
 }
 
