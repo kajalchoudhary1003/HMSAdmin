@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		075B50FD2C4078260038861D /* AdminProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075B50FC2C4078260038861D /* AdminProfileView.swift */; };
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
 		07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */; };
 		62060EC42C37086000177028 /* DoctorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62060EC32C37086000177028 /* DoctorView.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		075B50FC2C4078260038861D /* AdminProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileView.swift; sourceTree = "<group>"; };
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctors.swift; sourceTree = "<group>"; };
 		62060EC32C37086000177028 /* DoctorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorView.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				07938CF52C3711E300A4FA96 /* ChangePassword.swift */,
 				8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */,
 				8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */,
+				075B50FC2C4078260038861D /* AdminProfileView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 				809112AB2C37EA67009CDBEF /* DataController.swift in Sources */,
 				8018E5112C39BDAD007D5FF4 /* DoctorCard.swift in Sources */,
 				810406342C3BEA540009C58E /* Extensions.swift in Sources */,
+				075B50FD2C4078260038861D /* AdminProfileView.swift in Sources */,
 				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				8059DF912C3E4B360061A261 /* SpeechRecognizer.swift in Sources */,
@@ -468,7 +472,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -497,7 +501,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
