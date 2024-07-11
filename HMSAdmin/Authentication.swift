@@ -24,7 +24,6 @@ struct Authentication: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
                     
-                                        
                     Spacer() // Pushes VStack content to the top
                 }
                 VStack(alignment: .trailing){
@@ -112,16 +111,22 @@ struct Authentication: View {
 
                             }
                             
-                            Button("Sign In") {
-                                    validateInputs()
+                            Button(action: {
+                                validateInputs()
+                            }) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color(hex: "006666"))
+                                    Text("Sign In")
+                                        .font(.headline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                }
+                                .frame(maxHeight: 22)
+                                .padding(.vertical)
                             }
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity, maxHeight: 22)
-                            .padding()
-                            .foregroundColor(Color.white)
-                            .background(Color(hex: "006666"))
-                            .cornerRadius(10)
                         }
                         .padding(.horizontal,5)
                         
@@ -129,7 +134,8 @@ struct Authentication: View {
                     .padding(.vertical, 5)
                     .background(Blur())
                     .padding(.horizontal, 6)
-                    .cornerRadius(22)                }
+                    .cornerRadius(22)
+                }
             }
             .padding(.bottom,10)
         }
