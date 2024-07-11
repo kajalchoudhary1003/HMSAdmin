@@ -111,25 +111,6 @@ struct DoctorFormView: View {
                         )
                     DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
                         .disabled(!isEditing)
-                    TextField("Zip Code", text: $zipCode)
-                        .keyboardType(.numberPad)
-                        .disabled(!isEditing)
-                        .onChange(of: zipCode) { newValue in
-                            let filtered = newValue.filter { "0123456789".contains($0) }
-                            if zipCode != filtered {
-                                zipCode = filtered
-                            }
-                            if zipCode.count > 6 {
-                                zipCode = String(zipCode.prefix(6))
-                            }
-                        }
-                        .overlay(
-                            Text("\(zipCode.count)/6")
-                                .font(.caption)
-                                .foregroundColor(zipCode.count > 6 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
                 }
                 
                 // Professional information section
