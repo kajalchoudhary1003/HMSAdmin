@@ -2,7 +2,10 @@ import SwiftUI
 
 struct ProfileView: View {
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var viewModel = ProfileViewModel()
     
+    var doctor: Doctor?
+
     var body: some View {
         VStack {
             HStack {
@@ -33,22 +36,22 @@ struct ProfileView: View {
                 .shadow(radius: 10)
                 .padding(.trailing, 20)
             
-            Text("Dr. Rajesh Waghle")
+            Text("\(doctor?.firstName ?? "N/A") \(doctor?.lastName ?? "N/A")")
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top, 10)
                 .padding(.trailing, 150)
             
             VStack(alignment: .leading, spacing: 10) {
-                ProfileRow(title: "Qualification", value: "MBBS, MD")
+                ProfileRow(title: "Qualification", value: doctor?.titles ?? "N/A")
                 Divider()
-                ProfileRow(title: "Department", value: "Physiotherapy")
+                ProfileRow(title: "Department", value: doctor?.designation.title ?? "N/A")
                 Divider()
-                ProfileRow(title: "Email id", value: "waghlerajesh@gmail.com")
+                ProfileRow(title: "Email id", value: doctor?.email ?? "N/A")
                 Divider()
-                ProfileRow(title: "Phone Number", value: "7864527364")
+                ProfileRow(title: "Phone Number", value: doctor?.phone ?? "N/A")
                 Divider()
-                ProfileRow(title: "Work Experience", value: "18+ yrs")
+                ProfileRow(title: "Work Experience", value: "18+ yrs") // Placeholder for experience
             }
             .padding()
             .background(Color(.systemGray6))
@@ -99,8 +102,14 @@ struct ProfileRow: View {
         }
     }
 }
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
+
+class ProfileViewModel: ObservableObject {
+    @Published var doctor: Doctor?
+    
+    func fetchDoctor(by id: String) {
+        // Fetch the doctor from DataController
+        if let doctor = DataController.shared.getDoctors().first(where: { $0.id == id }) {
+            self.doctor = doctor
+        }
     }
 }
