@@ -105,7 +105,7 @@ struct Doctor: Codable, Identifiable,Equatable {
         return designation.fees
     }
 
-    init(id: String? = nil, firstName: String, lastName: String, email: String, phone: String, starts: Date, ends: Date, dob: Date, designation: DoctorDesignation, titles: String) {
+    init(id: String?, firstName: String, lastName: String, email: String, phone: String, starts: Date, ends: Date, dob: Date, designation: DoctorDesignation, titles: String) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName

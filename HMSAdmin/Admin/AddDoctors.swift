@@ -23,7 +23,6 @@ struct DoctorFormView: View {
     @State private var showingMailView = false
     @State private var newDoctorEmail: String = ""
     @State private var newPassword: String = ""
-    @State private var isEditing = false
     
     var designations = DoctorDesignation.allCases
     
@@ -50,7 +49,6 @@ struct DoctorFormView: View {
             _dob = State(initialValue: doctor.dob)
             _designation = State(initialValue: doctor.designation)
             _titles = State(initialValue: doctor.titles)
-            _isEditing = State(initialValue: true)
         }
     }
     
@@ -154,7 +152,7 @@ struct DoctorFormView: View {
             }, trailing: Button("Save") {
                 saveDoctor()
             }
-                .disabled(doctorToEdit == nil && !isFormValid)) // Disable save button if form is not valid for adding new doctor
+                .disabled(!isFormValid)) // Disable save button if form is not valid
             // Added alert for email error
             .alert(isPresented: $showMailError) {
                 Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
@@ -164,54 +162,111 @@ struct DoctorFormView: View {
             .sheet(isPresented: $showingMailView) {
                 MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
                     if result == .sent {
-                        performFirebaseSignup()
+                        performFirebaseSignup { userId in
+                            guard let userId = userId else {
+                                // Handle error (e.g., show an alert)
+                                print("Failed to create user")
+                                return
+                            }
+                            
+                            let newDoctor = Doctor(
+                                id: userId,
+                                firstName: firstName,
+                                lastName: lastName,
+                                email: email,
+                                phone: phone,
+                                starts: starts,
+                                ends: ends,
+                                dob: dob,
+                                designation: designation,
+                                titles: titles
+                            )
+                            
+                            doctors.append(newDoctor)
+                            DataController.shared.addDoctor(newDoctor) { error in
+                                if let error = error {
+                                    print("Failed to save doctor: \(error.localizedDescription)")
+                                } else {
+                                    isPresent = false
+                                }
+                            }
+                        }
+                    } else {
+                        isPresent = false
                     }
                     showingMailView = false
-                    isPresent = false
                 })
             }
+
         }
     }
     
     private func saveDoctor() {
-        // Generate random email and password
+        // generate random email and password
         newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
         newPassword = generateRandomPassword(length: 6)
         
-        let newDoctor = Doctor(
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            starts: starts,
-            ends: ends,
-            dob: dob,
-            designation: designation,
-            titles: titles
-        )
-        
-        if let doctorToEdit = doctorToEdit {
-            // If editing an existing doctor, update the doctor details
-            if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
-                doctors[index] = newDoctor
+        // Perform Firebase signup first
+        performFirebaseSignup { userId in
+            guard let userId = userId else {
+                // Handle error (e.g., show an alert)
+                print("Failed to create user")
+                return
             }
-        } else {
-            // If adding a new doctor, append to the doctors array
-            doctors.append(newDoctor)
+            
+            let newDoctor = Doctor(
+                id: userId,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                starts: starts,
+                ends: ends,
+                dob: dob,
+                designation: designation,
+                titles: titles
+            )
+            
+            if let doctorToEdit = doctorToEdit {
+                // If editing an existing doctor, update the doctor details
+                if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
+                    var updatedDoctor = newDoctor
+                    updatedDoctor.id = doctorToEdit.id
+                    doctors[index] = updatedDoctor
+                    DataController.shared.addDoctor(updatedDoctor) { error in
+                        if let error = error {
+                            print("Failed to save doctor: \(error.localizedDescription)")
+                        } else {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+            } else {
+                // If adding a new doctor, append to the doctors list
+                doctors.append(newDoctor)
+                DataController.shared.addDoctor(newDoctor) { error in
+                    if let error = error {
+                        print("Failed to save doctor: \(error.localizedDescription)")
+                    } else {
+                        showingMailView = true
+                    }
+                }
+            }
         }
-        
-        showingMailView.toggle()
     }
     
-    // Function to delete the doctor
     private func deleteDoctor(_ doctor: Doctor) {
-        if let index = doctors.firstIndex(where: { $0.id == doctor.id }) {
-            doctors.remove(at: index)
-            isPresent = false
+        DataController.shared.deleteDoctor(doctor) { error in
+            if let error = error {
+                print("Failed to delete doctor: \(error.localizedDescription)")
+            } else {
+                doctors.removeAll { $0.id == doctor.id }
+                isPresent = false
+            }
         }
     }
     
-    // Function to construct email body
+    // Function to compose email body
     private func mailBody() -> String {
         """
         Hello Dr. \(firstName) \(lastName),
@@ -235,12 +290,14 @@ struct DoctorFormView: View {
     }
     
     // Function to perform Firebase signup
-    private func performFirebaseSignup() {
+    private func performFirebaseSignup(completion: @escaping (String?) -> Void) {
         Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
             if let error = error {
                 print("Error signing up: \(error.localizedDescription)")
+                completion(nil)
             } else {
                 print("User signed up successfully")
+                completion(authResult?.user.uid)
             }
         }
     }
