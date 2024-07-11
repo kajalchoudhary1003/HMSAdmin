@@ -5,7 +5,12 @@ struct PatientDetailsView: View {
     let patient: Patient
     @State private var prescriptionText = ""
     @State private var isShowingActionSheet = false
-    @ObservedObject private var speechRecognizer = SpeechRecognizer()
+    @State private var isRecordingPathology = false
+    @State private var isRecordingRadiology = false
+    @State private var audioRecorder: AVAudioRecorder?
+    @State private var pathologyAudioURLs: [URL] = []
+    @State private var radiologyAudioURLs: [URL] = []
+    @State private var audioPlayer: AVAudioPlayer?
     
     var body: some View {
         NavigationView {
@@ -68,53 +73,88 @@ struct PatientDetailsView: View {
                                     .foregroundColor(.blue)
                             }
                         }
-                        .padding(.bottom, -10)
+                        .padding(.bottom, 10)
                         
-                        // Medical Reports
-                        Section(header: Text("").padding(.bottom, -20)) {
+                        // Medical Records
+                        Section(header: Text("Medical Records").font(.headline).padding(.bottom, 20)) {
                             HStack {
-                                Image(systemName: "pdf")
+                                Image(systemName: "doc.text")
                                 Text("Pathology")
                                 Spacer()
-                                Text("440 Kbs")
-                                    .foregroundColor(.gray)
+                                Button(action: {}) {
+                                    Image(systemName: isRecordingPathology ? "mic.circle.fill" : "mic.circle")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                }
+                                .simultaneousGesture(
+                                    LongPressGesture(minimumDuration: 0.5)
+                                        .onEnded { _ in
+                                            if isRecordingPathology {
+                                                stopRecording()
+                                                isRecordingPathology = false
+                                            } else {
+                                                startRecording(fileName: "pathology.m4a")
+                                                isRecordingPathology = true
+                                            }
+                                        }
+                                )
+                            }
+                            ForEach(pathologyAudioURLs, id: \.self) { url in
+                                HStack {
+                                    Text(url.lastPathComponent)
+                                    Spacer()
+                                    Button(action: {
+                                        playAudio(url: url)
+                                    }) {
+                                        Image(systemName: "play.circle")
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                    }
+                                }
                             }
                             HStack {
-                                Image(systemName: "pdf")
+                                Image(systemName: "doc.text")
                                 Text("Radiology")
                                 Spacer()
-                                Text("440 Kbs")
-                                    .foregroundColor(.gray)
+                                Button(action: {}) {
+                                    Image(systemName: isRecordingRadiology ? "mic.circle.fill" : "mic.circle")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                }
+                                .simultaneousGesture(
+                                    LongPressGesture(minimumDuration: 0.5)
+                                        .onEnded { _ in
+                                            if isRecordingRadiology {
+                                                stopRecording()
+                                                isRecordingRadiology = false
+                                            } else {
+                                                startRecording(fileName: "radiology.m4a")
+                                                isRecordingRadiology = true
+                                            }
+                                        }
+                                )
+                            }
+                            ForEach(radiologyAudioURLs, id: \.self) { url in
+                                HStack {
+                                    Text(url.lastPathComponent)
+                                    Spacer()
+                                    Button(action: {
+                                        playAudio(url: url)
+                                    }) {
+                                        Image(systemName: "play.circle")
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                    }
+                                }
                             }
                         }
                         .padding(.bottom, -10)
                         
                         // Prescription Section
                         Section(header: Text("").padding(.bottom, -20)) {
-                            ZStack(alignment: .bottomTrailing) {
-                                TextField("Write Prescription...", text: $prescriptionText)
-                                    .padding(.bottom, 100)
-                                    .background(Color.white)
-                                Button(action: {
-                                    if speechRecognizer.isRunning {
-                                        speechRecognizer.stopRecording()
-                                    } else {
-                                        speechRecognizer.startRecording()
-                                    }
-                                }) {
-                                    Image(systemName: speechRecognizer.isRunning ? "mic.circle.fill" : "mic.circle")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(.top,50)
-                                        .padding(.leading,1)
-                                        
-                                }
-                                .padding(.bottom, 8)
-                                .padding(.trailing, 8)
-                            }
-                            .onChange(of: speechRecognizer.recognizedText) { newValue in
-                                prescriptionText = newValue
-                            }
+                            TextField("Write Prescription...", text: $prescriptionText)
+                                .padding(.bottom, 100)
+                                .background(Color.white)
                         }
                     }
                     .background(Color.white)
@@ -123,6 +163,48 @@ struct PatientDetailsView: View {
             }
         }
     }
+
+    func startRecording(fileName: String) {
+        let audioFilename = getDocumentsDirectory().appendingPathComponent(fileName)
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+            audioRecorder?.record()
+        } catch {
+            // Handle the error
+        }
+    }
+
+    func stopRecording() {
+        audioRecorder?.stop()
+        if let url = audioRecorder?.url {
+            if isRecordingPathology {
+                pathologyAudioURLs.append(url)
+            } else if isRecordingRadiology {
+                radiologyAudioURLs.append(url)
+            }
+        }
+        audioRecorder = nil
+    }
+
+    func playAudio(url: URL) {
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+        } catch {
+            // Handle the error
+        }
+    }
+
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
 }
 
 struct PatientDetailsView_Previews: PreviewProvider {
@@ -130,4 +212,3 @@ struct PatientDetailsView_Previews: PreviewProvider {
         PatientDetailsView(patient: Patient(name: "Madhav Sharma", age: 21, type: "Regular", startTime: Date(), appointmentDate: Date()))
     }
 }
-
