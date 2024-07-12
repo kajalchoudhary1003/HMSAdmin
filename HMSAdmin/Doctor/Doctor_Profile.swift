@@ -19,7 +19,6 @@ struct ProfileView: View {
                 }
             }
             .padding(.trailing)
-            .padding()
             
             Text("Profile")
                 .font(.title)
