@@ -75,22 +75,6 @@ struct AddHospital: View {
                             .padding(.trailing, 8),
                         alignment: .trailing
                     )
-                TextField("Address", text: $address)
-                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                        address = address.trimmingCharacters(in: .whitespacesAndNewlines)
-                    }
-                    .onChange(of: address) { newValue in
-                        if newValue.count > 100 {
-                            address = String(newValue.prefix(100))
-                        }
-                    }
-                    .overlay(
-                        Text("\(address.count)/100")
-                            .font(.caption)
-                            .foregroundColor(address.count > 100 ? .red : .gray)
-                            .padding(.trailing, 8),
-                        alignment: .trailing
-                    )
                 TextField("Phone", text: $phone)
                     .keyboardType(.numberPad)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
@@ -134,6 +118,27 @@ struct AddHospital: View {
                         .foregroundColor(.red)
                         .font(.caption)
                 }
+
+            }
+            
+            Section(){
+                
+            TextField("Address", text: $address)
+                .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                    address = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+                .onChange(of: address) { newValue in
+                    if newValue.count > 100 {
+                        address = String(newValue.prefix(100))
+                    }
+                }
+                .overlay(
+                    Text("\(address.count)/100")
+                        .font(.caption)
+                        .foregroundColor(address.count > 100 ? .red : .gray)
+                        .padding(.trailing, 8),
+                    alignment: .trailing
+                )
                 TextField("City", text: $city)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
                         city = city.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -168,8 +173,14 @@ struct AddHospital: View {
                         .foregroundColor(.red)
                         .font(.caption)
                 }
+                HStack(){
+                    Text("Location")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                    
+                }.background(Color.white)
+                .cornerRadius(10)
             }
-            
             // Section for admin details
             Section(header: Text("Admin Details")) {
                 Picker(selection: $selectedTypeIndex, label: Text("Type")) {
