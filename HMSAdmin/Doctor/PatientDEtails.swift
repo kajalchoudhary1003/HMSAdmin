@@ -11,7 +11,9 @@ struct PatientDetailsView: View {
     @State private var pathologyAudioURLs: [URL] = []
     @State private var radiologyAudioURLs: [URL] = []
     @State private var audioPlayer: AVAudioPlayer?
-    
+    @State private var recordingDuration: TimeInterval = 0
+    @State private var recordingTimer: Timer?
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -81,23 +83,35 @@ struct PatientDetailsView: View {
                                 Image(systemName: "doc.text")
                                 Text("Pathology")
                                 Spacer()
-                                Button(action: {}) {
-                                    Image(systemName: isRecordingPathology ? "mic.circle.fill" : "mic.circle")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                }
-                                .simultaneousGesture(
-                                    LongPressGesture(minimumDuration: 0.5)
-                                        .onEnded { _ in
-                                            if isRecordingPathology {
-                                                stopRecording()
-                                                isRecordingPathology = false
-                                            } else {
-                                                startRecording(fileName: "pathology.m4a")
-                                                isRecordingPathology = true
+                                VStack {
+                                    Button(action: {}) {
+                                        Image(systemName: isRecordingPathology ? "mic.circle.fill" : "mic.circle")
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                    }
+                                    .gesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged { _ in
+                                                if !isRecordingPathology {
+                                                    startRecording(fileName: "pathology.m4a")
+                                                    isRecordingPathology = true
+                                                    startTimer()
+                                                }
                                             }
-                                        }
-                                )
+                                            .onEnded { _ in
+                                                if isRecordingPathology {
+                                                    stopRecording()
+                                                    isRecordingPathology = false
+                                                    stopTimer()
+                                                }
+                                            }
+                                    )
+                                    if isRecordingPathology {
+                                        Text("\(Int(recordingDuration))s")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
                             }
                             ForEach(pathologyAudioURLs, id: \.self) { url in
                                 HStack {
@@ -116,23 +130,35 @@ struct PatientDetailsView: View {
                                 Image(systemName: "doc.text")
                                 Text("Radiology")
                                 Spacer()
-                                Button(action: {}) {
-                                    Image(systemName: isRecordingRadiology ? "mic.circle.fill" : "mic.circle")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                }
-                                .simultaneousGesture(
-                                    LongPressGesture(minimumDuration: 0.5)
-                                        .onEnded { _ in
-                                            if isRecordingRadiology {
-                                                stopRecording()
-                                                isRecordingRadiology = false
-                                            } else {
-                                                startRecording(fileName: "radiology.m4a")
-                                                isRecordingRadiology = true
+                                VStack {
+                                    Button(action: {}) {
+                                        Image(systemName: isRecordingRadiology ? "mic.circle.fill" : "mic.circle")
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                    }
+                                    .gesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged { _ in
+                                                if !isRecordingRadiology {
+                                                    startRecording(fileName: "radiology.m4a")
+                                                    isRecordingRadiology = true
+                                                    startTimer()
+                                                }
                                             }
-                                        }
-                                )
+                                            .onEnded { _ in
+                                                if isRecordingRadiology {
+                                                    stopRecording()
+                                                    isRecordingRadiology = false
+                                                    stopTimer()
+                                                }
+                                            }
+                                    )
+                                    if isRecordingRadiology {
+                                        Text("\(Int(recordingDuration))s")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
                             }
                             ForEach(radiologyAudioURLs, id: \.self) { url in
                                 HStack {
@@ -175,6 +201,7 @@ struct PatientDetailsView: View {
         do {
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
             audioRecorder?.record()
+            recordingDuration = 0
         } catch {
             // Handle the error
         }
@@ -204,6 +231,17 @@ struct PatientDetailsView: View {
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
+    }
+
+    func startTimer() {
+        recordingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            recordingDuration += 1
+        }
+    }
+
+    func stopTimer() {
+        recordingTimer?.invalidate()
+        recordingTimer = nil
     }
 }
 
