@@ -131,3 +131,10 @@ struct PatientDetailsView: View {
 //    }
 //}
 
+struct PatientDetailsView_Previews: PreviewProvider {
+    static var previews: some View {
+        PatientDetailsView(patient: Patient(id: "1", firstName: "Madhav", lastName: "Sharma", age: 21, type: "Regular", appointmentDate: Date()))
+    }
+}
+
+

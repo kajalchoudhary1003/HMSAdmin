@@ -11,6 +11,16 @@ struct Patient: Codable, Identifiable{
     var type: String
     var appointmentDate: Date
     
+    
+    init(id: String? = nil, firstName: String, lastName: String, age: Int, type: String, appointmentDate: Date) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.type = type
+        self.appointmentDate = appointmentDate
+    }
+    
     init?(from dictionary: [String: Any], id: String){
         guard let firstName = dictionary["firstName"] as? String,
               let lastName = dictionary["lastName"] as? String,
