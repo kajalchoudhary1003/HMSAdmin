@@ -9,12 +9,14 @@ class DataController {
     private var database: DatabaseReference
     private var hospitals: [String: Hospital] = [:]
     private var doctors: [String: Doctor] = [:]
+    private var patients: [String: Patient] = [:]
     
     private init() {
         // Initialize the Firebase database reference
         self.database = Database.database(url: "https://hms-team02-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
         fetchHospitals()
         fetchDoctors()
+        fetchPatients()
     }
     
     // Fetch hospitals data from Firebase
@@ -36,6 +38,26 @@ class DataController {
             NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
         }
     }
+    
+    //fetch patient details
+    func fetchPatients() {
+           let ref = database.child("patient_users")
+           ref.observe(.value) { snapshot in
+               self.patients = [:]
+               for child in snapshot.children {
+                   if let childSnapshot = child as? DataSnapshot,
+                      let patientData = childSnapshot.value as? [String: Any],
+                      let patient = Patient(from: patientData, id: childSnapshot.key) {
+                       self.patients[patient.id ?? UUID().uuidString] = patient
+                       print("Added patient with ID: \(patient.id ?? "unknown")")
+                   } else {
+                       print("Failed to parse patient data from snapshot.")
+                   }
+               }
+               NotificationCenter.default.post(name: NSNotification.Name("PatientsUpdated"), object: nil)
+           }
+       }
+       
     
     // Add a hospital to Firebase
     func addHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
