@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0740F2EF2C41413B001FF481 /* AdminProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740F2EE2C41413B001FF481 /* AdminProfileView.swift */; };
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
 		07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */; };
 		24A780F82C3E845200C8F3B1 /* AddAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A780F72C3E845200C8F3B1 /* AddAdmin.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0740F2EE2C41413B001FF481 /* AdminProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileView.swift; sourceTree = "<group>"; };
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctors.swift; sourceTree = "<group>"; };
 		24A780F72C3E845200C8F3B1 /* AddAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAdmin.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 				8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */,
 				8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */,
 				EA4BE7282C3F96C9003F507D /* StaffView.swift */,
+				0740F2EE2C41413B001FF481 /* AdminProfileView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				810860412C3D0B5300558934 /* Blur.swift in Sources */,
 				812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
+				0740F2EF2C41413B001FF481 /* AdminProfileView.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
 				EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */,
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,

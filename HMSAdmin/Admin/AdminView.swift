@@ -5,6 +5,7 @@ struct AdminView: View {
     @State private var searchText: String = ""
     @State private var doctors: [Doctor] = []
     @State private var isLoading = true
+    @State private var isProfilePresented = false
     
     var body: some View {
         NavigationView {
@@ -17,11 +18,18 @@ struct AdminView: View {
             .navigationTitle("Hi, Admin")
             .toolbar {
                 ToolbarItem() {
-                    Image(systemName: "person.crop.circle.fill")
-                        .foregroundColor(Color(hex: "#006666"))
+                    Button(action: {
+                        isProfilePresented.toggle()
+                    }) {
+                        Image(systemName: "person.crop.circle.fill")
+                            .foregroundColor(Color(hex: "#006666"))
+                    }
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
+            .sheet(isPresented: $isProfilePresented) {
+                AdminProfileView(admin1: AdminProfile(id: "1", firstName: "Subhash", lastName: "Ghai", email: "subhash.ghai@example.com", phone: "1234567890"))
+            }
         }
     }
     
@@ -47,10 +55,10 @@ struct AdminView: View {
     
     private var hospitalDataSection: some View {
         Section(header: Text("Hospital Data").font(.headline).foregroundColor(.gray)) {
-                dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(ShowDoctors()))
-            dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(StaffsView())
-                //dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
-        )}
+            dataCard(icon: "stethoscope", title: "Doctors", count: "80", destination: AnyView(ShowDoctors()))
+            dataCard(icon: "syringe", title: "Staffs", count: "120", destination: AnyView(Text("Staff Screen")))
+            dataCard(icon: "gift", title: "Offers", count: "05", destination: AnyView(Text("Offers Screen")))
+        }
     }
     
     private func dataCard(icon: String, title: String, count: String, destination: AnyView) -> some View {
