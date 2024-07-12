@@ -40,13 +40,13 @@ struct PatientDetailsView: View {
                             HStack {
                                 Text("First Name")
                                 Spacer()
-                                Text(patient.name.split(separator: " ").first ?? "")
+                                Text(patient.firstName.split(separator: " ").first ?? "")
                                     .foregroundColor(.gray)
                             }
                             HStack {
                                 Text("Last Name")
                                 Spacer()
-                                Text(patient.name.split(separator: " ").last ?? "")
+                                Text(patient.lastName.split(separator: " ").last ?? "")
                                     .foregroundColor(.gray)
                             }
                             HStack {
@@ -125,9 +125,9 @@ struct PatientDetailsView: View {
     }
 }
 
-struct PatientDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PatientDetailsView(patient: Patient(name: "Madhav Sharma", age: 21, type: "Regular", startTime: Date(), appointmentDate: Date()))
-    }
-}
+//struct PatientDetailsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PatientDetailsView(patient: Patient(name: "Madhav Sharma", age: 21, type: "Regular", startTime: Date(), appointmentDate: Date()))
+//    }
+//}
 
