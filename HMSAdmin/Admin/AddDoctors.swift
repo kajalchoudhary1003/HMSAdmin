@@ -17,21 +17,22 @@ struct DoctorFormView: View {
     @State private var dob = Date()
     @State private var designation: DoctorDesignation = .generalPractitioner
     @State private var titles = ""
-    @State private var zipCode = ""
-    
+    @State private var showSignupError = false
+    @State private var signupErrorMessage = ""
     @State private var showMailError = false
     @State private var showingMailView = false
     @State private var newDoctorEmail: String = ""
     @State private var newPassword: String = ""
+    @State private var isEditing = true
     
     var designations = DoctorDesignation.allCases
     
     // Form validation check
     var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty && !zipCode.isEmpty &&
-        firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) && isValidZipCode(zipCode) &&
-        dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
-    }
+            !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
+            firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) &&
+            dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
+        }
     
     // Initializer to set up the form with existing doctor details if editing
     init(isPresent: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
@@ -58,6 +59,7 @@ struct DoctorFormView: View {
                 // Personal information section
                 Section(header: Text("Personal Information")) {
                     TextField("First Name", text: $firstName)
+                        .disabled(!isEditing)
                         .onChange(of: firstName) { newValue in
                             if newValue.count > 25 {
                                 firstName = String(newValue.prefix(25))
@@ -71,6 +73,7 @@ struct DoctorFormView: View {
                             alignment: .trailing
                         )
                     TextField("Last Name", text: $lastName)
+                        .disabled(!isEditing)
                         .onChange(of: lastName) { newValue in
                             if newValue.count > 25 {
                                 lastName = String(newValue.prefix(25))
@@ -85,8 +88,10 @@ struct DoctorFormView: View {
                         )
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
+                        .disabled(!isEditing)
                     TextField("Phone Number", text: $phone)
                         .keyboardType(.numberPad)
+                        .disabled(!isEditing)
                         .onChange(of: phone) { newValue in
                             let filtered = newValue.filter { "0123456789".contains($0) }
                             if phone != filtered {
@@ -104,24 +109,7 @@ struct DoctorFormView: View {
                             alignment: .trailing
                         )
                     DatePicker("Date of Birth", selection: $dob, in: ...Calendar.current.date(byAdding: .year, value: -20, to: Date())!, displayedComponents: .date)
-                    TextField("Zip Code", text: $zipCode)
-                        .keyboardType(.numberPad)
-                        .onChange(of: zipCode) { newValue in
-                            let filtered = newValue.filter { "0123456789".contains($0) }
-                            if zipCode != filtered {
-                                zipCode = filtered
-                            }
-                            if zipCode.count > 6 {
-                                zipCode = String(zipCode.prefix(6))
-                            }
-                        }
-                        .overlay(
-                            Text("\(zipCode.count)/6")
-                                .font(.caption)
-                                .foregroundColor(zipCode.count > 6 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
+                        .disabled(!isEditing)
                 }
                 
                 // Professional information section
@@ -131,142 +119,80 @@ struct DoctorFormView: View {
                             Text($0.title)
                         }
                     }
+                    .disabled(!isEditing)
                     DatePicker("Starts", selection: $starts, displayedComponents: .hourAndMinute)
+                        .disabled(!isEditing)
                     DatePicker("Ends", selection: $ends, displayedComponents: .hourAndMinute)
+                        .disabled(!isEditing)
                     TextField("Qualifications", text: $titles)
+                        .disabled(!isEditing)
                 }
-                VStack(alignment: .trailing) {
-                    if doctorToEdit != nil {
-                        Button(action: {
-                            deleteDoctor(doctorToEdit!)
-                        }) {
-                            Text("Delete Doctor")
-                                .foregroundColor(.red)
-                        }
-                    }
-                }
+                if doctorToEdit != nil && isEditing {
+                                    Section {
+                                        Button(action: {
+                                            deleteDoctor(doctorToEdit!)
+                                        }) {
+                                            Text("Delete Doctor")
+                                                .foregroundColor(.red)
+                                        }
+                                    }
+                                }
             }
-            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
-            .navigationBarItems(leading: Button("Cancel") {
-                isPresent = false
-            }, trailing: Button("Save") {
-                saveDoctor()
-            }
-                .disabled(!isFormValid)) // Disable save button if form is not valid
-            // Added alert for email error
-            .alert(isPresented: $showMailError) {
-                Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
-            }
-            
-            // Added sheet for showing email composer
-            .sheet(isPresented: $showingMailView) {
-                MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
-                    if result == .sent {
-                        performFirebaseSignup { userId in
-                            guard let userId = userId else {
-                                // Handle error (e.g., show an alert)
-                                print("Failed to create user")
-                                return
-                            }
-                            
-                            let newDoctor = Doctor(
-                                id: userId,
-                                firstName: firstName,
-                                lastName: lastName,
-                                email: email,
-                                phone: phone,
-                                starts: starts,
-                                ends: ends,
-                                dob: dob,
-                                designation: designation,
-                                titles: titles
-                            )
-                            
-                            doctors.append(newDoctor)
-                            DataController.shared.addDoctor(newDoctor) { error in
-                                if let error = error {
-                                    print("Failed to save doctor: \(error.localizedDescription)")
+            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor")
+                        .navigationBarItems(
+                            leading: Button("Cancel") {
+                                isPresent = false
+                            },
+                            trailing: Button(isEditing ? "Save" : "Edit") {
+                                if isEditing {
+                                    if isFormValid {
+                                        saveDoctor()
+                                    } else {
+                                        showSignupError = true
+                                        signupErrorMessage = "Please fill all fields correctly."
+                                    }
                                 } else {
-                                    isPresent = false
+                                    isEditing.toggle()
                                 }
                             }
+                            .disabled(isEditing && !isFormValid)
+                        )
+                        .alert(isPresented: $showSignupError) {
+                            Alert(title: Text("Error"), message: Text(signupErrorMessage), dismissButton: .default(Text("OK")))
                         }
-                    } else {
-                        isPresent = false
+                        .sheet(isPresented: $showingMailView) {
+                            MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
+                                if result == .sent {
+                                    isPresent = false
+                                } else {
+                                    showMailError = true
+                                }
+                                showingMailView = false
+                            })
+                        }
+                        .alert(isPresented: $showMailError) {
+                            Alert(title: Text("Email Error"), message: Text("Failed to send email with credentials. Please contact the doctor manually."), dismissButton: .default(Text("OK")))
+                        }
                     }
-                    showingMailView = false
-                })
-            }
+                }
 
-        }
-    }
     
     private func saveDoctor() {
-        // generate random email and password
-        newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
-        newPassword = generateRandomPassword(length: 6)
-        
-        // Perform Firebase signup first
-        performFirebaseSignup { userId in
-            guard let userId = userId else {
-                // Handle error (e.g., show an alert)
-                print("Failed to create user")
-                return
-            }
+            newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
+            newPassword = generateRandomPassword(length: 6)
             
-            let newDoctor = Doctor(
-                id: userId,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                phone: phone,
-                starts: starts,
-                ends: ends,
-                dob: dob,
-                designation: designation,
-                titles: titles
-            )
-            
-            if let doctorToEdit = doctorToEdit {
-                // If editing an existing doctor, update the doctor details
-                if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
-                    var updatedDoctor = newDoctor
-                    updatedDoctor.id = doctorToEdit.id
-                    doctors[index] = updatedDoctor
-                    DataController.shared.addDoctor(updatedDoctor) { error in
-                        if let error = error {
-                            print("Failed to save doctor: \(error.localizedDescription)")
-                        } else {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                }
-            } else {
-                // If adding a new doctor, append to the doctors list
-                doctors.append(newDoctor)
-                DataController.shared.addDoctor(newDoctor) { error in
-                    if let error = error {
-                        print("Failed to save doctor: \(error.localizedDescription)")
-                    } else {
-                        showingMailView = true
-                    }
-                }
-            }
-        }
+            performFirebaseSignup()
     }
     
+    // Function to delete the doctor
     private func deleteDoctor(_ doctor: Doctor) {
-        DataController.shared.deleteDoctor(doctor) { error in
-            if let error = error {
-                print("Failed to delete doctor: \(error.localizedDescription)")
-            } else {
-                doctors.removeAll { $0.id == doctor.id }
-                isPresent = false
-            }
+        if let index = doctors.firstIndex(where: { $0.id == doctor.id }) {
+            doctors.remove(at: index)
+            isPresent = false
         }
     }
     
-    // Function to compose email body
+    // Function to construct email body
     private func mailBody() -> String {
         """
         Hello Dr. \(firstName) \(lastName),
@@ -290,18 +216,43 @@ struct DoctorFormView: View {
     }
     
     // Function to perform Firebase signup
-    private func performFirebaseSignup(completion: @escaping (String?) -> Void) {
-        Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
-            if let error = error {
-                print("Error signing up: \(error.localizedDescription)")
-                completion(nil)
-            } else {
-                print("User signed up successfully")
-                completion(authResult?.user.uid)
+    private func performFirebaseSignup() {
+            Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
+                if let error = error {
+                    print("Error signing up: \(error.localizedDescription)")
+                    showSignupError = true
+                    signupErrorMessage = error.localizedDescription
+                } else if let authResult = authResult {
+                    let newDoctor = Doctor(
+                        id: authResult.user.uid,
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: newDoctorEmail,
+                        phone: phone,
+                        starts: starts,
+                        ends: ends,
+                        dob: dob,
+                        designation: designation,
+                        titles: titles
+                    )
+                    addNewDoctorToDatabase(newDoctor)
+                }
             }
         }
-    }
-    
+    private func addNewDoctorToDatabase(_ doctor: Doctor) {
+        DataController.shared.addDoctor(doctor) { error in
+              if let error = error {
+                  print("Error saving doctor to database: \(error.localizedDescription)")
+                  showSignupError = true
+                  signupErrorMessage = "Failed to save doctor details. Please try again."
+              } else {
+                  sendWelcomeEmail(to: doctor)
+              }
+          }
+      }
+    private func sendWelcomeEmail(to doctor: Doctor) {
+            showingMailView = true
+        }
     // Function to validate email
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "^[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"

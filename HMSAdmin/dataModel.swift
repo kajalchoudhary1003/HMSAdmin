@@ -10,7 +10,6 @@ struct Patient: Codable, Identifiable{
     var age: Int
     var type: String
     var appointmentDate: Date
-    var appointments:[Appointment]
     
     init(id: String? = nil, firstName: String, lastName: String, age: Int, type: String, appointmentDate: Date) {
         self.id = id
@@ -95,7 +94,6 @@ struct Doctor: Codable, Identifiable,Equatable {
     var dob: Date
     var designation: DoctorDesignation
     var titles: String
-    var appointments:[Appointment]
     
     // Computed property to return the consultation interval based on the designation
     var interval: String {
@@ -120,7 +118,6 @@ struct Doctor: Codable, Identifiable,Equatable {
         self.titles = titles
     }
     
-    // Equatable conformance to compare two Doctor instances
     static func == (lhs: Doctor, rhs: Doctor) -> Bool {
         return lhs.id == rhs.id
     }

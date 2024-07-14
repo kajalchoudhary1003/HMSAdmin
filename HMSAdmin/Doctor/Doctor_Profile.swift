@@ -1,11 +1,10 @@
 import SwiftUI
+import FirebaseAuth
 
 struct ProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = ProfileViewModel()
     
-    var doctor: Doctor?
-
     var body: some View {
         VStack {
             HStack {
@@ -36,20 +35,20 @@ struct ProfileView: View {
                 .shadow(radius: 10)
                 .padding(.trailing, 20)
             
-            Text("\(doctor?.firstName ?? "N/A") \(doctor?.lastName ?? "N/A")")
+            Text("\(viewModel.doctor?.firstName ?? "N/A") \(viewModel.doctor?.lastName ?? "N/A")")
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top, 10)
                 .padding(.trailing, 150)
             
             VStack(alignment: .leading, spacing: 10) {
-                ProfileRow(title: "Qualification", value: doctor?.titles ?? "N/A")
+                ProfileRow(title: "Qualification", value: viewModel.doctor?.titles ?? "N/A")
                 Divider()
-                ProfileRow(title: "Department", value: doctor?.designation.title ?? "N/A")
+                ProfileRow(title: "Department", value: viewModel.doctor?.designation.title ?? "N/A")
                 Divider()
-                ProfileRow(title: "Email id", value: doctor?.email ?? "N/A")
+                ProfileRow(title: "Email id", value: viewModel.doctor?.email ?? "N/A")
                 Divider()
-                ProfileRow(title: "Phone Number", value: doctor?.phone ?? "N/A")
+                ProfileRow(title: "Phone Number", value: viewModel.doctor?.phone ?? "N/A")
                 Divider()
                 ProfileRow(title: "Work Experience", value: "18+ yrs") // Placeholder for experience
             }
@@ -83,6 +82,9 @@ struct ProfileView: View {
             Spacer().frame(height: 20)
         }
         .background(Color(.systemGray5))
+        .onAppear {
+            viewModel.fetchCurrentDoctor()
+        }
     }
 }
 
@@ -106,13 +108,16 @@ struct ProfileRow: View {
 class ProfileViewModel: ObservableObject {
     @Published var doctor: Doctor?
     
-    func fetchDoctor(by id: String) {
-        // Fetch the doctor from DataController
-        if let doctor = DataController.shared.getDoctors().first(where: { $0.id == id }) {
+    func fetchCurrentDoctor() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No current user found")
+            return
+        }
+        print(userId)
+        if let doctor = DataController.shared.getDoctors().first(where: { $0.id == userId }) {
             self.doctor = doctor
+        } else {
+            print("Doctor not found for current user ID")
         }
     }
-}
-#Preview{
-    ProfileView()
 }
