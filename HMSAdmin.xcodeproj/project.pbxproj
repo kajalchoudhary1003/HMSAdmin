@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0740F2EF2C41413B001FF481 /* AdminProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740F2EE2C41413B001FF481 /* AdminProfileView.swift */; };
 		07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CF52C3711E300A4FA96 /* ChangePassword.swift */; };
 		07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */; };
 		24A780F82C3E845200C8F3B1 /* AddAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A780F72C3E845200C8F3B1 /* AddAdmin.swift */; };
@@ -24,7 +25,7 @@
 		8018E5112C39BDAD007D5FF4 /* DoctorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */; };
 		8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */; };
 		8059DF912C3E4B360061A261 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */; };
-		8059DF952C3E68CE0061A261 /* PatientProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF942C3E68CE0061A261 /* PatientProfileView.swift */; };
+		8059DF952C3E68CE0061A261 /* Doctor_Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */; };
 		809112AB2C37EA67009CDBEF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AA2C37EA67009CDBEF /* DataController.swift */; };
 		809112AD2C37F707009CDBEF /* ShowHospital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809112AC2C37F707009CDBEF /* ShowHospital.swift */; };
 		809C43B22C39BC2E003AB449 /* PatientDEtails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C43B12C39BC2E003AB449 /* PatientDEtails.swift */; };
@@ -36,18 +37,20 @@
 		812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37802C374B6900614EE9 /* HospitalCard.swift */; };
 		812C37832C37CB2100614EE9 /* AdminPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37822C37CB2100614EE9 /* AdminPickerView.swift */; };
 		812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */; };
+		E906D1412C43E33C00620531 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E906D1402C43E33C00620531 /* GoogleService-Info.plist */; };
 		E94E68D92C38195900ED9F1C /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E68D82C38195900ED9F1C /* MailView.swift */; };
-		E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */; };
 		E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9262C35C4FE00C02518 /* FirebaseAuth */; };
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
 		E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */; };
 		E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */; };
+		EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4BE7282C3F96C9003F507D /* StaffView.swift */; };
 		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
-		EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* AdminHome.swift */; };
+		EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */; };
 		EA6603342C3D6E77003540D1 /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603312C3D6E77003540D1 /* DataType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0740F2EE2C41413B001FF481 /* AdminProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileView.swift; sourceTree = "<group>"; };
 		07938CF52C3711E300A4FA96 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		07938CFB2C37ED0300A4FA96 /* AddDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDoctors.swift; sourceTree = "<group>"; };
 		24A780F72C3E845200C8F3B1 /* AddAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAdmin.swift; sourceTree = "<group>"; };
@@ -65,7 +68,7 @@
 		8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorCard.swift; sourceTree = "<group>"; };
 		8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDoctors.swift; sourceTree = "<group>"; };
 		8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
-		8059DF942C3E68CE0061A261 /* PatientProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientProfileView.swift; sourceTree = "<group>"; };
+		8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Doctor_Profile.swift; sourceTree = "<group>"; };
 		809112AA2C37EA67009CDBEF /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		809112AC2C37F707009CDBEF /* ShowHospital.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHospital.swift; sourceTree = "<group>"; };
 		809C43B12C39BC2E003AB449 /* PatientDEtails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientDEtails.swift; sourceTree = "<group>"; };
@@ -77,10 +80,11 @@
 		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
 		812C37822C37CB2100614EE9 /* AdminPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPickerView.swift; sourceTree = "<group>"; };
 		812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetSidebarView.swift; sourceTree = "<group>"; };
+		E906D1402C43E33C00620531 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E94E68D82C38195900ED9F1C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
-		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EA4BE7282C3F96C9003F507D /* StaffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffView.swift; sourceTree = "<group>"; };
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
-		EA6603302C3D6E77003540D1 /* AdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminHome.swift; sourceTree = "<group>"; };
+		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,7 +114,7 @@
 		62530F3F2C33D5BC001B496B = {
 			isa = PBXGroup;
 			children = (
-				E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */,
+				E906D1402C43E33C00620531 /* GoogleService-Info.plist */,
 				62530F4A2C33D5BC001B496B /* HMSAdmin */,
 				62530F492C33D5BC001B496B /* Products */,
 				62060ED92C374C0B00177028 /* Frameworks */,
@@ -154,7 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				EA6603312C3D6E77003540D1 /* DataType.swift */,
-				EA6603302C3D6E77003540D1 /* AdminHome.swift */,
+				EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */,
 				EA66032F2C3D6E77003540D1 /* Revenue.swift */,
 				812C377A2C36B65400614EE9 /* HospitalView.swift */,
 			);
@@ -209,6 +213,8 @@
 				07938CF52C3711E300A4FA96 /* ChangePassword.swift */,
 				8018E5102C39BDAD007D5FF4 /* DoctorCard.swift */,
 				8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */,
+				EA4BE7282C3F96C9003F507D /* StaffView.swift */,
+				0740F2EE2C41413B001FF481 /* AdminProfileView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -223,7 +229,7 @@
 				62060ECB2C37097E00177028 /* View+Extension.swift */,
 				62060ECD2C3709B400177028 /* Date+Extension.swift */,
 				8059DF902C3E4B360061A261 /* SpeechRecognizer.swift */,
-				8059DF942C3E68CE0061A261 /* PatientProfileView.swift */,
+				8059DF942C3E68CE0061A261 /* Doctor_Profile.swift */,
 			);
 			path = Doctor;
 			sourceTree = "<group>";
@@ -297,8 +303,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				62530F532C33D5BE001B496B /* Preview Assets.xcassets in Resources */,
+				E906D1412C43E33C00620531 /* GoogleService-Info.plist in Resources */,
 				62530F502C33D5BE001B496B /* Assets.xcassets in Resources */,
-				E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,13 +316,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */,
-				8059DF952C3E68CE0061A261 /* PatientProfileView.swift in Sources */,
+				8059DF952C3E68CE0061A261 /* Doctor_Profile.swift in Sources */,
 				812C377C2C36B65400614EE9 /* AddHospital.swift in Sources */,
 				810860412C3D0B5300558934 /* Blur.swift in Sources */,
 				812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */,
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
+				0740F2EF2C41413B001FF481 /* AdminProfileView.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
-				EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */,
+				EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */,
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
@@ -335,6 +342,7 @@
 				8018E5112C39BDAD007D5FF4 /* DoctorCard.swift in Sources */,
 				810406342C3BEA540009C58E /* Extensions.swift in Sources */,
 				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
+				EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
 				8059DF912C3E4B360061A261 /* SpeechRecognizer.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
@@ -472,7 +480,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -485,7 +493,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-Mediflex";
+				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-AdminApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -501,7 +509,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -514,7 +522,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-Mediflex";
+				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-AdminApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

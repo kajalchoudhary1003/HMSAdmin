@@ -3,51 +3,52 @@ import Firebase
 import FirebaseFirestoreSwift
 
 
-//Patient Model
-//struct Patient: Hashable, Codable, Identifiable {
-//    @DocumentID var id: String?
-//    var firstName: String
-//    var lastName: String
-//    var email: String
-//    var dob: Date
-//    var sex: String
-//    var bloodtype: String
-//    @ServerTimestamp var lastUpdated: Timestamp?
-//    
-//    enum CodingKeys: String, CodingKey {
-//        case id
-//        case firstName
-//        case lastName
-//        case email
-//        case dob
-//        case sex
-//        case bloodtype
-//        case lastUpdated
-//    }
-//    
-//    init(firstName: String, lastName: String, email: String, dob: Date, sex: String, bloodtype: String, lastUpdated: Timestamp? = nil) {
-//        self.firstName = firstName
-//        self.lastName = lastName
-//        self.email = email
-//        self.dob = dob
-//        self.sex = sex
-//        self.bloodtype = bloodtype
-//        self.lastUpdated = lastUpdated
-//    }
-//    
-//    init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try values.decodeIfPresent(String.self, forKey: .id)
-//        firstName = try values.decode(String.self, forKey: .firstName)
-//        lastName = try values.decode(String.self, forKey: .lastName)
-//        email = try values.decode(String.self, forKey: .email)
-//        dob = try values.decode(Date.self, forKey: .dob)
-//        sex = try values.decode(String.self, forKey: .sex)
-//        bloodtype = try values.decode(String.self, forKey: .bloodtype)
-//        lastUpdated = try values.decodeIfPresent(Timestamp.self, forKey: .lastUpdated)
-//    }
-//}
-
+struct Patient: Codable, Identifiable{
+    @DocumentID var id: String?
+    var firstName: String
+    var lastName: String
+    var age: Int
+    var type: String
+    var appointmentDate: Date
+    //var appointments:[Appointment]
+    
+    init(id: String? = nil, firstName: String, lastName: String, age: Int, type: String, appointmentDate: Date) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.type = type
+        self.appointmentDate = appointmentDate
+    }
+    
+    init?(from dictionary: [String: Any], id: String){
+        guard let firstName = dictionary["firstName"] as? String,
+              let lastName = dictionary["lastName"] as? String,
+              let age = dictionary["age"] as? Int,
+              let type = dictionary["type"] as? String,
+                            let appointmentDate = dictionary["appointmentDate"] as? Date else {
+                          return nil
+                      }
+        self.id = id
+               self.firstName = firstName
+        self.lastName = lastName
+               self.age = age
+               self.type = type
+               self.appointmentDate = appointmentDate
+    }
+    
+    // Function to convert Patient to dictionary for Firebase
+        func toDictionary() -> [String: Any] {
+            return [
+                "id": id ?? UUID().uuidString,
+                "firstName" : firstName,
+                "lastName" : lastName,
+                "age": age,
+                "type": type,
+                "appointmentDate": appointmentDate
+            ]
+        }
+}
 
 // Enumeration for Doctor's Designation with associated properties
 enum DoctorDesignation: String, Codable, CaseIterable {
@@ -94,6 +95,7 @@ struct Doctor: Codable, Identifiable,Equatable {
     var dob: Date
     var designation: DoctorDesignation
     var titles: String
+   // var appointments:[Appointment]
     
     // Computed property to return the consultation interval based on the designation
     var interval: String {
@@ -105,7 +107,7 @@ struct Doctor: Codable, Identifiable,Equatable {
         return designation.fees
     }
 
-    init(id: String? = nil, firstName: String, lastName: String, email: String, phone: String, starts: Date, ends: Date, dob: Date, designation: DoctorDesignation, titles: String) {
+    init(id: String?, firstName: String, lastName: String, email: String, phone: String, starts: Date, ends: Date, dob: Date, designation: DoctorDesignation, titles: String) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
@@ -118,7 +120,6 @@ struct Doctor: Codable, Identifiable,Equatable {
         self.titles = titles
     }
     
-    // Equatable conformance to compare two Doctor instances
     static func == (lhs: Doctor, rhs: Doctor) -> Bool {
         return lhs.id == rhs.id
     }
@@ -145,6 +146,7 @@ struct Hospital: Codable, Identifiable, Equatable {
     var country: String
     var zipCode: String
     var type: String
+    
     
     // Initializer for the Hospital struct
     init(id: String? = nil, name: String, email: String, phone: String, admins: [Admin], address: String, city: String, country: String, zipCode: String, type: String) {

@@ -1,17 +1,17 @@
 import SwiftUI
 
-struct Patient: Identifiable {
-    let id = UUID()
-    let name: String
-    let age: Int
-    let type: String
-    let startTime: Date
-    let appointmentDate: Date
-    
-    var endTime: Date {
-        Calendar.current.date(byAdding: .minute, value: 15, to: startTime)!
-    }
-}
+//struct Patient: Identifiable {
+//    let id = UUID()
+//    let name: String
+//    let age: Int
+//    let type: String
+//    let startTime: Date
+//    let appointmentDate: Date
+//    
+//    var endTime: Date {
+//        Calendar.current.date(byAdding: .minute, value: 15, to: startTime)!
+//    }
+//}
 
 struct PatientRow: View {
     let patient: Patient
@@ -21,7 +21,7 @@ struct PatientRow: View {
             VStack {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(patient.name)
+                        Text(patient.firstName)
                             .font(.headline)
                             .foregroundColor(.black)
                         Text("Type: \(patient.type)")
@@ -35,7 +35,7 @@ struct PatientRow: View {
                     VStack(alignment: .trailing) {
                         Image(systemName: "chevron.right")
                             .foregroundColor(.gray)
-                        Text(timeRangeString)
+                        Text("time")
                             .font(.headline)
                             .foregroundColor(Color(hex: "#006666"))
                             .padding(.top, 10)
@@ -50,27 +50,29 @@ struct PatientRow: View {
         }
     }
     
-    private var timeRangeString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        let startString = formatter.string(from: patient.startTime)
-        let endString = formatter.string(from: patient.endTime)
-        return "\(startString) - \(endString)"
-    }
+//    private var timeRangeString: String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "HH:mm"
+////        let startString = formatter.string(from: patient.startTime)
+////        let endString = formatter.string(from: patient.endTime)
+////        return "\(startString) - \(endString)"
+//    }
 }
 
 struct Home: View {
     @State private var currentDate: Date = .init()
     @State private var weekSlider: [[Date.WeekDay]] = []
     @State private var currentWeekIndex: Int = 1
+    @State private var isProfileSheetPresented = false
     
-    @State private var patients: [Patient] = [
-        Patient(name: "John Doe", age: 30, type: "Regular", startTime: Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!, appointmentDate: Date().addingTimeInterval(86400)),
-        Patient(name: "Jane Smith", age: 25, type: "Urgent", startTime: Calendar.current.date(bySettingHour: 10, minute: 15, second: 0, of: Date())!, appointmentDate: Date()),
-        Patient(name: "Mark Johnson", age: 40, type: "Consultation", startTime: Calendar.current.date(bySettingHour: 10, minute: 30, second: 0, of: Date())!, appointmentDate: Date()),
-        Patient(name: "Emily Brown", age: 35, type: "Follow-up", startTime: Calendar.current.date(bySettingHour: 10, minute: 45, second: 0, of: Date())!, appointmentDate: Date()),
-        Patient(name: "Michael Lee", age: 50, type: "Regular", startTime: Calendar.current.date(bySettingHour: 11, minute: 0, second: 0, of: Date())!, appointmentDate: Date())
-    ]
+    
+//    @State private var patients: [Patient] = [
+//        Patient(name: "John Doe", age: 30, type: "Regular", startTime: Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!, appointmentDate: Date().addingTimeInterval(86400)),
+//        Patient(name: "Jane Smith", age: 25, type: "Urgent", startTime: Calendar.current.date(bySettingHour: 10, minute: 15, second: 0, of: Date())!, appointmentDate: Date()),
+//        Patient(name: "Mark Johnson", age: 40, type: "Consultation", startTime: Calendar.current.date(bySettingHour: 10, minute: 30, second: 0, of: Date())!, appointmentDate: Date()),
+//        Patient(name: "Emily Brown", age: 35, type: "Follow-up", startTime: Calendar.current.date(bySettingHour: 10, minute: 45, second: 0, of: Date())!, appointmentDate: Date()),
+//        Patient(name: "Michael Lee", age: 50, type: "Regular", startTime: Calendar.current.date(bySettingHour: 11, minute: 0, second: 0, of: Date())!, appointmentDate: Date())
+//    ]
     
     @Namespace private var animation
     
@@ -87,14 +89,14 @@ struct Home: View {
                             Text("Active:")
                                 .padding(.trailing, 250)
                                 .fontWeight(.bold)
-                            Text("\(todaysPatients.count)/\(patients.count)")
+//                            Text("\(todaysPatients.count)/\(patients.count)")
                         }
                         .padding(.bottom, 20)
                         .padding(.horizontal)
                         
-                        ForEach(todaysPatients.sorted { $0.startTime < $1.startTime }) { patient in
-                            PatientRow(patient: patient)
-                        }
+//                        ForEach(todaysPatients.sorted { $0.startTime < $1.startTime }) { patient in
+//                            PatientRow(patient: patient)
+//                        }
                     }
                 }
             }
@@ -111,9 +113,9 @@ struct Home: View {
         }
     }
     
-    var todaysPatients: [Patient] {
-        patients.filter { Calendar.current.isDate($0.appointmentDate, inSameDayAs: currentDate) }
-    }
+//    var todaysPatients: [Patient] {
+//        patients.filter { Calendar.current.isDate($0.appointmentDate, inSameDayAs: currentDate) }
+//    }
     
     @ViewBuilder
     func HeaderView() -> some View {
@@ -135,13 +137,19 @@ struct Home: View {
         }
         .hSpacing(.leading)
         .overlay(alignment: .topTrailing) {
-            Button(action: {}, label: {
+            Button(action: {
+                // Show profile screen modally
+                isProfileSheetPresented = true
+            }) {
                 Image(systemName: "person.circle")
                     .resizable()
                     .foregroundColor(Color(hex: "#006666"))
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 45, height: 45)
-            })
+            }
+            .sheet(isPresented: $isProfileSheetPresented) {
+                ProfileView()
+            }
         }
         .padding(15)
     }
@@ -191,7 +199,8 @@ struct Home: View {
     }
 }
 
-#Preview {
-    Home()
+struct Home_Previews: PreviewProvider {
+    static var previews: some View {
+        Home()
+    }
 }
-

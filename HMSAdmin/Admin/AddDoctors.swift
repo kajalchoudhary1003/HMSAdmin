@@ -17,22 +17,22 @@ struct DoctorFormView: View {
     @State private var dob = Date()
     @State private var designation: DoctorDesignation = .generalPractitioner
     @State private var titles = ""
-    @State private var zipCode = ""
-    
+    @State private var showSignupError = false
+    @State private var signupErrorMessage = ""
     @State private var showMailError = false
     @State private var showingMailView = false
     @State private var newDoctorEmail: String = ""
     @State private var newPassword: String = ""
-    @State private var isEditing = false
+    @State private var isEditing = true
     
     var designations = DoctorDesignation.allCases
     
     // Form validation check
     var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty && !zipCode.isEmpty &&
-        firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) && isValidZipCode(zipCode) &&
-        dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
-    }
+            !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
+            firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) &&
+            dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())!
+        }
     
     // Initializer to set up the form with existing doctor details if editing
     init(isPresent: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
@@ -50,7 +50,6 @@ struct DoctorFormView: View {
             _dob = State(initialValue: doctor.dob)
             _designation = State(initialValue: doctor.designation)
             _titles = State(initialValue: doctor.titles)
-            //_zipCode = State(initialValue: doctor.zipCode) // Initialize zipCode
         }
     }
     
@@ -128,79 +127,61 @@ struct DoctorFormView: View {
                     TextField("Qualifications", text: $titles)
                         .disabled(!isEditing)
                 }
-                VStack(alignment: .trailing) {
-                    if doctorToEdit != nil {
-                        Button(action: {
-                            deleteDoctor(doctorToEdit!)
-                        }) {
-                            Text("Delete Doctor")
-                                .foregroundColor(.red)
+                if doctorToEdit != nil && isEditing {
+                                    Section {
+                                        Button(action: {
+                                            deleteDoctor(doctorToEdit!)
+                                        }) {
+                                            Text("Delete Doctor")
+                                                .foregroundColor(.red)
+                                        }
+                                    }
+                                }
+            }
+            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor")
+                        .navigationBarItems(
+                            leading: Button("Cancel") {
+                                isPresent = false
+                            },
+                            trailing: Button(isEditing ? "Save" : "Edit") {
+                                if isEditing {
+                                    if isFormValid {
+                                        saveDoctor()
+                                    } else {
+                                        showSignupError = true
+                                        signupErrorMessage = "Please fill all fields correctly."
+                                    }
+                                } else {
+                                    isEditing.toggle()
+                                }
+                            }
+                            .disabled(isEditing && !isFormValid)
+                        )
+                        .alert(isPresented: $showSignupError) {
+                            Alert(title: Text("Error"), message: Text(signupErrorMessage), dismissButton: .default(Text("OK")))
+                        }
+                        .sheet(isPresented: $showingMailView) {
+                            MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
+                                if result == .sent {
+                                    isPresent = false
+                                } else {
+                                    showMailError = true
+                                }
+                                showingMailView = false
+                            })
+                        }
+                        .alert(isPresented: $showMailError) {
+                            Alert(title: Text("Email Error"), message: Text("Failed to send email with credentials. Please contact the doctor manually."), dismissButton: .default(Text("OK")))
                         }
                     }
                 }
-            }
-            .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor") // Title based on add or edit mode
-            .navigationBarItems(leading: Button("Cancel") {
-                isPresent = false
-            }, trailing: Button(isEditing ? "Save" : "Edit") {
-                if isEditing {
-                    saveDoctor()
-                } else {
-                    isEditing.toggle()
-                }
-            }
-                .disabled(!isEditing && doctorToEdit == nil && !isFormValid)) // Disable save button if form is not valid
-            // Added alert for email error
-            .alert(isPresented: $showMailError) {
-                Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
-            }
-            
-            // Added sheet for showing email composer
-            .sheet(isPresented: $showingMailView) {
-                MailView(recipient: email, subject: "Doctor Credentials", body: mailBody(), completion: { result in
-                    if result == .sent {
-                        performFirebaseSignup()
-                    }
-                    showingMailView = false
-                    isPresent = false
-                })
-            }
-        }
-    }
+
     
     private func saveDoctor() {
-        //  generate random email and password
-        newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
-        newPassword = generateRandomPassword(length: 6)
-        
-        let newDoctor = Doctor(
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            starts: starts,
-            ends: ends,
-            dob: dob,
-            designation: designation,
-            titles: titles
-            //zipCode: zipCode // Add zipCode here
-        )
-        
-        if let doctorToEdit = doctorToEdit {
-            // If editing an existing doctor, update the doctor details
-            if let index = doctors.firstIndex(where: { $0.id == doctorToEdit.id }) {
-                doctors[index] = newDoctor
-            }
-        } else {
-            // If adding a new doctor, append to the doctors array
-            doctors.append(newDoctor)
-        }
-        
-        isEditing.toggle()
-        
-        if isEditing == false {
-            showingMailView.toggle()
-        }
+            newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
+            newPassword = generateRandomPassword(length: 6)
+            
+            performFirebaseSignup()
     }
     
     // Function to delete the doctor
@@ -236,15 +217,42 @@ struct DoctorFormView: View {
     
     // Function to perform Firebase signup
     private func performFirebaseSignup() {
-        Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
-            if let error = error {
-                print("Error signing up: \(error.localizedDescription)")
-            } else {
-                print("User signed up successfully")
+            Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
+                if let error = error {
+                    print("Error signing up: \(error.localizedDescription)")
+                    showSignupError = true
+                    signupErrorMessage = error.localizedDescription
+                } else if let authResult = authResult {
+                    let newDoctor = Doctor(
+                        id: authResult.user.uid,
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: newDoctorEmail,
+                        phone: phone,
+                        starts: starts,
+                        ends: ends,
+                        dob: dob,
+                        designation: designation,
+                        titles: titles
+                    )
+                    addNewDoctorToDatabase(newDoctor)
+                }
             }
         }
-    }
-    
+    private func addNewDoctorToDatabase(_ doctor: Doctor) {
+        DataController.shared.addDoctor(doctor) { error in
+              if let error = error {
+                  print("Error saving doctor to database: \(error.localizedDescription)")
+                  showSignupError = true
+                  signupErrorMessage = "Failed to save doctor details. Please try again."
+              } else {
+                  sendWelcomeEmail(to: doctor)
+              }
+          }
+      }
+    private func sendWelcomeEmail(to doctor: Doctor) {
+            showingMailView = true
+        }
     // Function to validate email
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "^[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
