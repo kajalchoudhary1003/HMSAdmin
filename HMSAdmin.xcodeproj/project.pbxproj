@@ -37,8 +37,8 @@
 		812C37812C374B6900614EE9 /* HospitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37802C374B6900614EE9 /* HospitalCard.swift */; };
 		812C37832C37CB2100614EE9 /* AdminPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37822C37CB2100614EE9 /* AdminPickerView.swift */; };
 		812C37852C37CC2400614EE9 /* AlphabetSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */; };
+		E906D1412C43E33C00620531 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E906D1402C43E33C00620531 /* GoogleService-Info.plist */; };
 		E94E68D92C38195900ED9F1C /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E68D82C38195900ED9F1C /* MailView.swift */; };
-		E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */; };
 		E9F0D9272C35C4FE00C02518 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9262C35C4FE00C02518 /* FirebaseAuth */; };
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
 		E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */; };
@@ -80,8 +80,8 @@
 		812C37802C374B6900614EE9 /* HospitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HospitalCard.swift; sourceTree = "<group>"; };
 		812C37822C37CB2100614EE9 /* AdminPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPickerView.swift; sourceTree = "<group>"; };
 		812C37842C37CC2400614EE9 /* AlphabetSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetSidebarView.swift; sourceTree = "<group>"; };
+		E906D1402C43E33C00620531 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E94E68D82C38195900ED9F1C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
-		E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EA4BE7282C3F96C9003F507D /* StaffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffView.swift; sourceTree = "<group>"; };
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		EA6603302C3D6E77003540D1 /* AdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminHome.swift; sourceTree = "<group>"; };
@@ -114,7 +114,7 @@
 		62530F3F2C33D5BC001B496B = {
 			isa = PBXGroup;
 			children = (
-				E9F0D9232C35C4A600C02518 /* GoogleService-Info.plist */,
+				E906D1402C43E33C00620531 /* GoogleService-Info.plist */,
 				62530F4A2C33D5BC001B496B /* HMSAdmin */,
 				62530F492C33D5BC001B496B /* Products */,
 				62060ED92C374C0B00177028 /* Frameworks */,
@@ -303,8 +303,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				62530F532C33D5BE001B496B /* Preview Assets.xcassets in Resources */,
+				E906D1412C43E33C00620531 /* GoogleService-Info.plist in Resources */,
 				62530F502C33D5BE001B496B /* Assets.xcassets in Resources */,
-				E9F0D9242C35C4A600C02518 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,7 +493,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-Mediflex";
+				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-AdminApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -522,7 +522,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-Mediflex";
+				PRODUCT_BUNDLE_IDENTIFIER = "team02.HMS-AdminApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
