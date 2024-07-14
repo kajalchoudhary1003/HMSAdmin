@@ -13,7 +13,7 @@ class DataController {
     
     private init() {
         // Initialize the Firebase database reference
-        self.database = Database.database(url: "https://hms-team02-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
+        self.database = Database.database(url: "https://hms-hospital-management-system-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
         fetchHospitals()
         fetchDoctors()
         fetchPatients()
