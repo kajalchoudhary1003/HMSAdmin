@@ -5,13 +5,23 @@ import Firebase
 struct HMSAdminApp: App {
     
     // Initialize Firebase in the initializer
-    init() {
-        FirebaseApp.configure()
-    }
+     init() {
+         FirebaseApp.configure()
+     }
+     
     
-    var body: some Scene {
-        WindowGroup {
-            Authentication()
-        }
-    }
-}
+    // Initialize Firebase in the initializer
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
+   
+     
+     var body: some Scene {
+         WindowGroup {
+             if isLoggedIn {
+                 Home()
+             } else {
+                 Authentication()
+             }
+         }
+     }
+ }

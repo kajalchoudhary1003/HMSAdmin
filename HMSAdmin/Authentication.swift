@@ -7,6 +7,7 @@ struct Authentication: View {
     @State private var errorMessage = ""
     @State private var showErrorAlert = false
     @State private var clearFields = false
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
     var body: some View {
         NavigationView {
