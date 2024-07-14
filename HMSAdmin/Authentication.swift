@@ -7,6 +7,7 @@ struct Authentication: View {
     @State private var errorMessage = ""
     @State private var showErrorAlert = false
     @State private var clearFields = false
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
     var body: some View {
         NavigationView {
@@ -193,19 +194,22 @@ struct Authentication: View {
             let emailDomain = email.components(separatedBy: "@").last ?? ""
             
             switch emailDomain {
-            case "superadmin.com":
-                navigateToScreen(screen: HospitalView())
-                
-            case "admin.com":
-                navigateToScreen(screen: AdminView())
-                
-            case "doctor.com":
-                navigateToScreen(screen: DoctorView())
-                
-            default:
-                errorMessage = "Invalid email domain"
-                showErrorAlert = true
-            }
+                       case "superadmin.com":
+                           isLoggedIn = true
+                           navigateToScreen(screen: AdminHome())
+                           
+                       case "admin.com":
+                           isLoggedIn = true
+                           navigateToScreen(screen: AdminView())
+                           
+                       case "doctor.com":
+                           isLoggedIn = true
+                           navigateToScreen(screen: DoctorView())
+                           
+                       default:
+                           errorMessage = "Invalid email domain"
+                           showErrorAlert = true
+                       }
         }
     }
     
