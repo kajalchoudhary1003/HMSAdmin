@@ -26,5 +26,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:438439766467:ios:6b7827c0b6b11722773576</string>
+	<key>DATABASE_URL</key>
+	<string>https://hms-hospital-management-system-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

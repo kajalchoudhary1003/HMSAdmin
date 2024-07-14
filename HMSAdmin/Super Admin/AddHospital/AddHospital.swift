@@ -1,12 +1,11 @@
 import SwiftUI
+import MapKit
 import FirebaseAuth
-import FirebaseDatabase
-import MessageUI
 
 struct AddHospital: View {
     @Binding var hospitals: [Hospital]
     @Environment(\.presentationMode) var presentationMode
-    
+
     @State private var name: String = ""
     @State private var address: String = ""
     @State private var phone: String = ""
@@ -17,44 +16,45 @@ struct AddHospital: View {
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
     @State private var selectedAdminName = "Select Admin"
-    
+    @State private var locationCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+
     @State private var showMailError = false
     @State private var showingMailView = false
     @State private var newAdminEmail: String = ""
     @State private var newPassword: String = ""
-    
+
     @State private var newAdminName: String = ""
     @State private var newAdminPhone: String = ""
     
     // Admin types and existing admins for selection
     let adminTypes = ["Select", "New", "Existing"]
     @State private var existingAdmins = ["Select", "Michael", "Emily", "David", "Robert"]
-    
+
     var isSaveDisabled: Bool {
-        selectedTypeIndex == 0 || // Disable when "Select" is chosen
+        selectedTypeIndex == 0 ||
         !isFormValid ||
         (selectedTypeIndex == 1 && (!isNewAdminNameValid || !isNewAdminEmailValid || !isNewAdminPhoneValid)) ||
         (selectedTypeIndex == 2 && selectedAdminIndex == 0)
     }
 
-    
     var isFormValid: Bool {
         !name.isEmpty && !address.isEmpty && !email.isEmpty && !phone.isEmpty && !city.isEmpty && !country.isEmpty && !zipCode.isEmpty &&
         name.count <= 25 && address.count <= 100 && isValidEmail(email) && isValidPhone(phone) && isValidZipCode(zipCode)
     }
-    
+
     var isNewAdminNameValid: Bool {
         !newAdminName.isEmpty && newAdminName.count <= 25
     }
-    
+
     var isNewAdminEmailValid: Bool {
         isValidEmail(newAdminEmail)
     }
-    
+
     var isNewAdminPhoneValid: Bool {
         isValidPhone(newAdminPhone)
     }
-    
+
     var body: some View {
         Form {
             // Section for hospital details
@@ -75,9 +75,10 @@ struct AddHospital: View {
                             .padding(.trailing, 8),
                         alignment: .trailing
                     )
-                TextField("Address", text: $address)
+                TextField("Address", text: $address, onCommit: geocodeAddress)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
                         address = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                        geocodeAddress()
                     }
                     .onChange(of: address) { newValue in
                         if newValue.count > 100 {
@@ -168,6 +169,9 @@ struct AddHospital: View {
                         .foregroundColor(.red)
                         .font(.caption)
                 }
+
+                MapView(locationCoordinate: $locationCoordinate, region: $region)
+                    .frame(height: 300)
             }
             
             // Section for admin details
@@ -178,7 +182,7 @@ struct AddHospital: View {
                     }
                 }
                 .pickerStyle(.menu)
-                
+
                 if selectedTypeIndex > 0 {
                     if adminTypes[selectedTypeIndex] == "New" {
                         TextField("Name", text: $newAdminName)
@@ -245,7 +249,6 @@ struct AddHospital: View {
                                 .foregroundColor(.red)
                                 .font(.caption)
                         }
-//
                     } else if selectedTypeIndex == 2 {
                         NavigationLink(destination: AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
                             Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
@@ -254,7 +257,7 @@ struct AddHospital: View {
                 }
             }
         }
-        .toolbar { // Toolbar with Save button
+        .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { saveHospital() }) {
                     Text("Save")
@@ -290,18 +293,18 @@ struct AddHospital: View {
             
             // Add new admin to existing admins list
             existingAdmins.append(newAdminName)
-            
+
             showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
             let selectedAdminName = existingAdmins[selectedAdminIndex]
             let existingAdmin = Admin(name: selectedAdminName, address: "Admin Address", email: "admin@example.com", phone: "1234567890")
             admins.append(existingAdmin)
         }
-        
-        let newHospital = Hospital(name: name, email: email, phone: phone, admins: admins, address: address, city: city, country: country, zipCode: zipCode, type: adminTypes[selectedTypeIndex])
-        
+
+        let newHospital = Hospital(name: name, email: email, phone: phone, admins: admins, address: address, city: city, country: country, zipCode: zipCode, type: adminTypes[selectedTypeIndex], latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+
         hospitals.append(newHospital)
-        
+
         DataController.shared.addHospital(newHospital) { error in
             if let error = error {
                 print("Failed to save hospital: \(error.localizedDescription)")
@@ -358,21 +361,34 @@ struct AddHospital: View {
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
     }
-    
+
     func isValidPhone(_ phone: String) -> Bool {
         let phoneRegEx = "^[0-9]{10}$"
         let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegEx)
         return phoneTest.evaluate(with: phone)
     }
-    
+
     func isValidZipCode(_ zipCode: String) -> Bool {
         let zipCodeRegEx = "^[0-9]{6}$"
         let zipCodeTest = NSPredicate(format: "SELF MATCHES %@", zipCodeRegEx)
         return zipCodeTest.evaluate(with: zipCode)
     }
+
+    func geocodeAddress() {
+        DataController.shared.geocodeAddress(address: address, city: city, country: country, zipCode: zipCode) { result in
+            switch result {
+            case .success(let coordinate):
+                locationCoordinate = coordinate
+                region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+            case .failure(let error):
+                print("Geocoding error: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
-#Preview {
-    // Provide a sample data binding for preview
-    AddHospital(hospitals: .constant([Hospital(name: "Sample Hospital", email: "sample@hospital.com", phone: "1234567890", admins: [], address: "123 Sample Street", city: "Sample City", country: "Sample Country", zipCode: "123456", type: "New")]))
+struct AddHospital_Previews: PreviewProvider {
+    static var previews: some View {
+        AddHospital(hospitals: .constant([]))
+    }
 }
