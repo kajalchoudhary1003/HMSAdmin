@@ -1,33 +1,21 @@
 import SwiftUI
-
-//struct Patient: Identifiable {
-//    let id = UUID()
-//    let name: String
-//    let age: Int
-//    let type: String
-//    let startTime: Date
-//    let appointmentDate: Date
-//    
-//    var endTime: Date {
-//        Calendar.current.date(byAdding: .minute, value: 15, to: startTime)!
-//    }
-//}
+import Firebase
 
 struct PatientRow: View {
     let patient: Patient
-    
+    let appointment: Appointment
     var body: some View {
         NavigationLink(destination: PatientDetailsView(patient: patient)) {
             VStack {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(patient.firstName)
+                        Text("\(patient.firstName) \(patient.lastName)")
                             .font(.headline)
                             .foregroundColor(.black)
-                        Text("Type: \(patient.type)")
+                        Text("Blood Group: \(patient.bloodGroup)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text("Age: \(patient.age)")
+                        Text("Gender: \(patient.gender)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -35,7 +23,7 @@ struct PatientRow: View {
                     VStack(alignment: .trailing) {
                         Image(systemName: "chevron.right")
                             .foregroundColor(.gray)
-                        Text("time")
+                        Text(formatDate(appointment.date))
                             .font(.headline)
                             .foregroundColor(Color(hex: "#006666"))
                             .padding(.top, 10)
@@ -49,73 +37,64 @@ struct PatientRow: View {
             .padding(.horizontal)
         }
     }
-    
-//    private var timeRangeString: String {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "HH:mm"
-////        let startString = formatter.string(from: patient.startTime)
-////        let endString = formatter.string(from: patient.endTime)
-////        return "\(startString) - \(endString)"
-//    }
 }
 
 struct Home: View {
-    @State private var currentDate: Date = .init()
-    @State private var weekSlider: [[Date.WeekDay]] = []
-    @State private var currentWeekIndex: Int = 1
-    @State private var isProfileSheetPresented = false
-    
-    
-//    @State private var patients: [Patient] = [
-//        Patient(name: "John Doe", age: 30, type: "Regular", startTime: Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date())!, appointmentDate: Date().addingTimeInterval(86400)),
-//        Patient(name: "Jane Smith", age: 25, type: "Urgent", startTime: Calendar.current.date(bySettingHour: 10, minute: 15, second: 0, of: Date())!, appointmentDate: Date()),
-//        Patient(name: "Mark Johnson", age: 40, type: "Consultation", startTime: Calendar.current.date(bySettingHour: 10, minute: 30, second: 0, of: Date())!, appointmentDate: Date()),
-//        Patient(name: "Emily Brown", age: 35, type: "Follow-up", startTime: Calendar.current.date(bySettingHour: 10, minute: 45, second: 0, of: Date())!, appointmentDate: Date()),
-//        Patient(name: "Michael Lee", age: 50, type: "Regular", startTime: Calendar.current.date(bySettingHour: 11, minute: 0, second: 0, of: Date())!, appointmentDate: Date())
-//    ]
-    
-    @Namespace private var animation
+        @State private var currentDate: Date = .init()
+        @State private var weekSlider: [[Date.WeekDay]] = []
+        @State private var currentWeekIndex: Int = 1
+        @State private var isProfileSheetPresented = false
+        @State private var currentDoctorID: String = Auth.auth().currentUser!.uid
+        @Namespace private var animation
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color(uiColor: .systemGray6)
-                    .ignoresSafeArea()
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    HeaderView()
-                    ScrollView {
-                        HStack {
-                            Text("Active:")
-                                .padding(.trailing, 250)
-                                .fontWeight(.bold)
-//                            Text("\(todaysPatients.count)/\(patients.count)")
+            NavigationView {
+                ZStack {
+                    Color(uiColor: .systemGray6)
+                        .ignoresSafeArea()
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HeaderView()
+                        ScrollView {
+                            HStack {
+                                Text("Active:")
+                                    .padding(.trailing, 250)
+                                    .fontWeight(.bold)
+                                Text("\(todaysAppointments.count)/\(DataController.shared.appointments.count)")
+                            }
+                            .padding(.bottom, 20)
+                            .padding(.horizontal)
+                            
+                            ForEach(todaysAppointments) { appointment in
+                                if let patient = DataController.shared.patients[appointment.patientID] {
+                                    PatientRow(patient: patient, appointment: appointment)
+                                }
+                            }
                         }
-                        .padding(.bottom, 20)
-                        .padding(.horizontal)
-                        
-//                        ForEach(todaysPatients.sorted { $0.startTime < $1.startTime }) { patient in
-//                            PatientRow(patient: patient)
-//                        }
                     }
                 }
-            }
-            .vSpacing(.top)
-            .onAppear {
-                if weekSlider.isEmpty {
-                    let currentWeek = Date().fetchWeek()
-                    weekSlider.append(currentWeek)
-                    if let lastDate = currentWeek.last?.date {
-                        weekSlider.append(lastDate.createNextWeek())
+                .vSpacing(.top)
+                .onAppear {
+                    DataController.shared.fetchAppointmentsById(for: currentDoctorID)
+                    print("current user \(currentDoctorID)")
+                    if weekSlider.isEmpty {
+                        let currentWeek = Date().fetchWeek()
+                        weekSlider.append(currentWeek)
+                        if let lastDate = currentWeek.last?.date {
+                            weekSlider.append(lastDate.createNextWeek())
+                        }
                     }
                 }
             }
         }
-    }
-    
-//    var todaysPatients: [Patient] {
-//        patients.filter { Calendar.current.isDate($0.appointmentDate, inSameDayAs: currentDate) }
-//    }
+        var doctorAppointments: [Appointment] {
+            DataController.shared.appointments.filter { $0.doctorID == currentDoctorID }
+        }
+        
+        var todaysAppointments: [Appointment] {
+            DataController.shared.appointments.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
+        }
+
     
     @ViewBuilder
     func HeaderView() -> some View {
@@ -198,7 +177,11 @@ struct Home: View {
         }
     }
 }
-
+func formatDate(_ date: Date) -> String {
+       let formatter = DateFormatter()
+       formatter.dateStyle = .medium
+       return formatter.string(from: date)
+   }
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home()

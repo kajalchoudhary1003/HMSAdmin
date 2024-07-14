@@ -9,7 +9,8 @@ class DataController {
     private var database: DatabaseReference
     private var hospitals: [String: Hospital] = [:]
     private var doctors: [String: Doctor] = [:]
-    private var patients: [String: Patient] = [:]
+    @Published var patients: [String: Patient] = [:]
+    @Published var appointments: [Appointment] = []
     
     private init() {
         // Initialize the Firebase database reference
@@ -17,6 +18,7 @@ class DataController {
         fetchHospitals()
         fetchDoctors()
         fetchPatients()
+//        fetchAppointments()
     }
     
     // Fetch hospitals data from Firebase
@@ -41,23 +43,38 @@ class DataController {
     
     //fetch patient details
     func fetchPatients() {
-           let ref = database.child("patient_users")
-           ref.observe(.value) { snapshot in
-               self.patients = [:]
-               for child in snapshot.children {
-                   if let childSnapshot = child as? DataSnapshot,
-                      let patientData = childSnapshot.value as? [String: Any],
-                      let patient = Patient(from: patientData, id: childSnapshot.key) {
-                       self.patients[patient.id ?? UUID().uuidString] = patient
-                       print("Added patient with ID: \(patient.id ?? "unknown")")
-                   } else {
-                       print("Failed to parse patient data from snapshot.")
-                   }
-               }
-               NotificationCenter.default.post(name: NSNotification.Name("PatientsUpdated"), object: nil)
-           }
-       }
-       
+        let ref = database.child("patient_users")
+        ref.observe(.value) { snapshot in
+            self.patients = [:]
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let patientData = childSnapshot.value as? [String: Any],
+                   let patient = Patient(from: patientData, id: childSnapshot.key) {
+                    self.patients[patient.id ?? UUID().uuidString] = patient
+                    print("Added patient with ID: \(patient.id ?? "unknown")")
+                } else {
+                    print("Failed to parse patient data from snapshot.")
+                }
+            }
+            NotificationCenter.default.post(name: NSNotification.Name("PatientsUpdated"), object: nil)
+        }
+    }
+//    func fetchPatientsDetails() {
+//           database.child("patient_users").observe(.value) { snapshot in
+//               var newPatients: [String: Patient] = [:]
+//               for child in snapshot.children {
+//                   if let childSnapshot = child as? DataSnapshot,
+//                      let patientData = childSnapshot.value as? [String: Any],
+//                      let patient = Patient(from: patientData, id: childSnapshot.key) {
+//                       newPatients[patient.id] = patient
+//                   }
+//               }
+//               DispatchQueue.main.async {
+//                   self.patients = newPatients
+//               }
+//           }
+//       }
+    
     
     // Add a hospital to Firebase
     func addHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
@@ -161,10 +178,35 @@ class DataController {
             completion(nil)
         }
     }
-    
-    // Remove a doctor from Firebase (to be implemented)
-    func removeDoctor(){
-        
+    func fetchAppointments() {
+            database.child("appointments").observe(.value) { snapshot in
+                var newAppointments: [Appointment] = []
+                for child in snapshot.children {
+                    if let childSnapshot = child as? DataSnapshot,
+                       let appointmentData = childSnapshot.value as? [String: Any],
+                       let appointment = Appointment(from: appointmentData, id: childSnapshot.key) {
+                        newAppointments.append(appointment)
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.appointments = newAppointments
+                }
+            }
+        }
+    func fetchAppointmentsById(for doctorID: String) {
+        database.child("appointments").queryOrdered(byChild: "doctorID").queryEqual(toValue: doctorID).observe(.value) { snapshot in
+            var newAppointments: [Appointment] = []
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let appointmentData = childSnapshot.value as? [String: Any],
+                   let appointment = Appointment(from: appointmentData, id: childSnapshot.key) {
+                    newAppointments.append(appointment)
+                }
+            }
+            DispatchQueue.main.async {
+                self.appointments = newAppointments
+            }
+        }
     }
 }
 
