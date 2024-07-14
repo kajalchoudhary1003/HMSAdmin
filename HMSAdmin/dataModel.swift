@@ -3,51 +3,38 @@ import Firebase
 import FirebaseFirestoreSwift
 
 
-struct Patient: Codable, Identifiable{
-    @DocumentID var id: String?
-    var firstName: String
-    var lastName: String
-    var age: Int
-    var type: String
-    var appointmentDate: Date
-    //var appointments:[Appointment]
+struct Patient: Identifiable, Codable {
+    let id: String
+    let firstName: String
+    let lastName: String
+    let bloodGroup: String
+    let dateOfBirth: Date
+    let emergencyPhone: String
+    let gender: String
     
-    init(id: String? = nil, firstName: String, lastName: String, age: Int, type: String, appointmentDate: Date) {
+    init?(from dictionary: [String: Any], id: String) {
+        guard let firstName = dictionary["firstName"] as? String,
+              let lastName = dictionary["lastName"] as? String,
+              let bloodGroup = dictionary["bloodGroup"] as? String,
+              let dateOfBirthString = dictionary["dateOfBirth"] as? String,
+              let emergencyPhone = dictionary["emergencyPhone"] as? String,
+              let gender = dictionary["gender"] as? String else {
+            return nil
+        }
+        
+        let dateFormatter = ISO8601DateFormatter()
+        guard let dateOfBirth = dateFormatter.date(from: dateOfBirthString) else {
+            return nil
+        }
+        
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
-        self.age = age
-        self.type = type
-        self.appointmentDate = appointmentDate
+        self.bloodGroup = bloodGroup
+        self.dateOfBirth = dateOfBirth
+        self.emergencyPhone = emergencyPhone
+        self.gender = gender
     }
-    
-    init?(from dictionary: [String: Any], id: String){
-        guard let firstName = dictionary["firstName"] as? String,
-              let lastName = dictionary["lastName"] as? String,
-              let age = dictionary["age"] as? Int,
-              let type = dictionary["type"] as? String,
-                            let appointmentDate = dictionary["appointmentDate"] as? Date else {
-                          return nil
-                      }
-        self.id = id
-               self.firstName = firstName
-        self.lastName = lastName
-               self.age = age
-               self.type = type
-               self.appointmentDate = appointmentDate
-    }
-    
-    // Function to convert Patient to dictionary for Firebase
-        func toDictionary() -> [String: Any] {
-            return [
-                "id": id ?? UUID().uuidString,
-                "firstName" : firstName,
-                "lastName" : lastName,
-                "age": age,
-                "type": type,
-                "appointmentDate": appointmentDate
-            ]
-        }
 }
 
 // Enumeration for Doctor's Designation with associated properties
@@ -210,39 +197,26 @@ struct Hospital: Codable, Identifiable, Equatable {
 }
 
 // Struct to represent an Appointment
-struct Appointment: Hashable, Codable {
+struct Appointment: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var patientID: String
     var doctorID: String
     var date: Date
-    var startTime: Date
-    var endTime: Date
+    var timeSlotID: String
     
     enum CodingKeys: String, CodingKey {
-        case id, patientID, doctorID, date, startTime, endTime
+        case id, patientID, doctorID, date, timeSlotID
     }
     
-    // Initializer for the Appointment struct
-    init(patientID: String, doctorID: String, date: Date, startTime: Date, endTime: Date, id: String? = nil) {
+    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil) {
         self.id = id
         self.patientID = patientID
         self.doctorID = doctorID
         self.date = date
-        self.startTime = startTime
-        self.endTime = endTime
-    }
-    
-    // Initializer to decode Appointment instance from a decoder
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decodeIfPresent(String.self, forKey: .id)
-        self.patientID = try container.decode(String.self, forKey: .patientID)
-        self.doctorID = try container.decode(String.self, forKey: .doctorID)
-        self.date = try container.decode(Date.self, forKey: .date)
-        self.startTime = try container.decode(Date.self, forKey: .startTime)
-        self.endTime = try container.decode(Date.self, forKey: .endTime)
+        self.timeSlotID = timeSlotID
     }
 }
+
 
 // Extension to convert Admin instances to dictionary and initialize from dictionary
 extension Admin {

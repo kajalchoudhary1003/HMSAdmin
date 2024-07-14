@@ -22,4 +22,20 @@ extension Color {
     }
 }
 
+extension Appointment {
+    init?(from dictionary: [String: Any], id: String) {
+        guard let patientID = dictionary["patientID"] as? String,
+              let doctorID = dictionary["doctorID"] as? String,
+              let date = dictionary["date"] as? TimeInterval,
+              let timeSlotID = dictionary["timeSlotID"] as? String else {
+            return nil
+        }
+        
+        self.patientID = patientID
+        self.doctorID = doctorID
+        self.date = Date(timeIntervalSince1970: date)
+        self.timeSlotID = timeSlotID
+        self.id = id
+    }
+}
 

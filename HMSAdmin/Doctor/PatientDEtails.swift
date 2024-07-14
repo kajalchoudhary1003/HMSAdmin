@@ -40,32 +40,38 @@ struct PatientDetailsView: View {
                             HStack {
                                 Text("First Name")
                                 Spacer()
-                                Text(patient.firstName.split(separator: " ").first ?? "")
+                                Text(patient.firstName)
                                     .foregroundColor(.gray)
                             }
                             HStack {
                                 Text("Last Name")
                                 Spacer()
-                                Text(patient.lastName.split(separator: " ").last ?? "")
+                                Text(patient.lastName)
                                     .foregroundColor(.gray)
                             }
                             HStack {
-                                Text("Age")
+                                Text("Blood Group")
                                 Spacer()
-                                Text("\(patient.age)")
+                                Text(patient.bloodGroup)
                                     .foregroundColor(.gray)
                             }
                             HStack {
-                                Text("Type")
+                                Text("Gender")
                                 Spacer()
-                                Text(patient.type)
+                                Text(patient.gender)
                                     .foregroundColor(.gray)
                             }
                             HStack {
-                                Text("Appointment Date")
+                                Text("Date of Birth")
                                 Spacer()
-                                Text(patient.appointmentDate, style: .date)
-                                    .foregroundColor(.blue)
+                                Text(formatDate(patient.dateOfBirth))
+                                    .foregroundColor(.gray)
+                            }
+                            HStack {
+                                Text("Emergency Phone")
+                                Spacer()
+                                Text(patient.emergencyPhone)
+                                    .foregroundColor(.gray)
                             }
                         }
                         .padding(.bottom, -10)
@@ -107,7 +113,6 @@ struct PatientDetailsView: View {
                                         .frame(width: 30, height: 30)
                                         .padding(.top,50)
                                         .padding(.leading,1)
-                                        
                                 }
                                 .padding(.bottom, 8)
                                 .padding(.trailing, 8)
@@ -123,18 +128,11 @@ struct PatientDetailsView: View {
             }
         }
     }
-}
-
-//struct PatientDetailsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PatientDetailsView(patient: Patient(name: "Madhav Sharma", age: 21, type: "Regular", startTime: Date(), appointmentDate: Date()))
-//    }
-//}
-
-struct PatientDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PatientDetailsView(patient: Patient(id: "1", firstName: "Madhav", lastName: "Sharma", age: 21, type: "Regular", appointmentDate: Date()))
+    
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 }
-
 
