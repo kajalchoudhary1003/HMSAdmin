@@ -31,7 +31,7 @@ struct PatientRow: View {
                 }
                 .padding()
                 .background(Color.white)
-                .cornerRadius(8)
+                .cornerRadius(10)
                 .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
             }
             .padding(.horizontal)
