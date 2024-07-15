@@ -16,8 +16,8 @@ struct AddHospital: View {
     @State private var selectedTypeIndex = 0
     @State private var selectedAdminIndex = 0
     @State private var selectedAdminName = "Select Admin"
-    @State private var locationCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    @State private var locationCoordinate = CLLocationCoordinate2D(latitude: 20.5937, longitude: 78.9629) // Coordinates for India
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 20.5937, longitude: 78.9629), span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10))
 
     @State private var showMailError = false
     @State private var showingMailView = false
@@ -75,23 +75,7 @@ struct AddHospital: View {
                             .padding(.trailing, 8),
                         alignment: .trailing
                     )
-                TextField("Address", text: $address, onCommit: geocodeAddress)
-                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                        address = address.trimmingCharacters(in: .whitespacesAndNewlines)
-                        geocodeAddress()
-                    }
-                    .onChange(of: address) { newValue in
-                        if newValue.count > 100 {
-                            address = String(newValue.prefix(100))
-                        }
-                    }
-                    .overlay(
-                        Text("\(address.count)/100")
-                            .font(.caption)
-                            .foregroundColor(address.count > 100 ? .red : .gray)
-                            .padding(.trailing, 8),
-                        alignment: .trailing
-                    )
+ 
                 TextField("Phone", text: $phone)
                     .keyboardType(.numberPad)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
@@ -135,6 +119,28 @@ struct AddHospital: View {
                         .foregroundColor(.red)
                         .font(.caption)
                 }
+                
+            }
+            
+            Section(){
+                TextField("Address", text: $address, onCommit: geocodeAddress)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        address = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                        geocodeAddress()
+                    }
+                    .onChange(of: address) { newValue in
+                        if newValue.count > 100 {
+                            address = String(newValue.prefix(100))
+                        }
+                    }
+                    .overlay(
+                        Text("\(address.count)/100")
+                            .font(.caption)
+                            .foregroundColor(address.count > 100 ? .red : .gray)
+                            .padding(.trailing, 8),
+                        alignment: .trailing
+                    )
+                
                 TextField("City", text: $city)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
                         city = city.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -170,9 +176,11 @@ struct AddHospital: View {
                         .font(.caption)
                 }
 
-                MapView(locationCoordinate: $locationCoordinate, region: $region)
-                    .frame(height: 300)
             }
+            
+            
+            MapView(locationCoordinate: $locationCoordinate, region: $region)
+                .frame(height: 300)
             
             // Section for admin details
             Section(header: Text("Admin Details")) {
@@ -257,19 +265,23 @@ struct AddHospital: View {
                 }
             }
         }
+        .navigationTitle("New Hospital")
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                    Text("Cancel")
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { saveHospital() }) {
-                    Text("Save")
+                    Image(systemName: "plus")
                 }
-                .disabled(isSaveDisabled)
             }
         }
-        // Alert for mail error
         .alert(isPresented: $showMailError) {
             Alert(title: Text("Error"), message: Text("Unable to send email."), dismissButton: .default(Text("OK")))
         }
-        // Sheet for showing email composer
         .sheet(isPresented: $showingMailView) {
             MailView(recipient: newAdminEmail, subject: "Admin Credentials for New Hospital", body: mailBody(), completion: { result in
                 if result == .sent {
@@ -279,7 +291,6 @@ struct AddHospital: View {
                 }
             })
         }
-        .navigationTitle("New Hospital")
     }
     
     // Function to save hospital details
