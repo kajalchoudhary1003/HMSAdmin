@@ -74,7 +74,7 @@ struct StaffCard: View {
                 .font(.subheadline)
                 .foregroundColor(.black)
             HStack {
-                Text("Age: ")
+                Text("Age: \(staff.age)")
                     .font(.caption)
                     .foregroundColor(.black)
                 Spacer()
