@@ -10,9 +10,10 @@ struct StaffsView: View {
     
     var filteredStaffs: [Staff] {
         staffs.filter { staff in
-            (selectedFilter == "Nurse" || selectedFilter == "Caretakers") &&
-            (searchText.isEmpty || staff.firstName.localizedCaseInsensitiveContains(searchText))
-        }
+                   (selectedFilter == "Nurse" && staff.position == "Nurse") ||
+                   (selectedFilter == "Caretakers" && staff.position == "Caretaker") &&
+                   (searchText.isEmpty || staff.firstName.localizedCaseInsensitiveContains(searchText) || staff.lastName.localizedCaseInsensitiveContains(searchText))
+               }
     }
     
     var body: some View {
@@ -101,6 +102,8 @@ struct AddStaffsView: View {
     @State private var selectedPosition: String = ""
     @State private var selectedDepartment: String = ""
     @State private var selectedEmploymentStatus: String = ""
+    @State private var showAlert = false
+     @State private var alertMessage = ""
     
     let positions = ["Nurse", "Care Taker"]
     let departments = ["General Ward", "ICU", "Emergency"]
@@ -119,8 +122,12 @@ struct AddStaffsView: View {
                     
                     TextField("Phone Number", text: $phoneNumber)
                         .keyboardType(.phonePad)
+                        .onChange(of: phoneNumber) { newValue in
+                                                   phoneNumber = newValue.filter { "0123456789".contains($0) }
+                                               }
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
                 }
                 
                 Picker("Position", selection: $selectedPosition) {
@@ -143,11 +150,45 @@ struct AddStaffsView: View {
             }
             .navigationTitle("Add Staffs")
             .navigationBarItems(trailing: Button("Done") {
-                saveStaff()
-                isPresentingAddStaffView = false
+                if validateFields(){
+                    saveStaff()
+                    isPresentingAddStaffView = false
+                }
+                
             })
+            .alert(isPresented: $showAlert) {
+                            Alert(title: Text("Validation Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                        }
         }
     }
+    
+    func validateFields() -> Bool {
+            if firstName.isEmpty || lastName.isEmpty || phoneNumber.isEmpty || email.isEmpty || selectedPosition.isEmpty || selectedDepartment.isEmpty || selectedEmploymentStatus.isEmpty {
+                alertMessage = "All fields are required."
+                showAlert = true
+                return false
+            }
+            
+            if !isValidEmail(email) {
+                alertMessage = "Please enter a valid email address."
+                showAlert = true
+                return false
+            }
+            
+            if phoneNumber.count != 10 {
+                alertMessage = "Phone number must be exactly 10 digits."
+                showAlert = true
+                return false
+            }
+            
+            return true
+        }
+    
+    func isValidEmail(_ email: String) -> Bool {
+            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+            let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+            return emailPred.evaluate(with: email)
+        }
     
     func saveStaff() {
         let newStaff = Staff(
@@ -183,11 +224,7 @@ struct AddStaffsView: View {
         selectedEmploymentStatus = ""
     }
     
-    func calculateAge(from date: Date) -> Int {
-        let now = Date()
-        let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
-        return ageComponents.year ?? 0
-    }
+   
     
 }
 

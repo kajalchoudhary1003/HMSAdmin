@@ -22,6 +22,7 @@ class DataController: ObservableObject {
         fetchDoctors()
         fetchPatients()
         fetchAppointments()
+        fetchStaffs()
     }
 
     // Fetch hospitals data from Firebase
@@ -88,6 +89,7 @@ class DataController: ObservableObject {
                        self.staffs[staff.id ?? UUID().uuidString] = staff
                    }
                }
+               NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
            }
        }
     
@@ -126,7 +128,8 @@ class DataController: ObservableObject {
                     return
                 }
                 self.staffs[id] = staffWithID
-                completion(nil)
+                NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
+                           completion(nil)
             }
         }
 
