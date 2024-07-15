@@ -4,7 +4,7 @@ struct AddAdminView: View {
     @Binding var newAdmin: Admin
     var onSave: (Admin) -> Void
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         NavigationView {
             Form {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AdminPickerView: View {
-    @Binding var existingAdmins: [String] // List of existing admin names
+    @Binding var existingAdmins: [String]
     @Binding var selectedAdminIndex: Int
     @Environment(\.presentationMode) var presentationMode
     @State private var searchText = ""
@@ -34,8 +34,8 @@ struct AdminPickerView: View {
                     ForEach(groupedAdmins[key]!, id: \.self) { admin in
                         Button(action: {
                             if let index = existingAdmins.firstIndex(of: admin) {
-                                selectedAdminIndex = index // Update selected admin index
-                                presentationMode.wrappedValue.dismiss()  // Dismiss the view on selection
+                                selectedAdminIndex = index
+                                presentationMode.wrappedValue.dismiss()
                             }
                         }) {
                             HStack {
@@ -51,9 +51,8 @@ struct AdminPickerView: View {
                 }
             }
         }
-        .listStyle(GroupedListStyle()) // Use GroupedListStyle to remove extra spacing
+        .listStyle(GroupedListStyle())
         .navigationTitle("Select Admin")
         .searchable(text: $searchText, prompt: "Search Admin")
     }
 }
-

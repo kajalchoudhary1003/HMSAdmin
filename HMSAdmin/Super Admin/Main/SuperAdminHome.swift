@@ -106,7 +106,6 @@ struct SuperAdminHome : View {
                     .padding(15)
                     .background(Color.white)
                     .cornerRadius(10)
-                    .shadow(radius: 5)
                     
                     VStack(alignment: .leading) {
                         HStack {

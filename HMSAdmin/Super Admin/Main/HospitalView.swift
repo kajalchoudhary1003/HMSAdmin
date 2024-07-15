@@ -14,7 +14,6 @@ struct HospitalView: View {
     }
     
     var body: some View {
-        NavigationView {
             VStack {
                 if isLoading {
                     ProgressView("Loading hospitals...")
@@ -54,7 +53,7 @@ struct HospitalView: View {
                 }
             }
             .searchable(text: $searchText)
-            .navigationTitle("Hospitals")
+            .navigationTitle("Hospitals").navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: AddHospital(hospitals: $hospitals)) {
@@ -62,7 +61,6 @@ struct HospitalView: View {
                     }
                 }
             }
-        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("HospitalsUpdated"))) { _ in
             // Refresh hospitals when notification received
             self.hospitals = DataController.shared.getHospitals()
