@@ -172,41 +172,41 @@ struct AdminHome : View {
                     
                     
     //                NavigationLink(destination: HospitalView()){
-                    NavigationLink(destination: HospitalView()) {
-                        HStack {
-                                Image(systemName: "plus.square.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(Color("AccentColor"))
-                                    .padding(8)
-                                    .cornerRadius(8)
-                                
-                                Text("Hospitals")
-                                    .font(.title2)
-                                
-                                Spacer()
-                                
-                                Text("03")
-                                    .foregroundColor(Color("AccentColor"))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                
-                                Image(systemName: "chevron.right")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 15, height: 15)
-                                    .foregroundColor(Color("AccentColor"))
-                                    .padding(8)
-                                    .cornerRadius(8)
-                            }
-                            .padding()
-        //                }
-                        
-                        .background(Color.white)
-                        .cornerRadius(10)
-                    .shadow(radius: 4)
-                    }
+//                    NavigationLink(destination: HospitalView()) {
+//                        HStack {
+//                                Image(systemName: "plus.square.fill")
+//                                    .resizable()
+//                                    .aspectRatio(contentMode: .fit)
+//                                    .frame(width: 24, height: 24)
+//                                    .foregroundColor(Color("AccentColor"))
+//                                    .padding(8)
+//                                    .cornerRadius(8)
+//                                
+//                                Text("Hospitals")
+//                                    .font(.title2)
+//                                
+//                                Spacer()
+//                                
+//                                Text("03")
+//                                    .foregroundColor(Color("AccentColor"))
+//                                    .font(.title)
+//                                    .fontWeight(.bold)
+//                                
+//                                Image(systemName: "chevron.right")
+//                                    .resizable()
+//                                    .aspectRatio(contentMode: .fit)
+//                                    .frame(width: 15, height: 15)
+//                                    .foregroundColor(Color("AccentColor"))
+//                                    .padding(8)
+//                                    .cornerRadius(8)
+//                            }
+//                            .padding()
+//        //                }
+//                        
+//                        .background(Color.white)
+//                        .cornerRadius(10)
+//                    .shadow(radius: 4)
+//                    }
                 }
                 .padding()
             }
