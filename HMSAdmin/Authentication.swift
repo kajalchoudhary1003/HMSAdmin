@@ -194,22 +194,19 @@ struct Authentication: View {
             let emailDomain = email.components(separatedBy: "@").last ?? ""
             
             switch emailDomain {
-                       case "superadmin.com":
-                           isLoggedIn = true
-                           navigateToScreen(screen: AdminHome())
-                           
-                       case "admin.com":
-                           isLoggedIn = true
-                           navigateToScreen(screen: AdminView())
-                           
-                       case "doctor.com":
-                           isLoggedIn = true
-                           navigateToScreen(screen: DoctorView())
-                           
-                       default:
-                           errorMessage = "Invalid email domain"
-                           showErrorAlert = true
-                       }
+            case "superadmin.com":
+                navigateToScreen(screen: SuperAdminHome())
+                
+            case "admin.com":
+                navigateToScreen(screen: AdminView())
+                
+            case "doctor.com":
+                navigateToScreen(screen: DoctorView())
+                
+            default:
+                errorMessage = "Invalid email domain"
+                showErrorAlert = true
+            }
         }
     }
     

@@ -8,7 +8,7 @@ import Charts
 //    case year = "Year"
 //}
 
-struct AdminHome : View {
+struct SuperAdminHome : View {
     
     @State private var timePeriod: TimePeriod = .day
     @State private var barSelection: String?
@@ -174,7 +174,7 @@ struct AdminHome : View {
     //                NavigationLink(destination: HospitalView()){
                     NavigationLink(destination: HospitalView()) {
                         HStack {
-                                Image(systemName: "plus.square.fill")
+                                Image(systemName: "cross.case.fill")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 24, height: 24)
@@ -266,5 +266,5 @@ func ChartPopOverView(_ revenue: Double, _ month: String) -> some View {
 //}
 
 #Preview {
-    AdminHome()
+    SuperAdminHome()
 }

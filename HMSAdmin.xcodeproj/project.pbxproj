@@ -46,7 +46,7 @@
 		E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */; };
 		EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4BE7282C3F96C9003F507D /* StaffView.swift */; };
 		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
-		EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* AdminHome.swift */; };
+		EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */; };
 		EA6603342C3D6E77003540D1 /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603312C3D6E77003540D1 /* DataType.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,7 +86,7 @@
 		E94E68D82C38195900ED9F1C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		EA4BE7282C3F96C9003F507D /* StaffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffView.swift; sourceTree = "<group>"; };
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
-		EA6603302C3D6E77003540D1 /* AdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminHome.swift; sourceTree = "<group>"; };
+		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,7 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				EA6603312C3D6E77003540D1 /* DataType.swift */,
-				EA6603302C3D6E77003540D1 /* AdminHome.swift */,
+				EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */,
 				EA66032F2C3D6E77003540D1 /* Revenue.swift */,
 				812C377A2C36B65400614EE9 /* HospitalView.swift */,
 			);
@@ -326,7 +326,7 @@
 				62530F4E2C33D5BC001B496B /* Authentication.swift in Sources */,
 				0740F2EF2C41413B001FF481 /* AdminProfileView.swift in Sources */,
 				07938CF62C3711E300A4FA96 /* ChangePassword.swift in Sources */,
-				EA6603332C3D6E77003540D1 /* AdminHome.swift in Sources */,
+				EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */,
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
@@ -484,7 +484,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -513,7 +513,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HMSAdmin/Preview Content\"";
-				DEVELOPMENT_TEAM = 45FSZ24S5Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
