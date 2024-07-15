@@ -274,4 +274,10 @@ struct Staff: Identifiable, Codable{
             self.department = department
             self.employmentStatus = employmentStatus
         }
+    
+    var age: Int {
+            let now = Date()
+            let ageComponents = Calendar.current.dateComponents([.year], from: dateOfBirth, to: now)
+            return ageComponents.year ?? 0
+        }
 }
