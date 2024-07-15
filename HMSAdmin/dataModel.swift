@@ -249,3 +249,29 @@ extension Admin {
         self.phone = phone
     }
 }
+
+
+//struct for staff
+struct Staff: Identifiable, Codable{
+    @DocumentID var id: String?
+        var firstName: String
+        var lastName: String
+        var dateOfBirth: Date
+        var phoneNumber: String
+        var email: String
+        var position: String
+        var department: String
+        var employmentStatus: String
+
+        init(id: String? = nil, firstName: String, lastName: String, dateOfBirth: Date, phoneNumber: String, email: String, position: String, department: String, employmentStatus: String) {
+            self.id = id
+            self.firstName = firstName
+            self.lastName = lastName
+            self.dateOfBirth = dateOfBirth
+            self.phoneNumber = phoneNumber
+            self.email = email
+            self.position = position
+            self.department = department
+            self.employmentStatus = employmentStatus
+        }
+}
