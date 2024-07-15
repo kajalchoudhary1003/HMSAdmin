@@ -17,7 +17,7 @@ struct Authentication: View {
                         Text("Welcome to")
                             .font(.title3)
                             .padding(.top, 10)
-                        Text("Mediflex")
+                        Text("InfyMed")
                             .font(.largeTitle)
                             .bold()
                             .foregroundColor(Color(hex: "006666"))
