@@ -3,7 +3,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import CoreLocation
 
-class DataController {
+class DataController: ObservableObject {
 
     // Singleton instance of DataController
     static let shared = DataController()
@@ -13,6 +13,7 @@ class DataController {
     private var doctors: [String: Doctor] = [:]
     @Published var patients: [String: Patient] = [:]
     @Published var appointments: [Appointment] = []
+    @Published var staffs: [String: Staff] = [:]
 
     private init() {
         // Initialize the Firebase database reference
@@ -73,6 +74,26 @@ class DataController {
             NotificationCenter.default.post(name: NSNotification.Name("DoctorsUpdated"), object: nil)
         }
     }
+    
+    
+    //fetch staff details
+    func fetchStaffs() {
+           let ref = database.child("staffs")
+           ref.observe(.value) { snapshot in
+               self.staffs = [:]
+               for child in snapshot.children {
+                   if let childSnapshot = child as? DataSnapshot,
+                      let staffData = childSnapshot.value as? [String: Any],
+                      let staff = Staff(from: staffData, id: childSnapshot.key) {
+                       self.staffs[staff.id ?? UUID().uuidString] = staff
+                   }
+               }
+           }
+       }
+    
+    
+ 
+    
 
     // Add a hospital to Firebase
     func addHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
@@ -91,6 +112,23 @@ class DataController {
             completion(nil)
         }
     }
+    
+    //add staff
+    func addStaff(_ staff: Staff, completion: @escaping (Error?) -> Void) {
+            let id = staff.id ?? database.child("staffs").childByAutoId().key ?? UUID().uuidString
+            var staffWithID = staff
+            staffWithID.id = id
+
+            let ref = database.child("staffs").child(id)
+            ref.setValue(staffWithID.toDictionary()) { error, _ in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                self.staffs[id] = staffWithID
+                completion(nil)
+            }
+        }
 
     // Add a doctor to Firebase
     func addDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
@@ -128,6 +166,9 @@ class DataController {
             }
         }
     }
+    
+    
+    
 
     // Get all hospitals
     func getHospitals() -> [Hospital] {
@@ -205,6 +246,9 @@ class DataController {
     }
 }
 
+
+
+
 extension Doctor {
     func toDictionary() -> [String: Any] {
         return [
@@ -244,5 +288,43 @@ extension Doctor {
         self.designation = designation
         self.titles = titles
         self.id = id
+    }
+}
+
+
+extension Staff {
+    func toDictionary() -> [String: Any] {
+        return [
+            "firstName": firstName,
+            "lastName": lastName,
+            "dateOfBirth": ISO8601DateFormatter().string(from: dateOfBirth),
+            "phoneNumber": phoneNumber,
+            "email": email,
+            "position": position,
+            "department": department,
+            "employmentStatus": employmentStatus
+        ]
+    }
+
+    init?(from dictionary: [String: Any], id: String) {
+        guard let firstName = dictionary["firstName"] as? String,
+              let lastName = dictionary["lastName"] as? String,
+              let dateOfBirthString = dictionary["dateOfBirth"] as? String,
+              let dateOfBirth = ISO8601DateFormatter().date(from: dateOfBirthString),
+              let phoneNumber = dictionary["phoneNumber"] as? String,
+              let email = dictionary["email"] as? String,
+              let position = dictionary["position"] as? String,
+              let department = dictionary["department"] as? String,
+              let employmentStatus = dictionary["employmentStatus"] as? String else {
+            return nil
+        }
+        self.firstName = firstName
+        self.lastName = lastName
+        self.dateOfBirth = dateOfBirth
+        self.phoneNumber = phoneNumber
+        self.email = email
+        self.position = position
+        self.department = department
+        self.employmentStatus = employmentStatus
     }
 }

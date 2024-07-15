@@ -3,18 +3,15 @@ import SwiftUI
 struct StaffsView: View {
     @State private var searchText = ""
     @State private var selectedFilter = "Nurse"
-    @State private var staffs = [
-        Staff(name: "Ms. Kajal Choudhary", type: "Full-Time", age: 28, position: "Full-Time", department: "ICU"),
-        Staff(name: "Ms. Kajal Choudhary", type: "Contract", age: 28, position: "Contract", department: "General Ward"),
-        Staff(name: "Ms. Kajal Choudhary", type: "Full-Time", age: 28, position: "Full-Time", department: "Emergency"),
-        Staff(name: "Ms. Kajal Choudhary", type: "Full-Time", age: 28, position: "Full-Time", department: "ICU")
-    ]
+
+    
+    @State private var staffs = [Staff]()
     @State private var isPresentingAddStaffView = false
     
     var filteredStaffs: [Staff] {
         staffs.filter { staff in
             (selectedFilter == "Nurse" || selectedFilter == "Caretakers") &&
-            (searchText.isEmpty || staff.name.localizedCaseInsensitiveContains(searchText))
+            (searchText.isEmpty || staff.firstName.localizedCaseInsensitiveContains(searchText))
         }
     }
     
@@ -30,7 +27,7 @@ struct StaffsView: View {
                 ScrollView {
                     LazyVStack(spacing: 10) {
                         ForEach(filteredStaffs) { staff in
-                            NavigationLink(destination: Text("Staff Details View for \(staff.name)")) {
+                            NavigationLink(destination: Text("Staff Details View for \(staff.firstName)")) {
                                 StaffCard(staff: staff)
                             }
                         }
@@ -53,6 +50,13 @@ struct StaffsView: View {
             .sheet(isPresented: $isPresentingAddStaffView) {
                 AddStaffsView(staffs: $staffs, isPresentingAddStaffView: $isPresentingAddStaffView)
             }
+            .onAppear{
+                DataController.shared.fetchStaffs()
+            }
+            .onReceive(DataController.shared.$staffs) {
+                newStaffs in
+                staffs = Array(newStaffs.values)
+            }
         }
         //.navigationViewStyle(StackNavigationViewStyle())
     }
@@ -63,14 +67,14 @@ struct StaffCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(staff.name)
+            Text(staff.firstName)
                 .font(.headline)
                 .foregroundColor(.black)
             Text(staff.position)
                 .font(.subheadline)
                 .foregroundColor(.black)
             HStack {
-                Text("Age: \(staff.age)")
+                Text("Age: ")
                     .font(.caption)
                     .foregroundColor(.black)
                 Spacer()
@@ -147,20 +151,25 @@ struct AddStaffsView: View {
     
     func saveStaff() {
         let newStaff = Staff(
-            name: "\(firstName) \(lastName)",
-            type: selectedEmploymentStatus,
-            age: calculateAge(from: dateOfBirth),
+            firstName: firstName,
+            lastName: lastName,
+            dateOfBirth: dateOfBirth,
+            phoneNumber: phoneNumber,
+            email: email,
             position: selectedPosition,
-            department: selectedDepartment
+            department: selectedDepartment,
+            employmentStatus: selectedEmploymentStatus
         )
-        staffs.append(newStaff)
+        
+        DataController.shared.addStaff(newStaff) { error in
+            if let error = error {
+                print("Error adding staff: \(error.localizedDescription)")
+            } else {
+                self.staffs.append(newStaff)
+            }
+        }
+        
         resetForm()
-    }
-    
-    func calculateAge(from date: Date) -> Int {
-        let now = Date()
-        let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
-        return ageComponents.year ?? 0
     }
     
     func resetForm() {
@@ -173,6 +182,13 @@ struct AddStaffsView: View {
         selectedDepartment = ""
         selectedEmploymentStatus = ""
     }
+    
+    func calculateAge(from date: Date) -> Int {
+        let now = Date()
+        let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
+        return ageComponents.year ?? 0
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -181,11 +197,4 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct Staff: Identifiable {
-    let id = UUID()
-    let name: String
-    let type: String
-    let age: Int
-    let position: String
-    let department: String
-}
+
