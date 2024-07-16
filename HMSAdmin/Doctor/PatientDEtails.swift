@@ -5,7 +5,6 @@ struct PatientDetailsView: View {
     let patient: Patient
     @State private var prescriptionText = ""
     @State private var isShowingActionSheet = false
-    @ObservedObject private var speechRecognizer = SpeechRecognizer()
     
     var body: some View {
         NavigationView {
@@ -101,24 +100,8 @@ struct PatientDetailsView: View {
                                 TextField("Write Prescription...", text: $prescriptionText)
                                     .padding(.bottom, 100)
                                     .background(Color.white)
-                                Button(action: {
-                                    if speechRecognizer.isRunning {
-                                        speechRecognizer.stopRecording()
-                                    } else {
-                                        speechRecognizer.startRecording()
-                                    }
-                                }) {
-                                    Image(systemName: speechRecognizer.isRunning ? "mic.circle.fill" : "mic.circle")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .padding(.top,50)
-                                        .padding(.leading,1)
-                                }
                                 .padding(.bottom, 8)
                                 .padding(.trailing, 8)
-                            }
-                            .onChange(of: speechRecognizer.recognizedText) { newValue in
-                                prescriptionText = newValue
                             }
                         }
                     }
@@ -135,4 +118,3 @@ struct PatientDetailsView: View {
         return formatter.string(from: date)
     }
 }
-
