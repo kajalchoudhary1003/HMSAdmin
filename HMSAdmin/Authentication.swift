@@ -32,7 +32,7 @@ struct Authentication: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: geometry.size.width)  // Adjust as needed
-                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.36)  // Adjust as needed
+                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
 //
                 }
 
