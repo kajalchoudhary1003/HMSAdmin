@@ -27,11 +27,13 @@ struct Authentication: View {
                     
                     Spacer() // Pushes VStack content to the top
                 }
-                VStack(alignment: .trailing){
-                    Image("Doctor 3D")
+                GeometryReader { geometry in
+                    Image("Staff 3D")
                         .resizable()
                         .scaledToFit()
-                        .padding(.bottom,220)
+                        .frame(width: geometry.size.width)  // Adjust as needed
+                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
+//
                 }
 
                 // Login input section at the bottom
@@ -138,6 +140,7 @@ struct Authentication: View {
                     .cornerRadius(22)
                 }
             }
+            .background(Color(hex:"ECEEEE"))
             .padding(.bottom,10)
         }
         .navigationBarHidden(true)
