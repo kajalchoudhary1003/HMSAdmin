@@ -45,7 +45,7 @@ struct PatientDetailsView: View {
                     
                     Form {
                         // Patient Information
-                        Section(header: Text("").padding(.bottom, -20)) {
+                        Section(header: Text("Patient Information").padding(.bottom, -20)) {
                             HStack {
                                 Text("First Name")
                                 Spacer()
@@ -123,12 +123,13 @@ struct PatientDetailsView: View {
                                             .resizable()
                                             .frame(width: 20, height: 20)
                                     }
+                                }
+                                .contextMenu {
                                     Button(action: {
                                         deleteRecording(url: url, isPathology: true)
                                     }) {
-                                        Image(systemName: "trash.circle")
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
+                                        Text("Delete All")
+                                        Image(systemName: "trash")
                                     }
                                 }
                             }
@@ -170,12 +171,13 @@ struct PatientDetailsView: View {
                                             .resizable()
                                             .frame(width: 20, height: 20)
                                     }
+                                }
+                                .contextMenu {
                                     Button(action: {
                                         deleteRecording(url: url, isPathology: false)
                                     }) {
-                                        Image(systemName: "trash.circle")
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
+                                        Text("Delete All")
+                                        Image(systemName: "trash")
                                     }
                                 }
                             }
@@ -183,7 +185,7 @@ struct PatientDetailsView: View {
                         .padding(.bottom, -10)
                         
                         // Prescription Section
-                        Section(header: Text("").padding(.bottom, -20)) {
+                        Section(header: Text("Prescription").padding(.bottom, -20)) {
                             TextField("Write Prescription...", text: $prescriptionText)
                                 .padding(.bottom, 100)
                                 .background(Color.white)
@@ -209,6 +211,8 @@ struct PatientDetailsView: View {
             }
             .onAppear {
                 configureAudioSession()
+                loadMedicalRecords()
+                loadPrescriptions()
             }
         }
     }
@@ -258,10 +262,10 @@ struct PatientDetailsView: View {
     }
 
     func playAudio(url: URL) {
-        if audioPlayer?.isPlaying == true {
-            audioPlayer?.stop()
-        }
         do {
+            if audioPlayer?.isPlaying == true {
+                audioPlayer?.stop()
+            }
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.play()
         } catch {
@@ -273,16 +277,12 @@ struct PatientDetailsView: View {
         do {
             try FileManager.default.removeItem(at: url)
             if isPathology {
-                if let index = pathologyAudioURLs.firstIndex(of: url) {
-                    pathologyAudioURLs.remove(at: index)
-                }
+                pathologyAudioURLs.removeAll { $0 == url }
             } else {
-                if let index = radiologyAudioURLs.firstIndex(of: url) {
-                    radiologyAudioURLs.remove(at: index)
-                }
+                radiologyAudioURLs.removeAll { $0 == url }
             }
         } catch {
-            print("Error deleting file: \(error.localizedDescription)")
+            print("Error deleting recording: \(error.localizedDescription)")
         }
     }
 
@@ -302,5 +302,17 @@ struct PatientDetailsView: View {
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }
-}
 
+    func loadMedicalRecords() {
+        // Fetch medical records from your data source and update pathologyAudioURLs and radiologyAudioURLs
+        // For example:
+        // pathologyAudioURLs = fetchedPathologyURLs
+        // radiologyAudioURLs = fetchedRadiologyURLs
+    }
+
+    func loadPrescriptions() {
+        // Fetch prescription text from your data source and update prescriptionText
+        // For example:
+        // prescriptionText = fetchedPrescriptionText
+    }
+}
