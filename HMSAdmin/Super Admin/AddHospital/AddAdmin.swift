@@ -10,7 +10,6 @@ struct AddAdminView: View {
             Form {
                 Section(header: Text("Admin Details")) {
                     TextField("First Name", text: $newAdmin.name)
-                    TextField("Address", text: $newAdmin.address)
                     TextField("Email", text: $newAdmin.email)
                     TextField("Phone", text: $newAdmin.phone)
                 }

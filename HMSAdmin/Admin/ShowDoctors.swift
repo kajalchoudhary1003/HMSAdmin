@@ -38,6 +38,7 @@ struct ShowDoctors: View {
                             .foregroundColor(.gray)
                             .padding(.top, 4)
                     }
+                    .background(Color.customBackground)
                     .navigationTitle("Doctors")
                     .padding(.vertical,10)
     //                .padding(.horizontal,0)
@@ -62,6 +63,7 @@ struct ShowDoctors: View {
                             .listRowInsets(EdgeInsets())
                     }
                 }
+                .background(Color.customBackground)
                 .navigationTitle("Doctors")
                 .padding(.vertical,10)
                 .navigationBarItems(trailing: Button(action: {

@@ -49,7 +49,7 @@ struct HospitalView: View {
                         }
                         .padding()
                     }
-                    .background(Color(hex: "ECEEEE"))
+                    .background(Color.customBackground)
                 }
             }
             .searchable(text: $searchText)

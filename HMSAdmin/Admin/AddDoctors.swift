@@ -165,6 +165,7 @@ struct DoctorFormView: View {
                     }
                 }
             }
+            .background(Color.customBackground)
             .navigationTitle(doctorToEdit == nil ? "Add Doctor" : "Edit Doctor")
             .navigationBarItems(
                 leading: Button("Cancel") {

@@ -116,7 +116,6 @@ struct Doctor: Codable, Identifiable,Equatable {
 struct Admin: Codable, Identifiable {
     var id: UUID = UUID()
     var name: String
-    var address: String
     var email: String
     var phone: String
 }
@@ -231,7 +230,6 @@ extension Admin {
     func toDictionary() -> [String: Any] {
         return [
             "name": name,
-            "address": address,
             "email": email,
             "phone": phone
         ]
@@ -240,13 +238,11 @@ extension Admin {
     // Initializes an Admin instance from a dictionary
     init?(from dictionary: [String: Any]) {
         guard let name = dictionary["name"] as? String,
-              let address = dictionary["address"] as? String,
               let email = dictionary["email"] as? String,
               let phone = dictionary["phone"] as? String else {
             return nil
         }
         self.name = name
-        self.address = address
         self.email = email
         self.phone = phone
     }

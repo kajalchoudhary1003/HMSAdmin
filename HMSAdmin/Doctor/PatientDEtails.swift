@@ -20,8 +20,7 @@ struct PatientDetailsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(.systemGray6)
-                    .edgesIgnoringSafeArea(.all)
+                Color.customBackground
                 
                 VStack {
                     // Profile Picture with Edit Button
