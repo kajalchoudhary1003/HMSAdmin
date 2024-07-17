@@ -4,6 +4,7 @@ import AVFoundation
 struct PatientDetailsView: View {
     let patient: Patient
     @State private var prescriptionText = ""
+    let appointment: Appointment
     @State private var isShowingActionSheet = false
     @State private var isRecordingPathology = false
     @State private var isRecordingRadiology = false
@@ -194,6 +195,7 @@ struct PatientDetailsView: View {
             }
             .navigationBarTitle("Patient Details", displayMode: .inline)
             .navigationBarItems(trailing: Button("Done") {
+                addPrescription()
                 isShowingAlert = true
             }
             .offset(y: -20)) // Adjust this value to move the button up
@@ -209,6 +211,20 @@ struct PatientDetailsView: View {
             }
             .onAppear {
                 configureAudioSession()
+            }
+          
+        }
+        
+        
+    }
+    
+    private func addPrescription(){
+        DataController.shared.addPrescription(prescriptionText, forAppointment: appointment){
+            error in
+            if let error = error {
+                print("Error in adding pres: \(error.localizedDescription)")
+            }else{
+                prescriptionText = ""
             }
         }
     }
