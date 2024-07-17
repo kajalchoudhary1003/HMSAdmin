@@ -299,7 +299,7 @@ struct AddHospital: View {
         if selectedTypeIndex == 1 {
             newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
             newPassword = generateRandomPassword(length: 8)
-            let newAdmin = Admin(name: newAdminName, address: "Admin Address", email: newAdminEmail, phone: newAdminPhone)
+            let newAdmin = Admin(name: newAdminName, email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
             
             // Add new admin to existing admins list
@@ -308,7 +308,7 @@ struct AddHospital: View {
             showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
             let selectedAdminName = existingAdmins[selectedAdminIndex]
-            let existingAdmin = Admin(name: selectedAdminName, address: "Admin Address", email: "admin@example.com", phone: "1234567890")
+            let existingAdmin = Admin(name: selectedAdminName, email: "admin@example.com", phone: "1234567890")
             admins.append(existingAdmin)
         }
 

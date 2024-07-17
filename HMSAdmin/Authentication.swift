@@ -20,7 +20,7 @@ struct Authentication: View {
                         Text("infyMed")
                             .font(.largeTitle)
                             .bold()
-                            .foregroundColor(Color(hex: "006666"))
+                            .foregroundColor(Color.customPrimary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
@@ -50,7 +50,7 @@ struct Authentication: View {
                         
                         Text("Please enter your email and password to proceed")
                             .font(.subheadline)
-                            .foregroundColor(Color(hex: "006666"))
+                            .foregroundColor(Color.customPrimary)
                             .padding(5)
                             .padding(.bottom, 5)
                             .padding(.horizontal,5)
@@ -78,7 +78,7 @@ struct Authentication: View {
 
                             } else if isValidEmail(username) {
                                 Text("Yeah, Looks Valid Email Address")
-                                    .foregroundColor(Color(hex: "006666"))
+                                    .foregroundColor(Color.customPrimary)
                                     .font(.caption)
                                     .padding(.horizontal,5)
 
@@ -103,7 +103,7 @@ struct Authentication: View {
                                     .font(.caption)
                             } else if password.count >= 6 {
                                 Text("Seems Valid!")
-                                    .foregroundColor(Color(hex: "006666"))
+                                    .foregroundColor(Color.customPrimary)
                                     .font(.caption)
                                     .padding(.horizontal,5)
                             } else {
@@ -119,7 +119,7 @@ struct Authentication: View {
                             }) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color(hex: "006666"))
+                                        .fill(Color.customPrimary)
                                     Text("Sign In")
                                         .font(.headline)
                                         .fontWeight(.bold)
@@ -140,7 +140,7 @@ struct Authentication: View {
                     .cornerRadius(22)
                 }
             }
-            .background(Color(hex:"ECEEEE"))
+            .background(Color.customBackground)
             .padding(.bottom,10)
         }
         .navigationBarHidden(true)

@@ -9,9 +9,9 @@ struct SuperAdminHome : View {
     @State private var selectedDepartment = "OPD"
     @State private var selectedPage = 0
 
-    let baseColor = Color(hex: "006666")
+    let baseColor = Color.customPrimary
     let colorScheme: [Color] = [
-        Color(hex: "006666"),
+        Color.customPrimary,
         Color(hex: "007777"),
         Color(hex: "00AAAA"),
         Color(hex: "00BBBB"),
@@ -204,7 +204,7 @@ struct SuperAdminHome : View {
                     }
                 }
                 .padding()
-            }.background(Color(hex:"ECEEEE"))
+            }.background(Color.customBackground)
         }
     }
 }
