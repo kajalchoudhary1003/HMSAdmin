@@ -8,6 +8,7 @@ struct Authentication: View {
     @State private var showErrorAlert = false
     @State private var clearFields = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("userRole") var userRole: String = ""
     
     var body: some View {
         NavigationView {
@@ -17,7 +18,7 @@ struct Authentication: View {
                         Text("Welcome to")
                             .font(.title3)
                             .padding(.top, 10)
-                        Text("infyMed")
+                        Text("Mediflex")
                             .font(.largeTitle)
                             .bold()
                             .foregroundColor(Color(hex: "006666"))
@@ -27,13 +28,11 @@ struct Authentication: View {
                     
                     Spacer() // Pushes VStack content to the top
                 }
-                GeometryReader { geometry in
-                    Image("Staff 3D")
+                VStack(alignment: .trailing){
+                    Image("Doctor 3D")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width)  // Adjust as needed
-                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
-//
+                        .padding(.bottom,220)
                 }
 
                 // Login input section at the bottom
@@ -140,7 +139,6 @@ struct Authentication: View {
                     .cornerRadius(22)
                 }
             }
-            .background(Color(hex:"ECEEEE"))
             .padding(.bottom,10)
         }
         .navigationBarHidden(true)
@@ -197,28 +195,25 @@ struct Authentication: View {
             let emailDomain = email.components(separatedBy: "@").last ?? ""
             
             switch emailDomain {
-            case "superadmin.com":
-                navigateToScreen(screen: SuperAdminHome())
-                
-            case "admin.com":
-                navigateToScreen(screen: AdminView())
-                
-            case "doctor.com":
-                navigateToScreen(screen: DoctorView())
-                
-            default:
-                errorMessage = "Invalid email domain"
-                showErrorAlert = true
-            }
-        }
-    }
-    
-    // Function to navigate to different screens based on user role
-    func navigateToScreen<Screen: View>(screen: Screen) {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if let window = windowScene.windows.first {
-                window.rootViewController = UIHostingController(rootView: screen)
-                window.makeKeyAndVisible()
+                case "superadmin.com":
+                    userRole = "superadmin"
+                    isLoggedIn = true
+                    navigateToScreen(screen: NewHome())
+                    
+                case "admin.com":
+                    userRole = "admin"
+                    isLoggedIn = true
+                    navigateToScreen(screen: AdminView())
+                    
+                case "doctor.com":
+                    userRole = "doctor"
+                    isLoggedIn = true
+                    navigateToScreen(screen: DoctorView())
+
+                    
+                default:
+                    errorMessage = "Invalid email domain"
+                    showErrorAlert = true
             }
         }
     }
@@ -229,6 +224,16 @@ struct Authentication: View {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
+    
+    // Function to navigate to different screens based on user role
+     func navigateToScreen<Screen: View>(screen: Screen) {
+         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+             if let window = windowScene.windows.first {
+                 window.rootViewController = UIHostingController(rootView: screen)
+                 window.makeKeyAndVisible()
+             }
+         }
+     }
 }
 
 struct Authentication_Previews: PreviewProvider {
