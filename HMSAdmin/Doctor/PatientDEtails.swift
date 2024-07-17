@@ -13,6 +13,8 @@ struct PatientDetailsView: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var recordingDuration: TimeInterval = 0
     @State private var recordingTimer: Timer?
+    @State private var isShowingAlert = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         NavigationView {
@@ -191,6 +193,20 @@ struct PatientDetailsView: View {
                 }
             }
             .navigationBarTitle("Patient Details", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Done") {
+                isShowingAlert = true
+            }
+            .offset(y: -20)) // Adjust this value to move the button up
+            .alert(isPresented: $isShowingAlert) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("Select an option"),
+                    primaryButton: .default(Text("End")) {
+                        presentationMode.wrappedValue.dismiss()
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
             .onAppear {
                 configureAudioSession()
             }
@@ -287,3 +303,4 @@ struct PatientDetailsView: View {
         return formatter.string(from: date)
     }
 }
+
