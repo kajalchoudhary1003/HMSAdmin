@@ -1,12 +1,7 @@
 import SwiftUI
 import Charts
 
-//enum TimePeriod: String, CaseIterable {
-//    case day = "Day"
-//    case week = "Week"
-//    case month = "Month"
-//    case year = "Year"
-//}
+
 
 struct AdminHome : View {
     

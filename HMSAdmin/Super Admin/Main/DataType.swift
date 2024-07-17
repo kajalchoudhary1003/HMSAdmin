@@ -14,17 +14,3 @@ case month = "1 Month"
 case year = "1 year"
 }
 
-//enum DepartmentType: String,CaseIterable {
-//    case opd = "OPD"
-//    case physio = "Pyhsio"
-//    case dental = "Dental"
-//    case cardio = "Cardio"
-//    
-//}
-//
-//
-//enum City : String , CaseIterable {
-//    case delhi = "Delhi"
-//    case chandigarh = "Bar Chart"
-//    case bengaluru = "Pie Chart"
-//}

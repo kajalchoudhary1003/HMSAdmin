@@ -196,7 +196,7 @@ struct Authentication: View {
             switch emailDomain {
                        case "superadmin.com":
                            isLoggedIn = true
-                           navigateToScreen(screen: AdminHome())
+                           navigateToScreen(screen: NewHome())
                            
                        case "admin.com":
                            isLoggedIn = true
