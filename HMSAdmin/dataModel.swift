@@ -208,17 +208,19 @@ struct Appointment: Hashable, Codable, Identifiable {
     var doctorID: String
     var date: Date
     var timeSlotID: String
+    var prescription: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, patientID, doctorID, date, timeSlotID
+        case id, patientID, doctorID, date, timeSlotID, prescription
     }
     
-    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil) {
+    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil, prescription: String?) {
         self.id = id
         self.patientID = patientID
         self.doctorID = doctorID
         self.date = date
         self.timeSlotID = timeSlotID
+        self.prescription = prescription
     }
 }
 

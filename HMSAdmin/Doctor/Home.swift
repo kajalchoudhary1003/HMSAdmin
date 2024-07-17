@@ -5,7 +5,7 @@ struct PatientRow: View {
     let patient: Patient
     let appointment: Appointment
     var body: some View {
-        NavigationLink(destination: PatientDetailsView(patient: patient)) {
+        NavigationLink(destination: PatientDetailsView(patient: patient, appointment: appointment)) {
             VStack {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
