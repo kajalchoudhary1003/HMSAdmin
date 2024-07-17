@@ -10,38 +10,34 @@ struct Revenue: Identifiable, Equatable {
     }
 }
 
-//enum TimePeriod: String, CaseIterable {
-//    case day = "Day"
-//    case week = "Week"
-//    case year = "Year"
-//}
+
 
 var departmentRevenueDay: [Revenue] = [
     .init(name: "OPD", revenue: 345),
     .init(name: "Cardio", revenue: 245),
     .init(name: "Dental", revenue: 125),
-    .init(name: "Physio", revenue: 45)
+    .init(name: "Others", revenue: 45)
 ]
 
 var departmentRevenueWeek: [Revenue] = [
-    .init(name: "OPD", revenue: 2450),
+    .init(name: "OPD", revenue: 950),
     .init(name: "Cardio", revenue: 1750),
     .init(name: "Dental", revenue: 850),
-    .init(name: "Physio", revenue: 450)
+    .init(name: "Others", revenue: 450)
 ]
 
 var departmentRevenueMonth: [Revenue] = [
-    .init(name: "OPD", revenue: 2450),
-    .init(name: "Cardio", revenue: 1750),
+    .init(name: "OPD", revenue: 1450),
+    .init(name: "Cardio", revenue: 750),
     .init(name: "Dental", revenue: 850),
-    .init(name: "Physio", revenue: 450)
+    .init(name: "Others", revenue: 450)
 ]
 
 var departmentRevenueYear: [Revenue] = [
-    .init(name: "OPD", revenue: 34500),
-    .init(name: "Cardio", revenue: 24500),
-    .init(name: "Dental", revenue: 12500),
-    .init(name: "Physio", revenue: 4500)
+    .init(name: "OPD", revenue: 3500),
+    .init(name: "Cardio", revenue: 2450),
+    .init(name: "Dental", revenue: 2500),
+    .init(name: "Others", revenue: 500)
 ]
 
 var opdRevenue: [ParticularRevenue] = [

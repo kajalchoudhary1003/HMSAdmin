@@ -10,7 +10,7 @@ import SwiftUI
 struct NewHome: View {
     var body: some View {
           TabView {
-              AdminHome()
+              NewAdminHome()
                   .tabItem {
                       Image(systemName: "chart.bar.xaxis")
                       Text("Analytics")
