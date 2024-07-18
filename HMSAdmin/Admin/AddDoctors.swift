@@ -12,8 +12,6 @@ struct DoctorFormView: View {
     @State private var lastName = ""
     @State private var email = ""
     @State private var phone = ""
-    @State private var starts = Date()
-    @State private var ends = Date()
     @State private var dob = Date()
     @State private var designation: DoctorDesignation = .generalPractitioner
     @State private var titles = ""
@@ -24,37 +22,57 @@ struct DoctorFormView: View {
     @State private var newDoctorEmail: String = ""
     @State private var newPassword: String = ""
     @State private var isEditing = true
+    @State private var startTimeIndex = 0
+    @State private var endTimeIndex = 1
     
     var designations = DoctorDesignation.allCases
     
-    // Computed property to get the minimum end time (1 hour after start time)
-    var minimumEndTime: Date {
-        return Calendar.current.date(byAdding: .hour, value: 1, to: starts) ?? starts
+    // Time slots array with AM and PM
+    let timeSlots = (6...11).map { "\($0):00 AM" } + ["12:00 PM"] + (1...11).map { "\($0):00 PM" }
+    
+    // Computed property to get the minimum end time index
+    var minimumEndTimeIndex: Int {
+        return startTimeIndex + 1
     }
-
+    
+    // Computed property to get the maximum end time index (5 hours after start time)
+    var maximumEndTimeIndex: Int {
+        return min(startTimeIndex + 5, timeSlots.count - 1)
+    }
+    
     // Form validation check
     var isFormValid: Bool {
         !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !phone.isEmpty && !titles.isEmpty &&
         firstName.count <= 25 && lastName.count <= 25 && isValidEmail(email) && isValidPhone(phone) &&
-        dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())! && ends >= minimumEndTime
+        dob <= Calendar.current.date(byAdding: .year, value: -20, to: Date())! && endTimeIndex >= minimumEndTimeIndex &&
+        endTimeIndex <= maximumEndTimeIndex
     }
-
+    
     // Initializer to set up the form with existing doctor details if editing
     init(isPresent: Binding<Bool>, doctors: Binding<[Doctor]>, doctorToEdit: Doctor?) {
         self._isPresent = isPresent
         self._doctors = doctors
         self.doctorToEdit = doctorToEdit
-
+        
         if let doctor = doctorToEdit {
             _firstName = State(initialValue: doctor.firstName)
             _lastName = State(initialValue: doctor.lastName)
             _email = State(initialValue: doctor.email)
             _phone = State(initialValue: doctor.phone)
-            _starts = State(initialValue: doctor.starts)
-            _ends = State(initialValue: doctor.ends)
             _dob = State(initialValue: doctor.dob)
             _designation = State(initialValue: doctor.designation)
             _titles = State(initialValue: doctor.titles)
+            
+            // Setting initial indices based on the doctor's existing start and end times
+            if let startHour = Calendar.current.dateComponents([.hour], from: doctor.starts).hour,
+               let endHour = Calendar.current.dateComponents([.hour], from: doctor.ends).hour {
+                let startPeriod = startHour >= 12 ? "PM" : "AM"
+                let endPeriod = endHour >= 12 ? "PM" : "AM"
+                let startHour12 = startHour % 12 == 0 ? 12 : startHour % 12
+                let endHour12 = endHour % 12 == 0 ? 12 : endHour % 12
+                _startTimeIndex = State(initialValue: timeSlots.firstIndex(of: "\(startHour12):00 \(startPeriod)") ?? 0)
+                _endTimeIndex = State(initialValue: timeSlots.firstIndex(of: "\(endHour12):00 \(endPeriod)") ?? 1)
+            }
         }
     }
     
@@ -135,22 +153,38 @@ struct DoctorFormView: View {
                         }
                     }
                     .disabled(!isEditing)
-                    DatePicker("Starts", selection: $starts, displayedComponents: .hourAndMinute)
-                        .disabled(!isEditing)
-                        .onChange(of: starts) { newValue in
-                            if ends < minimumEndTime {
-                                ends = minimumEndTime
-                            }
+                    Picker("Start Time", selection: $startTimeIndex) {
+                        ForEach(0..<timeSlots.count) { index in
+                            Text(timeSlots[index])
                         }
-                    DatePicker("Ends", selection: $ends, in: minimumEndTime..., displayedComponents: .hourAndMinute)
-                        .disabled(!isEditing)
-                        .onChange(of: ends) { newValue in
-                            if ends < minimumEndTime {
-                                ends = minimumEndTime
-                                signupErrorMessage = "End time should be at least 1 hour after start time."
-                                showSignupError = true
-                            }
+                    }
+                    .disabled(!isEditing)
+                    .onChange(of: startTimeIndex) { newValue in
+                        if endTimeIndex < minimumEndTimeIndex {
+                            endTimeIndex = minimumEndTimeIndex
+                        } else if endTimeIndex > maximumEndTimeIndex {
+                            endTimeIndex = maximumEndTimeIndex
+                            signupErrorMessage = "Shift cannot exceed 5 hours."
+                            showSignupError = true
                         }
+                    }
+                    Picker("End Time", selection: $endTimeIndex) {
+                        ForEach(minimumEndTimeIndex..<timeSlots.count) { index in
+                            Text(timeSlots[index])
+                        }
+                    }
+                    .disabled(!isEditing)
+                    .onChange(of: endTimeIndex) { newValue in
+                        if endTimeIndex < minimumEndTimeIndex {
+                            endTimeIndex = minimumEndTimeIndex
+                            signupErrorMessage = "End time should be at least 1 hour after start time."
+                            showSignupError = true
+                        } else if endTimeIndex > maximumEndTimeIndex {
+                            endTimeIndex = maximumEndTimeIndex
+                            signupErrorMessage = "Shift cannot exceed 5 hours."
+                            showSignupError = true
+                        }
+                    }
                     TextField("Qualifications", text: $titles)
                         .disabled(!isEditing)
                 }
@@ -199,112 +233,48 @@ struct DoctorFormView: View {
                 })
             }
             .alert(isPresented: $showMailError) {
-                Alert(title: Text("Email Error"), message: Text("Failed to send email with credentials. Please contact the doctor manually."), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Email Error"), message: Text("Failed to send email"), dismissButton: .default(Text("OK")))
             }
         }
     }
 
-    private func saveDoctor() {
-        newDoctorEmail = "\(UUID().uuidString.prefix(6))@doctor.com"
-        newPassword = generateRandomPassword(length: 6)
-        
-        performFirebaseSignup()
+    func isValidEmail(_ email: String) -> Bool {
+        // Add your email validation logic here
+        return email.contains("@") && email.contains(".")
     }
     
-    // Function to delete the doctor
-    private func deleteDoctor(_ doctor: Doctor) {
-        if let index = doctors.firstIndex(where: { $0.id == doctor.id }) {
-            doctors.remove(at: index)
-            isPresent = false
-        }
+    func isValidPhone(_ phone: String) -> Bool {
+        // Add your phone validation logic here
+        return phone.count == 10
     }
     
-    // Function to construct email body
-    private func mailBody() -> String {
-        """
-        Hello Dr. \(firstName) \(lastName),
-        
-        Here are your login credentials:
-        
+    func saveDoctor() {
+        // Add your logic to save the doctor details here
+    }
+    
+    func deleteDoctor(_ doctor: Doctor) {
+        // Add your logic to delete the doctor here
+    }
+    
+    func mailBody() -> String {
+        return """
+        Dear \(firstName),
+
+        Your account has been created with the following credentials:
         Email: \(newDoctorEmail)
         Password: \(newPassword)
-        
-        Please use these credentials to access the doctor portal.
-        
-        Regards,
-        Hospital Administration
+
+        Best regards,
+        Admin Team
         """
-    }
-    
-    // Email validation function
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailPredicate.evaluate(with: email)
-    }
-    
-    // Function to generate random password
-    private func generateRandomPassword(length: Int) -> String {
-        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0..<length).map { _ in characters.randomElement()! })
-    }
-    
-    // Function to perform Firebase signup
-    private func performFirebaseSignup() {
-        Auth.auth().createUser(withEmail: newDoctorEmail, password: newPassword) { authResult, error in
-            if let error = error {
-                print("Error signing up: \(error.localizedDescription)")
-                showSignupError = true
-                signupErrorMessage = error.localizedDescription
-            } else if let authResult = authResult {
-                let newDoctor = Doctor(
-                    id: authResult.user.uid,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: newDoctorEmail,
-                    phone: phone,
-                    starts: starts,
-                    ends: ends,
-                    dob: dob,
-                    designation: designation,
-                    titles: titles
-                )
-                addNewDoctorToDatabase(newDoctor)
-            }
-        }
-    }
-    
-    private func addNewDoctorToDatabase(_ doctor: Doctor) {
-        DataController.shared.addDoctor(doctor) { error in
-            if let error = error {
-                print("Error saving doctor to database: \(error.localizedDescription)")
-                showSignupError = true
-                signupErrorMessage = "Failed to save doctor details. Please try again."
-            } else {
-                sendWelcomeEmail(to: doctor)
-            }
-        }
-    }
-    
-    private func sendWelcomeEmail(to doctor: Doctor) {
-        showingMailView = true
-    }
-    
-    // Function to validate phone number
-    private func isValidPhone(_ phone: String) -> Bool {
-        let phoneRegEx = "^[0-9]{10}$"
-        let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegEx)
-        return phoneTest.evaluate(with: phone)
-    }
-    
-    // Function to validate zip code
-    private func isValidZipCode(_ zipCode: String) -> Bool {
-        let zipCodeRegEx = "^[0-9]{6}$"
-        let zipCodeTest = NSPredicate(format: "SELF MATCHES %@", zipCodeRegEx)
-        return zipCodeTest.evaluate(with: zipCode)
     }
 }
 
-#Preview {
-    DoctorFormView(isPresent: .constant(true), doctors: .constant([]), doctorToEdit: nil)
+struct DoctorFormView_Previews: PreviewProvider {
+    @State static var isPresent = true
+    @State static var doctors: [Doctor] = []
+    
+    static var previews: some View {
+        DoctorFormView(isPresent: $isPresent, doctors: $doctors, doctorToEdit: nil)
+    }
 }
