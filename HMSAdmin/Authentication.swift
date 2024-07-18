@@ -8,6 +8,7 @@ struct Authentication: View {
     @State private var showErrorAlert = false
     @State private var clearFields = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("userRole") var userRole: String = ""
     
     var body: some View {
         NavigationView {
@@ -197,28 +198,25 @@ struct Authentication: View {
             let emailDomain = email.components(separatedBy: "@").last ?? ""
             
             switch emailDomain {
-            case "superadmin.com":
-                navigateToScreen(screen: SuperAdminHome())
-                
-            case "admin.com":
-                navigateToScreen(screen: AdminView())
-                
-            case "doctor.com":
-                navigateToScreen(screen: DoctorView())
-                
-            default:
-                errorMessage = "Invalid email domain"
-                showErrorAlert = true
-            }
-        }
-    }
-    
-    // Function to navigate to different screens based on user role
-    func navigateToScreen<Screen: View>(screen: Screen) {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if let window = windowScene.windows.first {
-                window.rootViewController = UIHostingController(rootView: screen)
-                window.makeKeyAndVisible()
+                case "superadmin.com":
+                    userRole = "superadmin"
+                    isLoggedIn = true
+                    navigateToScreen(screen: NewHome())
+                    
+                case "admin.com":
+                    userRole = "admin"
+                    isLoggedIn = true
+                    navigateToScreen(screen: AdminView())
+                    
+                case "doctor.com":
+                    userRole = "doctor"
+                    isLoggedIn = true
+                    navigateToScreen(screen: DoctorView())
+
+                    
+                default:
+                    errorMessage = "Invalid email domain"
+                    showErrorAlert = true
             }
         }
     }
@@ -229,6 +227,16 @@ struct Authentication: View {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
+    
+    // Function to navigate to different screens based on user role
+     func navigateToScreen<Screen: View>(screen: Screen) {
+         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+             if let window = windowScene.windows.first {
+                 window.rootViewController = UIHostingController(rootView: screen)
+                 window.makeKeyAndVisible()
+             }
+         }
+     }
 }
 
 struct Authentication_Previews: PreviewProvider {

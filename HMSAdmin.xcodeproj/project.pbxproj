@@ -45,6 +45,9 @@
 		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
 		EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */; };
 		EA6603342C3D6E77003540D1 /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603312C3D6E77003540D1 /* DataType.swift */; };
+		EA92E7AA2C47C07D0041B09C /* NewHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA92E7A92C47C07D0041B09C /* NewHome.swift */; };
+		EA92E7AC2C47C0A40041B09C /* BranchAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA92E7AB2C47C0A40041B09C /* BranchAnalytics.swift */; };
+		EA92E7AE2C47C0ED0041B09C /* NewAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA92E7AD2C47C0ED0041B09C /* NewAdminHome.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +86,9 @@
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
+		EA92E7A92C47C07D0041B09C /* NewHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHome.swift; sourceTree = "<group>"; };
+		EA92E7AB2C47C0A40041B09C /* BranchAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchAnalytics.swift; sourceTree = "<group>"; };
+		EA92E7AD2C47C0ED0041B09C /* NewAdminHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAdminHome.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +166,9 @@
 				EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */,
 				EA66032F2C3D6E77003540D1 /* Revenue.swift */,
 				812C377A2C36B65400614EE9 /* HospitalView.swift */,
+				EA92E7A92C47C07D0041B09C /* NewHome.swift */,
+				EA92E7AB2C47C0A40041B09C /* BranchAnalytics.swift */,
+				EA92E7AD2C47C0ED0041B09C /* NewAdminHome.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -334,12 +343,15 @@
 				62530F4C2C33D5BC001B496B /* HMSAdminApp.swift in Sources */,
 				809112AB2C37EA67009CDBEF /* DataController.swift in Sources */,
 				8018E5112C39BDAD007D5FF4 /* DoctorCard.swift in Sources */,
+				EA92E7AE2C47C0ED0041B09C /* NewAdminHome.swift in Sources */,
 				E906D1452C43FB4200620531 /* MapView.swift in Sources */,
 				810406342C3BEA540009C58E /* Extensions.swift in Sources */,
 				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
 				EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
+				EA92E7AC2C47C0A40041B09C /* BranchAnalytics.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
+				EA92E7AA2C47C07D0041B09C /* NewHome.swift in Sources */,
 				E94E68D92C38195900ED9F1C /* MailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
