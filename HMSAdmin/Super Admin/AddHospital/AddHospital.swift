@@ -59,7 +59,7 @@ struct AddHospital: View {
     var body: some View {
         Form {
             // Section for hospital details
-            Section(header: Text("Hospital Details")) {
+            Section(header: Text("All fields are required, So fill carefully.")) {
                 TextField("Name", text: $name)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
                         name = name.trimmingCharacters(in: .whitespacesAndNewlines)
