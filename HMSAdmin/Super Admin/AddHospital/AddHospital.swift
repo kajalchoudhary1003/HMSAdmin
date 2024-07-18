@@ -242,7 +242,7 @@ struct AddHospital: View {
                                     newAdminPhone = filtered
                                 }
                                 if newAdminPhone.count > 10 {
-                                    newAdminPhone = String(newAdminPhone.prefix(10))
+                                    newAdminPhone = String(newValue.prefix(10))
                                 }
                             }
                             .overlay(
@@ -277,6 +277,7 @@ struct AddHospital: View {
                 Button(action: { saveHospital() }) {
                     Text("Save")
                 }
+                .disabled(isSaveDisabled) // Disable the button based on form validity
             }
         }
         .alert(isPresented: $showMailError) {
@@ -286,6 +287,7 @@ struct AddHospital: View {
             MailView(recipient: newAdminEmail, subject: "Admin Credentials for New Hospital", body: mailBody(), completion: { result in
                 if result == .sent {
                     performFirebaseSignup()
+                    addNewAdminToExistingAdmins()
                 } else {
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -297,13 +299,10 @@ struct AddHospital: View {
     func saveHospital() {
         var admins: [AdminProfile] = []
         if selectedTypeIndex == 1 {
-            newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+            newAdminEmail = generateNewAdminEmail(name: newAdminName)
             newPassword = generateRandomPassword(length: 8)
             let newAdmin = AdminProfile(id: UUID().uuidString, firstName: newAdminName, lastName: "", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
-            
-            // Add new admin to existing admins list
-            existingAdmins.append(newAdminName)
 
             showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
@@ -353,6 +352,18 @@ struct AddHospital: View {
     func generateRandomPassword(length: Int) -> String {
         let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0..<length).map { _ in characters.randomElement()! })
+    }
+    
+    // Function to generate new admin email
+    func generateNewAdminEmail(name: String) -> String {
+        let randomDigits = String(format: "%04d", Int.random(in: 0...9999))
+        let email = "\(name.replacingOccurrences(of: " ", with: "").lowercased())\(randomDigits)@admin.com"
+        return email
+    }
+
+    // Function to add new admin to existing list
+    func addNewAdminToExistingAdmins() {
+        existingAdmins.append(newAdminName)
     }
     
     // Function to perform Firebase signup for new admin
