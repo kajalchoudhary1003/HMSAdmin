@@ -116,7 +116,6 @@ struct Doctor: Codable, Identifiable,Equatable {
 struct Admin: Codable, Identifiable {
     var id: UUID = UUID()
     var name: String
-    var address: String
     var email: String
     var phone: String
 }
@@ -208,17 +207,19 @@ struct Appointment: Hashable, Codable, Identifiable {
     var doctorID: String
     var date: Date
     var timeSlotID: String
+    var prescription: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, patientID, doctorID, date, timeSlotID
+        case id, patientID, doctorID, date, timeSlotID, prescription
     }
     
-    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil) {
+    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil, prescription: String?) {
         self.id = id
         self.patientID = patientID
         self.doctorID = doctorID
         self.date = date
         self.timeSlotID = timeSlotID
+        self.prescription = prescription
     }
 }
 
@@ -229,7 +230,6 @@ extension Admin {
     func toDictionary() -> [String: Any] {
         return [
             "name": name,
-            "address": address,
             "email": email,
             "phone": phone
         ]
@@ -238,13 +238,11 @@ extension Admin {
     // Initializes an Admin instance from a dictionary
     init?(from dictionary: [String: Any]) {
         guard let name = dictionary["name"] as? String,
-              let address = dictionary["address"] as? String,
               let email = dictionary["email"] as? String,
               let phone = dictionary["phone"] as? String else {
             return nil
         }
         self.name = name
-        self.address = address
         self.email = email
         self.phone = phone
     }

@@ -14,7 +14,7 @@ struct ProfileView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Done")
-                        .foregroundColor(Color(hex: "006666"))
+                        .foregroundColor(Color.customPrimary)
                         .padding()
                 }
             }
@@ -32,7 +32,7 @@ struct ProfileView: View {
                 .scaledToFill()
                 .frame(width: 130, height: 130)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color(hex: "006666"), lineWidth: 2))
+                .overlay(Circle().stroke(Color.customPrimary, lineWidth: 2))
                 .shadow(radius: 10)
                 .padding(.trailing, 20)
             
@@ -83,7 +83,7 @@ struct ProfileView: View {
             
             Spacer().frame(height: 20)
         }
-        .background(Color(.systemGray5))
+        .background(Color.customBackground)
         .onAppear {
             viewModel.fetchCurrentDoctor()
         }

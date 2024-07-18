@@ -5,7 +5,7 @@ struct ShowHospital: View {
     @State private var showDeleteConfirmation = false
     @State private var isEditing = false
     @State private var editedHospital: Hospital
-    @State private var newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
+    @State private var newAdmin = Admin(id: UUID(), name: "", email: "", phone: "")
     @State private var isAddingAdmin = false
     
     init(hospital: Hospital) {
@@ -123,11 +123,6 @@ struct ShowHospital: View {
                             Text(admin.name)
                         }
                         HStack {
-                            Text("Address:")
-                            Spacer()
-                            Text(admin.address)
-                        }
-                        HStack {
                             Text("Phone:")
                             Spacer()
                             Text(admin.phone)
@@ -148,9 +143,6 @@ struct ShowHospital: View {
                     if isAddingAdmin {
                         VStack {
                             TextField("Name", text: $newAdmin.name)
-                                .padding(.vertical, 4)
-                            Divider()
-                            TextField("Address", text: $newAdmin.address)
                                 .padding(.vertical, 4)
                             Divider()
                             TextField("Email", text: $newAdmin.email)
@@ -221,6 +213,6 @@ struct ShowHospital: View {
     }
     
     func resetNewAdmin() {
-        newAdmin = Admin(id: UUID(), name: "", address: "", email: "", phone: "")
+        newAdmin = Admin(id: UUID(), name: "", email: "", phone: "")
     }
 }

@@ -5,7 +5,7 @@ struct PatientRow: View {
     let patient: Patient
     let appointment: Appointment
     var body: some View {
-        NavigationLink(destination: PatientDetailsView(patient: patient)) {
+        NavigationLink(destination: PatientDetailsView(patient: patient, appointment: appointment)) {
             VStack {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -34,6 +34,7 @@ struct PatientRow: View {
                 .cornerRadius(10)
                 .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
             }
+            .background(Color.customBackground)
             .padding(.horizontal)
         }
     }

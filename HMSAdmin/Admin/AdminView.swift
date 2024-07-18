@@ -30,7 +30,7 @@ struct AdminView: View {
             .sheet(isPresented: $isProfilePresented) {
                 AdminProfileView(admin1: AdminProfile(id: "1", firstName: "Subhash", lastName: "Ghai", email: "subhash.ghai@example.com", phone: "1234567890"))
             }
-        }
+        }.background(Color.customBackground)
     }
     
     private var analyticsSection: some View {

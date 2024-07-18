@@ -15,7 +15,7 @@ struct AdminProfileView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Done")
-                        .foregroundColor(Color(hex: "006666"))
+                        .foregroundColor(Color.customPrimary)
                         .padding()
                 }
             }
@@ -29,7 +29,7 @@ struct AdminProfileView: View {
             Spacer().frame(height: 60)
 
             Circle()
-                .fill(Color(hex: "006666"))
+                .fill(Color.customPrimary)
                 .frame(width: 100, height: 100)
                 .overlay(
                     Text(admin1.initials)
@@ -82,7 +82,7 @@ struct AdminProfileView: View {
 
             Spacer().frame(height: 20)
         }
-        .background(Color(.systemGray5))
+        .background(Color.customBackground)
     }
     
     // Function to handle logout

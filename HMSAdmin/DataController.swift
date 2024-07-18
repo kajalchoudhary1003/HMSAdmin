@@ -171,6 +171,24 @@ class DataController: ObservableObject {
     }
     
     
+    func addPrescription(_ prescription: String, forAppointment appointment: Appointment, completion: @escaping(Error?)-> Void){
+        guard let appointmentID = appointment.id else{
+            completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Appointment id is nil"]))
+            return
+        }
+        let ref = database.child("appointments").child(appointmentID).child("prescription")
+        ref.setValue(prescription){
+            error, _ in
+            if let error = error{
+                completion(error)
+            }else{
+                self.fetchAppointments()
+                completion(nil)
+            }
+        }
+    }
+    
+    
     
 
     // Get all hospitals

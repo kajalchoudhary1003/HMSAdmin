@@ -1,5 +1,19 @@
 import SwiftUI
 
+
+struct CustomSegmentedControlAppearance: UIViewRepresentable {
+    var selectedColor: UIColor
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        UISegmentedControl.appearance().selectedSegmentTintColor = selectedColor
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
+}
+
 struct StaffsView: View {
     @State private var searchText = ""
     @State private var selectedFilter = "Nurse"
@@ -37,7 +51,7 @@ struct StaffsView: View {
                     .padding(.horizontal)
                 }
             }
-            .background(Color(.systemGray6).edgesIgnoringSafeArea(.all))
+            .background(Color.customBackground)
             .navigationTitle("Staffs")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -51,6 +65,10 @@ struct StaffsView: View {
             .sheet(isPresented: $isPresentingAddStaffView) {
                 AddStaffsView(staffs: $staffs, isPresentingAddStaffView: $isPresentingAddStaffView)
             }
+            .overlay(
+                CustomSegmentedControlAppearance(selectedColor: UIColor(Color.customPrimary))
+                    .frame(width: 0, height: 0)
+            )
             .onAppear{
                 DataController.shared.fetchStaffs()
             }

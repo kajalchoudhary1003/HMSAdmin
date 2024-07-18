@@ -20,7 +20,7 @@ struct HospitalCardView: View {
                 
                 Text("Revenue")
                     .font(.headline)
-                    .foregroundColor(Color(hex: "006666"))
+                    .foregroundColor(Color.customPrimary)
                 
             }
         }

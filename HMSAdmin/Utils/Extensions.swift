@@ -20,6 +20,10 @@ extension Color {
         let b = Double(rgb & 0xFF) / 255.0
         self.init(red: r, green: g, blue: b)
     }
+    
+    static let customBackground = Color(hex: "ECEEEE")
+       static let customPrimary = Color(hex: "0E6B60")
+       static let customPremium = Color(hex: "BC79B8")
 }
 
 extension Appointment {
@@ -39,3 +43,75 @@ extension Appointment {
     }
 }
 
+extension Date{
+    static func updateHour(_ value: Int) -> Date{
+        let calendar = Calendar.current
+        return calendar.date(byAdding: .hour, value: value, to: .init()) ?? .init()
+    }
+}
+
+
+extension Date{
+    func format(_ format: String) -> String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        
+        return formatter.string(from: self)
+    }
+    
+    //checking whether date is today or not
+    var isToday: Bool{
+        return Calendar.current.isDateInToday(self)
+    }
+    
+    func fetchWeek(_ date: Date = .init()) -> [WeekDay]{
+        let calendar = Calendar.current
+        let startOfDate = calendar.startOfDay(for: date)
+        
+        var week : [WeekDay] = []
+        let weekForDate = calendar.dateInterval(of: .weekOfMonth, for: startOfDate)
+        guard let startOfWeek = weekForDate?.start else{
+            return []
+        }
+        
+        (0..<7).forEach{
+            index in
+            if let weekDay = calendar.date(byAdding: .day, value: index,  to: startOfWeek){
+                week.append(.init(date: weekDay))
+            }
+        }
+        return week
+    }
+    
+    //creating next week based on the last current week's date
+    func createNextWeek () -> [WeekDay]{
+        let calendar = Calendar.current
+        let startOfLastDate = calendar.startOfDay(for: self)
+        guard let nextDate = calendar.date(byAdding: .day, value: 1,  to: startOfLastDate) else{
+            return []
+        }
+        return fetchWeek(nextDate)
+    }
+    
+    struct WeekDay: Identifiable{
+        var id: UUID = .init()
+        var date: Date
+    }
+}
+
+extension View{
+    @ViewBuilder
+    func hSpacing(_ alignment: Alignment) -> some View{
+        self.frame(maxWidth: .infinity, alignment: alignment)
+    }
+    
+    @ViewBuilder
+    func vSpacing(_ alignment: Alignment) -> some View{
+        self.frame(maxHeight: .infinity, alignment: alignment)
+    }
+    
+    //checking two dates are same
+    func isSameDate(_ date1: Date, _ date2: Date) -> Bool{
+        return Calendar.current.isDate(date1, inSameDayAs: date2)
+    }
+}

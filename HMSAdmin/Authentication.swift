@@ -18,21 +18,23 @@ struct Authentication: View {
                         Text("Welcome to")
                             .font(.title3)
                             .padding(.top, 10)
-                        Text("Mediflex")
+                        Text("infyMed")
                             .font(.largeTitle)
                             .bold()
-                            .foregroundColor(Color(hex: "006666"))
+                            .foregroundColor(Color.customPrimary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
                     
                     Spacer() // Pushes VStack content to the top
                 }
-                VStack(alignment: .trailing){
-                    Image("Doctor 3D")
+                GeometryReader { geometry in
+                    Image("Staff 3D")
                         .resizable()
                         .scaledToFit()
-                        .padding(.bottom,220)
+                        .frame(width: geometry.size.width)  // Adjust as needed
+                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
+//
                 }
 
                 // Login input section at the bottom
@@ -49,7 +51,7 @@ struct Authentication: View {
                         
                         Text("Please enter your email and password to proceed")
                             .font(.subheadline)
-                            .foregroundColor(Color(hex: "006666"))
+                            .foregroundColor(Color.customPrimary)
                             .padding(5)
                             .padding(.bottom, 5)
                             .padding(.horizontal,5)
@@ -77,7 +79,7 @@ struct Authentication: View {
 
                             } else if isValidEmail(username) {
                                 Text("Yeah, Looks Valid Email Address")
-                                    .foregroundColor(Color(hex: "006666"))
+                                    .foregroundColor(Color.customPrimary)
                                     .font(.caption)
                                     .padding(.horizontal,5)
 
@@ -102,7 +104,7 @@ struct Authentication: View {
                                     .font(.caption)
                             } else if password.count >= 6 {
                                 Text("Seems Valid!")
-                                    .foregroundColor(Color(hex: "006666"))
+                                    .foregroundColor(Color.customPrimary)
                                     .font(.caption)
                                     .padding(.horizontal,5)
                             } else {
@@ -118,7 +120,7 @@ struct Authentication: View {
                             }) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color(hex: "006666"))
+                                        .fill(Color.customPrimary)
                                     Text("Sign In")
                                         .font(.headline)
                                         .fontWeight(.bold)
@@ -139,6 +141,7 @@ struct Authentication: View {
                     .cornerRadius(22)
                 }
             }
+            .background(Color.customBackground)
             .padding(.bottom,10)
         }
         .navigationBarHidden(true)
