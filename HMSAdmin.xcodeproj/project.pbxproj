@@ -45,6 +45,7 @@
 		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
 		EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */; };
 		EA6603342C3D6E77003540D1 /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603312C3D6E77003540D1 /* DataType.swift */; };
+		EAA9763B2C48DD14006118C2 /* AddOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA9763A2C48DD14006118C2 /* AddOrders.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,7 @@
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
+		EAA9763A2C48DD14006118C2 /* AddOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 				8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */,
 				EA4BE7282C3F96C9003F507D /* StaffView.swift */,
 				0740F2EE2C41413B001FF481 /* AdminProfileView.swift */,
+				EAA9763A2C48DD14006118C2 /* AddOrders.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
+				EAA9763B2C48DD14006118C2 /* AddOrders.swift in Sources */,
 				812C377D2C36B65400614EE9 /* HospitalView.swift in Sources */,
 				24A780F82C3E845200C8F3B1 /* AddAdmin.swift in Sources */,
 				8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */,
