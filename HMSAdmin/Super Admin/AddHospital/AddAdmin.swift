@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct AddAdminView: View {
-    @Binding var newAdmin: AdminProfile
-    var onSave: (AdminProfile) -> Void
+    @Binding var newAdmin: Admin
+    var onSave: (Admin) -> Void
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Admin Details")) {
-                    TextField("First Name", text: $newAdmin.firstName)
-                    TextField("Last Name", text: $newAdmin.lastName)
+                    TextField("First Name", text: $newAdmin.name)
                     TextField("Email", text: $newAdmin.email)
                     TextField("Phone", text: $newAdmin.phone)
                 }
