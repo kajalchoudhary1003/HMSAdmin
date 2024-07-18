@@ -1,7 +1,9 @@
 import SwiftUI
+import FirebaseAuth
 
 struct AdminProfileView: View {
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
     var admin1: AdminProfile
 
@@ -61,7 +63,7 @@ struct AdminProfileView: View {
 
             VStack {
                 Button(action: {
-                    // Logout action
+                    logout()
                 }) {
                     Text("Log out")
                         .fontWeight(.semibold)
@@ -82,6 +84,28 @@ struct AdminProfileView: View {
         }
         .background(Color.customBackground)
     }
+    
+    // Function to handle logout
+      func logout() {
+          do {
+              try Auth.auth().signOut()
+              isLoggedIn = false
+              navigateToScreen(screen: Authentication())
+          } catch let signOutError as NSError {
+              print("Error signing out: %@", signOutError)
+          }
+      }
+
+
+    // Function to navigate to different screens
+     func navigateToScreen<Screen: View>(screen: Screen) {
+         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+             if let window = windowScene.windows.first {
+                 window.rootViewController = UIHostingController(rootView: screen)
+                 window.makeKeyAndVisible()
+             }
+         }
+     }
 }
 
 struct AdminProfileRow: View {
