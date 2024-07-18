@@ -5,7 +5,7 @@ struct ShowHospital: View {
     @State private var showDeleteConfirmation = false
     @State private var isEditing = false
     @State private var editedHospital: Hospital
-    @State private var newAdmin = Admin(id: UUID(), name: "", email: "", phone: "")
+    @State private var newAdmin = AdminProfile(id: UUID().uuidString, firstName: "", lastName: "", email: "", phone: "")
     @State private var isAddingAdmin = false
     
     init(hospital: Hospital) {
@@ -122,9 +122,14 @@ struct ShowHospital: View {
                 ForEach(editedHospital.admins) { admin in
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Name:")
+                            Text("First Name:")
                             Spacer()
-                            Text(admin.name)
+                            Text(admin.firstName)
+                        }
+                        HStack {
+                            Text("Last Name:")
+                            Spacer()
+                            Text(admin.lastName)
                         }
                         HStack {
                             Text("Phone:")
@@ -146,7 +151,10 @@ struct ShowHospital: View {
                 Section {
                     if isAddingAdmin {
                         VStack {
-                            TextField("Name", text: $newAdmin.name)
+                            TextField("First Name", text: $newAdmin.firstName)
+                                .padding(.vertical, 4)
+                            Divider()
+                            TextField("Last Name", text: $newAdmin.lastName)
                                 .padding(.vertical, 4)
                             Divider()
                             TextField("Email", text: $newAdmin.email)
@@ -211,12 +219,12 @@ struct ShowHospital: View {
             } else {
                 NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
                 // Optionally, you can navigate back or perform any additional UI updates
-                print("Deleted hospital: \(hospital.name) with ID: \(hospital.id)")
+                print("Deleted hospital: \(hospital.name) with ID: \(hospital.id ?? "")")
             }
         }
     }
     
     func resetNewAdmin() {
-        newAdmin = Admin(id: UUID(), name: "", email: "", phone: "")
+        newAdmin = AdminProfile(id: UUID().uuidString, firstName: "", lastName: "", email: "", phone: "")
     }
 }

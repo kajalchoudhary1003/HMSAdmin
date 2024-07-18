@@ -9,6 +9,7 @@ struct Authentication: View {
     @State private var clearFields = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("userRole") var userRole: String = ""
+    @AppStorage("userID") var userID: String = "" // Store the logged-in user's ID
     
     var body: some View {
         NavigationView {
@@ -34,7 +35,6 @@ struct Authentication: View {
                         .scaledToFit()
                         .frame(width: geometry.size.width)  // Adjust as needed
                         .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
-//
                 }
 
                 // Login input section at the bottom
@@ -188,11 +188,14 @@ struct Authentication: View {
                 return
             }
             
-            guard (authResult?.user) != nil else {
+            guard let user = authResult?.user else {
                 errorMessage = "Authentication failed"
                 showErrorAlert = true
                 return
             }
+            
+            // Store the user ID
+            userID = user.uid
             
             // User role based on email domain
             let emailDomain = email.components(separatedBy: "@").last ?? ""
@@ -206,7 +209,7 @@ struct Authentication: View {
                 case "admin.com":
                     userRole = "admin"
                     isLoggedIn = true
-                    navigateToScreen(screen: AdminView())
+                    navigateToScreen(screen: AdminView(loggedInAdminID: user.uid))
                     
                 case "doctor.com":
                     userRole = "doctor"

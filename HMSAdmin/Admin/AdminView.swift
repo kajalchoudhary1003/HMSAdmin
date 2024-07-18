@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct AdminView: View {
-    
     @State private var searchText: String = ""
     @State private var doctors: [Doctor] = []
     @State private var isLoading = true
     @State private var isProfilePresented = false
+    
+    var loggedInAdminID: String
     
     var body: some View {
         NavigationView {
@@ -27,9 +28,10 @@ struct AdminView: View {
                 }
             }
             .sheet(isPresented: $isProfilePresented) {
-                AdminProfileView(admin1: AdminProfile(id: "1", firstName: "Subhash", lastName: "Ghai", email: "subhash.ghai@example.com", phone: "1234567890"))
+                AdminProfileView(adminID: loggedInAdminID)
             }
-        }.background(Color.customBackground)
+        }
+        .background(Color.customBackground)
     }
     
     private var hospitalDataSection: some View {
@@ -65,8 +67,4 @@ struct AdminView: View {
         .listRowBackground(Color.clear).background(Color("SecondaryColor"))
         .cornerRadius(10)
     }
-}
-
-#Preview {
-    AdminView()
 }

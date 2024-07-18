@@ -2,7 +2,6 @@ import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 
-
 struct Patient: Identifiable, Codable {
     let id: String
     let firstName: String
@@ -71,7 +70,7 @@ enum DoctorDesignation: String, Codable, CaseIterable {
 }
 
 // Struct to represent a Doctor
-struct Doctor: Codable, Identifiable,Equatable {
+struct Doctor: Codable, Identifiable, Equatable {
     @DocumentID var id: String?
     var firstName: String
     var lastName: String
@@ -113,20 +112,60 @@ struct Doctor: Codable, Identifiable,Equatable {
 }
 
 // Struct to represent an Admin
-struct Admin: Codable, Identifiable {
-    var id: UUID = UUID()
-    var name: String
+struct AdminProfile: Identifiable, Codable {
+    var id: String
+    var firstName: String
+    var lastName: String
     var email: String
     var phone: String
+
+    var initials: String {
+        return "\(firstName.prefix(1))\(lastName.prefix(1))"
+    }
+
+    init(id: String, firstName: String, lastName: String, email: String, phone: String) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+        self.phone = phone
+    }
+
+    init?(from dictionary: [String: Any]) {
+        guard let id = dictionary["id"] as? String,
+              let firstName = dictionary["firstName"] as? String,
+              let lastName = dictionary["lastName"] as? String,
+              let email = dictionary["email"] as? String,
+              let phone = dictionary["phone"] as? String else {
+            return nil
+        }
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+        self.phone = phone
+    }
+
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id,
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "phone": phone
+        ]
+    }
 }
+
+
 
 // Struct to represent a Hospital
 struct Hospital: Codable, Identifiable, Equatable {
-    @DocumentID var id: String?
+    var id: String?
     var name: String
     var email: String
     var phone: String
-    var admins: [Admin]
+    var admins: [AdminProfile]
     var address: String
     var city: String
     var country: String
@@ -135,7 +174,7 @@ struct Hospital: Codable, Identifiable, Equatable {
     var latitude: Double
     var longitude: Double
     
-    init(id: String? = nil, name: String, email: String, phone: String, admins: [Admin], address: String, city: String, country: String, zipCode: String, type: String, latitude: Double, longitude: Double) {
+    init(id: String? = nil, name: String, email: String, phone: String, admins: [AdminProfile], address: String, city: String, country: String, zipCode: String, type: String, latitude: Double, longitude: Double) {
         self.id = id
         self.name = name
         self.email = email
@@ -196,9 +235,10 @@ struct Hospital: Codable, Identifiable, Equatable {
         self.zipCode = zipCode
         self.latitude = latitude
         self.longitude = longitude
-        self.admins = adminsData.compactMap { Admin(from: $0) }
+        self.admins = adminsData.compactMap { AdminProfile(from: $0) }
     }
 }
+
 
 // Struct to represent an Appointment
 struct Appointment: Hashable, Codable, Identifiable {
@@ -223,59 +263,33 @@ struct Appointment: Hashable, Codable, Identifiable {
     }
 }
 
-
-// Extension to convert Admin instances to dictionary and initialize from dictionary
-extension Admin {
-    // Converts the Admin instance to a dictionary
-    func toDictionary() -> [String: Any] {
-        return [
-            "name": name,
-            "email": email,
-            "phone": phone
-        ]
-    }
-    
-    // Initializes an Admin instance from a dictionary
-    init?(from dictionary: [String: Any]) {
-        guard let name = dictionary["name"] as? String,
-              let email = dictionary["email"] as? String,
-              let phone = dictionary["phone"] as? String else {
-            return nil
-        }
-        self.name = name
-        self.email = email
-        self.phone = phone
-    }
-}
-
-
 //struct for staff
-struct Staff: Identifiable, Codable{
+struct Staff: Identifiable, Codable {
     @DocumentID var id: String?
-        var firstName: String
-        var lastName: String
-        var dateOfBirth: Date
-        var phoneNumber: String
-        var email: String
-        var position: String
-        var department: String
-        var employmentStatus: String
+    var firstName: String
+    var lastName: String
+    var dateOfBirth: Date
+    var phoneNumber: String
+    var email: String
+    var position: String
+    var department: String
+    var employmentStatus: String
 
-        init(id: String? = nil, firstName: String, lastName: String, dateOfBirth: Date, phoneNumber: String, email: String, position: String, department: String, employmentStatus: String) {
-            self.id = id
-            self.firstName = firstName
-            self.lastName = lastName
-            self.dateOfBirth = dateOfBirth
-            self.phoneNumber = phoneNumber
-            self.email = email
-            self.position = position
-            self.department = department
-            self.employmentStatus = employmentStatus
-        }
+    init(id: String? = nil, firstName: String, lastName: String, dateOfBirth: Date, phoneNumber: String, email: String, position: String, department: String, employmentStatus: String) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.dateOfBirth = dateOfBirth
+        self.phoneNumber = phoneNumber
+        self.email = email
+        self.position = position
+        self.department = department
+        self.employmentStatus = employmentStatus
+    }
     
     var age: Int {
-            let now = Date()
-            let ageComponents = Calendar.current.dateComponents([.year], from: dateOfBirth, to: now)
-            return ageComponents.year ?? 0
-        }
+        let now = Date()
+        let ageComponents = Calendar.current.dateComponents([.year], from: dateOfBirth, to: now)
+        return ageComponents.year ?? 0
+    }
 }

@@ -4,11 +4,10 @@ import FirebaseAuth
 import CoreLocation
 
 class DataController: ObservableObject {
-
-    // Singleton instance of DataController
     static let shared = DataController()
-
+    
     private var database: DatabaseReference
+    @Published var currentAdmin: AdminProfile?
     private var hospitals: [String: Hospital] = [:]
     private var doctors: [String: Doctor] = [:]
     @Published var patients: [String: Patient] = [:]
@@ -24,6 +23,23 @@ class DataController: ObservableObject {
         fetchAppointments()
         fetchStaffs()
     }
+    
+    func fetchAdminProfile(adminID: String, completion: @escaping (AdminProfile?) -> Void) {
+            let ref = database.child("hospitals")
+            ref.observeSingleEvent(of: .value) { snapshot in
+                for case let child as DataSnapshot in snapshot.children {
+                    if let hospitalData = child.value as? [String: Any],
+                       let hospital = Hospital(from: hospitalData, id: child.key) {
+                        if let admin = hospital.admins.first(where: { $0.id == adminID }) {
+                            self.currentAdmin = admin
+                            completion(admin)
+                            return
+                        }
+                    }
+                }
+                completion(nil)
+            }
+        }
 
     // Fetch hospitals data from Firebase
     func fetchHospitals() {
