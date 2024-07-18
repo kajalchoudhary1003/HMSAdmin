@@ -4,10 +4,42 @@ import FirebaseAuth
 struct AdminProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-
-    var admin1: AdminProfile
-
+    @State private var adminProfile: AdminProfile?
+    @State private var isLoading = true
+    
+    var adminID: String
+    
     var body: some View {
+        VStack {
+            if isLoading {
+                ProgressView("Loading...")
+            } else if let admin = adminProfile {
+                profileContent(for: admin)
+            } else {
+                Text("Failed to load profile")
+            }
+        }
+        .onAppear {
+            fetchAdminProfile()
+        }
+        .background(Color.customBackground)
+    }
+    
+    private func fetchAdminProfile() {
+        print("Fetching admin profile for ID: \(adminID)")
+        DataController.shared.fetchAdminProfile(adminID: adminID) { profile in
+            if let profile = profile {
+                print("Admin profile fetched successfully.")
+                self.adminProfile = profile
+            } else {
+                print("Failed to fetch admin profile.")
+            }
+            self.isLoading = false
+        }
+    }
+    
+    @ViewBuilder
+    private func profileContent(for admin: AdminProfile) -> some View {
         VStack {
             HStack {
                 Spacer()
@@ -32,26 +64,26 @@ struct AdminProfileView: View {
                 .fill(Color.customPrimary)
                 .frame(width: 100, height: 100)
                 .overlay(
-                    Text(admin1.initials)
+                    Text(admin.initials)
                         .font(.largeTitle)
                         .foregroundColor(.white)
                 )
                 .padding(.trailing, 20)
 
-            Text("\(admin1.firstName) \(admin1.lastName)")
+            Text("\(admin.firstName) \(admin.lastName)")
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top, 10)
                 .padding(.trailing)
 
             VStack(alignment: .leading, spacing: 10) {
-                AdminProfileRow(title: "First Name", value: admin1.firstName)
+                AdminProfileRow(title: "First Name", value: admin.firstName)
                 Divider()
-                AdminProfileRow(title: "Last Name", value: admin1.lastName)
+                AdminProfileRow(title: "Last Name", value: admin.lastName)
                 Divider()
-                AdminProfileRow(title: "Email id", value: admin1.email)
+                AdminProfileRow(title: "Email id", value: admin.email)
                 Divider()
-                AdminProfileRow(title: "Phone Number", value: admin1.phone)
+                AdminProfileRow(title: "Phone Number", value: admin.phone)
             }
             .padding()
             .background(Color(.systemGray6))
@@ -82,30 +114,26 @@ struct AdminProfileView: View {
 
             Spacer().frame(height: 20)
         }
-        .background(Color.customBackground)
     }
     
-    // Function to handle logout
-      func logout() {
-          do {
-              try Auth.auth().signOut()
-              isLoggedIn = false
-              navigateToScreen(screen: Authentication())
-          } catch let signOutError as NSError {
-              print("Error signing out: %@", signOutError)
-          }
-      }
+    private func logout() {
+        do {
+            try Auth.auth().signOut()
+            isLoggedIn = false
+            navigateToScreen(screen: Authentication())
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+    }
 
-
-    // Function to navigate to different screens
-     func navigateToScreen<Screen: View>(screen: Screen) {
-         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-             if let window = windowScene.windows.first {
-                 window.rootViewController = UIHostingController(rootView: screen)
-                 window.makeKeyAndVisible()
-             }
-         }
-     }
+    private func navigateToScreen<Screen: View>(screen: Screen) {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let window = windowScene.windows.first {
+                window.rootViewController = UIHostingController(rootView: screen)
+                window.makeKeyAndVisible()
+            }
+        }
+    }
 }
 
 struct AdminProfileRow: View {
@@ -123,19 +151,4 @@ struct AdminProfileRow: View {
                 .font(.body)
         }
     }
-}
-
-struct AdminProfile {
-    var id: String
-    var firstName: String
-    var lastName: String
-    var email: String
-    var phone: String
-
-    var initials: String {
-        return "\(firstName.prefix(1))\(lastName.prefix(1))"
-    }
-}
-#Preview {
-    AdminProfileView(admin1: AdminProfile(id: "1", firstName: "Subhash", lastName: "Ghai", email: "subhash.ghai@example.com", phone: "1234567890"))
 }

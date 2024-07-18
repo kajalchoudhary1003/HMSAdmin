@@ -275,7 +275,7 @@ struct AddHospital: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { saveHospital() }) {
-                    Image(systemName: "plus")
+                    Text("Save")
                 }
             }
         }
@@ -295,11 +295,11 @@ struct AddHospital: View {
     
     // Function to save hospital details
     func saveHospital() {
-        var admins: [Admin] = []
+        var admins: [AdminProfile] = []
         if selectedTypeIndex == 1 {
             newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
             newPassword = generateRandomPassword(length: 8)
-            let newAdmin = Admin(name: newAdminName, email: newAdminEmail, phone: newAdminPhone)
+            let newAdmin = AdminProfile(id: UUID().uuidString, firstName: newAdminName, lastName: "", email: newAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
             
             // Add new admin to existing admins list
@@ -308,11 +308,11 @@ struct AddHospital: View {
             showingMailView = true
         } else if selectedTypeIndex == 2 && selectedAdminIndex > 0 {
             let selectedAdminName = existingAdmins[selectedAdminIndex]
-            let existingAdmin = Admin(name: selectedAdminName, email: "admin@example.com", phone: "1234567890")
+            let existingAdmin = AdminProfile(id: UUID().uuidString, firstName: selectedAdminName, lastName: "", email: "admin@example.com", phone: "1234567890")
             admins.append(existingAdmin)
         }
 
-        let newHospital = Hospital(name: name, email: email, phone: phone, admins: admins, address: address, city: city, country: country, zipCode: zipCode, type: adminTypes[selectedTypeIndex], latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+        let newHospital = Hospital(id: UUID().uuidString, name: name, email: email, phone: phone, admins: admins, address: address, city: city, country: country, zipCode: zipCode, type: adminTypes[selectedTypeIndex], latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
 
         hospitals.append(newHospital)
 
