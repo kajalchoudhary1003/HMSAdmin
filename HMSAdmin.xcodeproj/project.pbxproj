@@ -41,6 +41,7 @@
 		E9F0D9292C35C4FE00C02518 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D9282C35C4FE00C02518 /* FirebaseDatabase */; };
 		E9F0D92B2C35C4FE00C02518 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92A2C35C4FE00C02518 /* FirebaseDatabaseSwift */; };
 		E9F0D92D2C35C4FE00C02518 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E9F0D92C2C35C4FE00C02518 /* FirebaseStorage */; };
+		EA3C19E72C49106300FB992F /* ShowOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3C19E62C49106300FB992F /* ShowOffer.swift */; };
 		EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4BE7282C3F96C9003F507D /* StaffView.swift */; };
 		EA6603322C3D6E77003540D1 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA66032F2C3D6E77003540D1 /* Revenue.swift */; };
 		EA6603332C3D6E77003540D1 /* SuperAdminHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */; };
@@ -82,13 +83,16 @@
 		E906D1422C43F4D200620531 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E906D1442C43FB4200620531 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		E94E68D82C38195900ED9F1C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
+		EA3C19E62C49106300FB992F /* ShowOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowOffer.swift; sourceTree = "<group>"; };
 		EA4BE7282C3F96C9003F507D /* StaffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffView.swift; sourceTree = "<group>"; };
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
+		EAA9763A2C48DD14006118C2 /* AddOffers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOffers.swift; sourceTree = "<group>"; };
 		EA92E7A92C47C07D0041B09C /* NewHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHome.swift; sourceTree = "<group>"; };
 		EA92E7AB2C47C0A40041B09C /* BranchAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchAnalytics.swift; sourceTree = "<group>"; };
 		EA92E7AD2C47C0ED0041B09C /* NewAdminHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAdminHome.swift; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +227,8 @@
 				8018E5122C39C69E007D5FF4 /* ShowDoctors.swift */,
 				EA4BE7282C3F96C9003F507D /* StaffView.swift */,
 				0740F2EE2C41413B001FF481 /* AdminProfileView.swift */,
+				EAA9763A2C48DD14006118C2 /* AddOffers.swift */,
+				EA3C19E62C49106300FB992F /* ShowOffer.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -332,6 +338,7 @@
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
+				EAA9763B2C48DD14006118C2 /* AddOffers.swift in Sources */,
 				812C377D2C36B65400614EE9 /* HospitalView.swift in Sources */,
 				24A780F82C3E845200C8F3B1 /* AddAdmin.swift in Sources */,
 				8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */,
@@ -349,6 +356,7 @@
 				07938CFC2C37ED0300A4FA96 /* AddDoctors.swift in Sources */,
 				EA4BE7292C3F96C9003F507D /* StaffView.swift in Sources */,
 				62060EC62C37087000177028 /* AdminView.swift in Sources */,
+				EA3C19E72C49106300FB992F /* ShowOffer.swift in Sources */,
 				EA92E7AC2C47C0A40041B09C /* BranchAnalytics.swift in Sources */,
 				62060EC42C37086000177028 /* DoctorView.swift in Sources */,
 				EA92E7AA2C47C07D0041B09C /* NewHome.swift in Sources */,
