@@ -7,7 +7,7 @@ struct HospitalCardView: View {
         VStack(alignment: .leading) {
             Text(hospital.city)
                 .font(.title2)
-                .foregroundColor(Color(.black))
+                .foregroundColor(Color("TextColor"))
             Text(hospital.city)
                 .font(.subheadline)
                 .foregroundColor(Color(.systemGray))
@@ -25,7 +25,7 @@ struct HospitalCardView: View {
             }
         }
         .padding()
-        .background(Color(.white))
+        .background(Color("SecondaryColor"))
         .cornerRadius(10)
     }
 }
