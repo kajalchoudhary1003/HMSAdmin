@@ -88,10 +88,11 @@
 		EA66032F2C3D6E77003540D1 /* Revenue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		EA6603302C3D6E77003540D1 /* SuperAdminHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAdminHome.swift; sourceTree = "<group>"; };
 		EA6603312C3D6E77003540D1 /* DataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
+		EAA9763A2C48DD14006118C2 /* AddOffers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOffers.swift; sourceTree = "<group>"; };
 		EA92E7A92C47C07D0041B09C /* NewHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHome.swift; sourceTree = "<group>"; };
 		EA92E7AB2C47C0A40041B09C /* BranchAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchAnalytics.swift; sourceTree = "<group>"; };
 		EA92E7AD2C47C0ED0041B09C /* NewAdminHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAdminHome.swift; sourceTree = "<group>"; };
-		EAA9763A2C48DD14006118C2 /* AddOffers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOffers.swift; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -337,6 +338,7 @@
 				EA6603342C3D6E77003540D1 /* DataType.swift in Sources */,
 				62060ECA2C37095E00177028 /* Task.swift in Sources */,
 				812C377B2C36B65400614EE9 /* DataModel.swift in Sources */,
+				EAA9763B2C48DD14006118C2 /* AddOffers.swift in Sources */,
 				812C377D2C36B65400614EE9 /* HospitalView.swift in Sources */,
 				24A780F82C3E845200C8F3B1 /* AddAdmin.swift in Sources */,
 				8018E5132C39C69E007D5FF4 /* ShowDoctors.swift in Sources */,
