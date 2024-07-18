@@ -7,8 +7,8 @@ struct DoctorCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(doctor.firstName) \(doctor.lastName)")
-                        .font(.headline)
-                        .foregroundColor(.black)
+                        .font(.title2)
+                        .foregroundColor(Color("TextColor"))
                     Text(doctor.designation.title)
                         .font(.subheadline)
                         .foregroundColor(.gray)
@@ -20,16 +20,18 @@ struct DoctorCard: View {
                 VStack(alignment: .trailing) {
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
                     Text(doctor.interval)
                         .font(.headline)
-                        .foregroundColor(Color(hex: "#006666"))
+                        .foregroundColor(Color("AccentColor"))
                         .padding(.top, 10)
                 }
             }
             .padding()
-            .background(Color.white)
+            .background(Color("SecondaryColor"))
             .cornerRadius(8)
-            .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
         }
         .padding(.vertical, 8)
         .padding(.horizontal,20)

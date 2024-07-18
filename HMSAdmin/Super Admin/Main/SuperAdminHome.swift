@@ -54,7 +54,7 @@ struct SuperAdminHome : View {
         NavigationView {
             ZStack {
                 
-                Color("bgColor").ignoresSafeArea(.all)
+                Color("BackgroundColor").ignoresSafeArea(.all)
                 
                 VStack(alignment: .leading) {
                     
@@ -67,7 +67,7 @@ struct SuperAdminHome : View {
                     VStack(alignment: .leading) {
                         Text("Revenue")
                             .fontWeight(.regular)
-                            .font(.title2).padding(.horizontal,10)
+                            .font(.headline).padding(.horizontal,10)
                         
                         VStack{
                             Chart {
@@ -96,7 +96,7 @@ struct SuperAdminHome : View {
                         .labelsHidden()
                         .padding(10)
                         .padding(.horizontal)
-                        .background(Color.white)
+                        .background(Color("SecondaryColor"))
                         .cornerRadius(10)
                     }
                     .padding(.vertical,10)
@@ -105,7 +105,7 @@ struct SuperAdminHome : View {
                         HStack {
                             Text("\(selectedDepartment) Earnings")
                                 .fontWeight(.regular)
-                                .font(.title3)
+                                .font(.headline)
                             
                             Spacer()
                             
@@ -161,7 +161,7 @@ struct SuperAdminHome : View {
                         .chartForegroundStyleScale(range: colorScheme)
                         .frame(height: 180)
                         .padding()
-                        .background(.white)
+                        .background(Color("SecondaryColor"))
                         .cornerRadius(10)
                     }
                     .padding(.bottom)
@@ -199,7 +199,7 @@ struct SuperAdminHome : View {
                             .padding()
         //                }
                         
-                        .background(Color.white)
+                        .background(Color("SecondaryColor"))
                         .cornerRadius(10)
                     }
                 }
@@ -214,9 +214,7 @@ struct SuperAdminHome : View {
 func ChartPopOverView(_ revenue: Double, _ month: String) -> some View {
     VStack(alignment: .leading, spacing: 6) {
         Text("Revenue")
-            .font(.title3)
-            .foregroundStyle(.gray)
-        
+            .font(.headline)
         HStack(spacing: 4) {
             Text(String(format: "%.0f", revenue))
                 .font(.title3)

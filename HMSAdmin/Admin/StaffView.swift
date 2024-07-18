@@ -87,24 +87,24 @@ struct StaffCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(staff.firstName)
-                .font(.headline)
-                .foregroundColor(.black)
+                .font(.title2)
+                .foregroundColor(Color("TextColor"))
             Text(staff.position)
                 .font(.subheadline)
-                .foregroundColor(.black)
+                .foregroundColor(.gray)
             HStack {
                 Text("Age: \(staff.age)")
-                    .font(.caption)
-                    .foregroundColor(.black)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
                 Spacer()
                 Text(staff.department)
                     .font(.body)
-                    .foregroundColor(Color(red: 0.0, green: 0.49, blue: 0.45))
+                    .foregroundColor(Color("AccentColor"))
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
+        .background(Color("SecondaryColor"))
         .cornerRadius(10)
     }
 }

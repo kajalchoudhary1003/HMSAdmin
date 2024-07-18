@@ -59,7 +59,7 @@ struct Authentication: View {
                         VStack(alignment: .leading){
                             TextField("Email", text: $username)
                                 .padding()
-                                .background(Color.black.opacity(0.05))
+                                .background(Color("SecondaryColor"))
                                 .cornerRadius(10)
                                 .autocapitalization(.none)
                                 .keyboardType(.emailAddress)
@@ -92,7 +92,7 @@ struct Authentication: View {
                             
                             SecureField("Password", text: $password)
                                 .padding()
-                                .background(Color.black.opacity(0.05))
+                                .background(Color("SecondaryColor"))
                                 .cornerRadius(10)
                                 .onTapGesture {
                                     clearFields = false
