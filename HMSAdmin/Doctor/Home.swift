@@ -11,7 +11,7 @@ struct PatientRow: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("\(patient.firstName) \(patient.lastName)")
                             .font(.headline)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("TextColor"))
                         Text("Blood Group: \(patient.bloodGroup)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
@@ -25,12 +25,12 @@ struct PatientRow: View {
                             .foregroundColor(.gray)
                         Text(formatDate(appointment.date))
                             .font(.headline)
-                            .foregroundColor(Color(hex: "#006666"))
+                            .foregroundColor(Color("AccentColor"))
                             .padding(.top, 10)
                     }
                 }
                 .padding()
-                .background(Color.white)
+                .background(Color.customBackground)
                 .cornerRadius(10)
                 .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
             }
@@ -51,7 +51,7 @@ struct Home: View {
     var body: some View {
             NavigationView {
                 ZStack {
-                    Color(uiColor: .systemGray6)
+                    Color("BackgroundColor")
                         .ignoresSafeArea()
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -123,7 +123,7 @@ struct Home: View {
             }) {
                 Image(systemName: "person.circle")
                     .resizable()
-                    .foregroundColor(Color(hex: "#006666"))
+                    .foregroundColor(Color("AccentColor"))
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 45, height: 45)
             }
@@ -159,7 +159,7 @@ struct Home: View {
                             
                             if day.date.isToday {
                                 Circle()
-                                    .fill(Color(hex: "#006666"))
+                                    .fill(Color("AccentColor"))
                                     .frame(width: 5, height: 5)
                                     .vSpacing(.bottom)
                                     .offset(y: 12)

@@ -42,37 +42,39 @@ struct ShowHospital: View {
                             .textFieldStyle(PlainTextFieldStyle())
                             .foregroundColor(.gray)
                     }
-                    HStack {
-                        Text("Address:")
-                        Spacer()
-                        TextField("", text: $editedHospital.address)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .foregroundColor(.gray)
-                    }
-                    HStack {
-                        Text("City:")
-                        Spacer()
-                        TextField("", text: $editedHospital.city)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .foregroundColor(.gray)
-                    }
-                    HStack {
-                        Text("Country:")
-                        Spacer()
-                        TextField("", text: $editedHospital.country)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .foregroundColor(.gray)
-                    }
-                    HStack {
-                        Text("Zip Code:")
-                        Spacer()
-                        TextField("", text: $editedHospital.zipCode)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .foregroundColor(.gray)
+                    Section(){
+                        HStack {
+                            Text("Address:")
+                            Spacer()
+                            TextField("", text: $editedHospital.address)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .foregroundColor(.gray)
+                        }
+                        HStack {
+                            Text("City:")
+                            Spacer()
+                            TextField("", text: $editedHospital.city)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .foregroundColor(.gray)
+                        }
+                        HStack {
+                            Text("Country:")
+                            Spacer()
+                            TextField("", text: $editedHospital.country)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .foregroundColor(.gray)
+                        }
+                        HStack {
+                            Text("Zip Code:")
+                            Spacer()
+                            TextField("", text: $editedHospital.zipCode)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .foregroundColor(.gray)
+                        }
                     }
                 } else {
                     HStack {
@@ -90,25 +92,27 @@ struct ShowHospital: View {
                         Spacer()
                         Text(hospital.phone)
                     }
-                    HStack {
-                        Text("Address:")
-                        Spacer()
-                        Text(hospital.address)
-                    }
-                    HStack {
-                        Text("City:")
-                        Spacer()
-                        Text(hospital.city)
-                    }
-                    HStack {
-                        Text("Country:")
-                        Spacer()
-                        Text(hospital.country)
-                    }
-                    HStack {
-                        Text("Zip Code:")
-                        Spacer()
-                        Text(hospital.zipCode)
+                    Section(){
+                        HStack {
+                            Text("Address:")
+                            Spacer()
+                            Text(hospital.address)
+                        }
+                        HStack {
+                            Text("City:")
+                            Spacer()
+                            Text(hospital.city)
+                        }
+                        HStack {
+                            Text("Country:")
+                            Spacer()
+                            Text(hospital.country)
+                        }
+                        HStack {
+                            Text("Zip Code:")
+                            Spacer()
+                            Text(hospital.zipCode)
+                        }
                     }
                 }
             }

@@ -11,9 +11,9 @@ struct AdminView: View {
     var body: some View {
         NavigationView {
             List {
-                analyticsSection
                 hospitalDataSection
             }
+            .background(Color("BackgroundColor"))
             .listStyle(InsetGroupedListStyle())
             .searchable(text: $searchText, prompt: "Search")
             .navigationTitle("Hi, Admin")
@@ -23,36 +23,15 @@ struct AdminView: View {
                         isProfilePresented.toggle()
                     }) {
                         Image(systemName: "person.crop.circle.fill")
-                            .foregroundColor(Color(hex: "#006666"))
+                            .foregroundColor(Color("AccentColor"))
                     }
                 }
             }
-            .background(Color(UIColor.systemGroupedBackground))
             .sheet(isPresented: $isProfilePresented) {
                 AdminProfileView(adminID: loggedInAdminID)
             }
         }
         .background(Color.customBackground)
-    }
-    
-    private var analyticsSection: some View {
-        Section(header: Text("Analytics").font(.headline).foregroundColor(.gray)) {
-            HStack {
-                Text("Bookings")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color(hex: "#006666"))
-                Spacer()
-                Text("46")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color(hex: "#006666"))
-            }
-            .padding()
-            .frame(maxWidth: .infinity, minHeight: 110)
-            .background(Color.white)
-            .cornerRadius(10)
-        }
     }
     
     private var hospitalDataSection: some View {
@@ -66,27 +45,26 @@ struct AdminView: View {
     private func dataCard(icon: String, title: String, count: String, destination: AnyView) -> some View {
         NavigationLink(destination: destination) {
             HStack {
-                HStack(spacing: 15) {
+                HStack(spacing: 20) {
                     Image(systemName: icon)
                         .font(.title)
-                        .foregroundColor(Color(hex: "#006666"))
+                        .foregroundColor(Color( "AccentColor"))
                     Text(title)
                         .font(.title2)
                         .fontWeight(.semibold)
+                        .foregroundColor(Color( "TextColor"))
                 }
                 Spacer()
                 Text(count)
                     .font(.title)
                     .fontWeight(.bold)
-                    .foregroundColor(Color.black)
+                    .foregroundColor(Color( "TextColor"))
             }
-            .padding(10)
             .frame(maxWidth: .infinity, minHeight: 100)
         }
         .padding(EdgeInsets(top: 2, leading: 10, bottom: 2, trailing: 20))
         .listRowInsets(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
-        .listRowBackground(Color.clear)
-        .background(Color.white)
+        .listRowBackground(Color.clear).background(Color("SecondaryColor"))
         .cornerRadius(10)
     }
 }

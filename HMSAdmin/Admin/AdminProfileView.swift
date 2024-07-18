@@ -101,7 +101,7 @@ struct AdminProfileView: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding(6)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(UIColor.systemRed))
                         .font(.title)
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
