@@ -26,7 +26,8 @@ struct AddHospital: View {
 
     @State private var newAdminName: String = ""
     @State private var newAdminPhone: String = ""
-    
+    @State private var generatedAdminEmail: String = ""
+
     // Admin types and existing admins for selection
     let adminTypes = ["Select", "New", "Existing"]
     @State private var existingAdmins = ["Select", "Michael", "Emily", "David", "Robert"]
@@ -56,220 +57,215 @@ struct AddHospital: View {
     }
 
     var body: some View {
-        VStack{
-            Form {
-                // Section for hospital details
-                Section(header: Text("Hospital Details")) {
-                    TextField("Name", text: $name)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }
-                        .onChange(of: name) { newValue in
-                            if newValue.count > 25 {
-                                name = String(newValue.prefix(25))
-                            }
-                        }
-                        .overlay(
-                            Text("\(name.count)/25")
-                                .font(.caption)
-                                .foregroundColor(name.count > 25 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
-     
-                    TextField("Phone", text: $phone)
-                        .keyboardType(.numberPad)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            phone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }
-                        .onChange(of: phone) { newValue in
-                            let filtered = newValue.filter { "0123456789".contains($0) }
-                            if phone != filtered {
-                                phone = filtered
-                            }
-                            if phone.count > 10 {
-                                phone = String(phone.prefix(10))
-                            }
-                        }
-                        .overlay(
-                            Text("\(phone.count)/10")
-                                .font(.caption)
-                                .foregroundColor(phone.count > 10 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
-                    if !isValidPhone(phone) && !phone.isEmpty {
-                        Text("Phone number should be 10 digits")
-                            .foregroundColor(.red)
-                            .font(.caption)
+        Form {
+            // Section for hospital details
+            Section(header: Text("Hospital Details")) {
+                TextField("Name", text: $name)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        name = name.trimmingCharacters(in: .whitespacesAndNewlines)
                     }
-                    TextField("Email", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                        .textInputAutocapitalization(.never)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .onChange(of: name) { newValue in
+                        if newValue.count > 25 {
+                            name = String(newValue.prefix(25))
                         }
-                        .onChange(of: email) { newValue in
-                            if newValue.count > 100 {
-                                email = String(newValue.prefix(100))
-                            }
-                        }
-                    if !isValidEmail(email) && !email.isEmpty {
-                        Text("Invalid email format")
-                            .foregroundColor(.red)
-                            .font(.caption)
                     }
-                    
+                    .overlay(
+                        Text("\(name.count)/25")
+                            .font(.caption)
+                            .foregroundColor(name.count > 25 ? .red : .gray)
+                            .padding(.trailing, 8),
+                        alignment: .trailing
+                    )
+ 
+                TextField("Phone", text: $phone)
+                    .keyboardType(.numberPad)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        phone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                    .onChange(of: phone) { newValue in
+                        let filtered = newValue.filter { "0123456789".contains($0) }
+                        if phone != filtered {
+                            phone = filtered
+                        }
+                        if phone.count > 10 {
+                            phone = String(phone.prefix(10))
+                        }
+                    }
+                    .overlay(
+                        Text("\(phone.count)/10")
+                            .font(.caption)
+                            .foregroundColor(phone.count > 10 ? .red : .gray)
+                            .padding(.trailing, 8),
+                        alignment: .trailing
+                    )
+                if !isValidPhone(phone) && !phone.isEmpty {
+                    Text("Phone number should be 10 digits")
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+                TextField("Email", text: $email)
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                    .onChange(of: email) { newValue in
+                        if newValue.count > 100 {
+                            email = String(newValue.prefix(100))
+                        }
+                    }
+                if !isValidEmail(email) && !email.isEmpty {
+                    Text("Invalid email format")
+                        .foregroundColor(.red)
+                        .font(.caption)
                 }
                 
-                Section(){
-                    TextField("Address", text: $address, onCommit: geocodeAddress)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            address = address.trimmingCharacters(in: .whitespacesAndNewlines)
-                            geocodeAddress()
-                        }
-                        .onChange(of: address) { newValue in
-                            if newValue.count > 100 {
-                                address = String(newValue.prefix(100))
-                            }
-                        }
-                        .overlay(
-                            Text("\(address.count)/100")
-                                .font(.caption)
-                                .foregroundColor(address.count > 100 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
-                    
-                    TextField("City", text: $city)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            city = city.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }
-                    TextField("Country", text: $country)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            country = country.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }
-                    TextField("Zip Code", text: $zipCode)
-                        .keyboardType(.numberPad)
-                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                            zipCode = zipCode.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }
-                        .onChange(of: zipCode) { newValue in
-                            let filtered = newValue.filter { "0123456789".contains($0) }
-                            if zipCode != filtered {
-                                zipCode = filtered
-                            }
-                            if zipCode.count > 6 {
-                                zipCode = String(zipCode.prefix(6))
-                            }
-                        }
-                        .overlay(
-                            Text("\(zipCode.count)/6")
-                                .font(.caption)
-                                .foregroundColor(zipCode.count > 6 ? .red : .gray)
-                                .padding(.trailing, 8),
-                            alignment: .trailing
-                        )
-                    if !isValidZipCode(zipCode) && !zipCode.isEmpty {
-                        Text("Zip Code should be 6 digits")
-                            .foregroundColor(.red)
-                            .font(.caption)
+            }
+            
+            Section(){
+                TextField("Address", text: $address, onCommit: geocodeAddress)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        address = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                        geocodeAddress()
                     }
+                    .onChange(of: address) { newValue in
+                        if newValue.count > 100 {
+                            address = String(newValue.prefix(100))
+                        }
+                    }
+                    .overlay(
+                        Text("\(address.count)/100")
+                            .font(.caption)
+                            .foregroundColor(address.count > 100 ? .red : .gray)
+                            .padding(.trailing, 8),
+                        alignment: .trailing
+                    )
+                
+                TextField("City", text: $city)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        city = city.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                TextField("Country", text: $country)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        country = country.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                TextField("Zip Code", text: $zipCode)
+                    .keyboardType(.numberPad)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                        zipCode = zipCode.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                    .onChange(of: zipCode) { newValue in
+                        let filtered = newValue.filter { "0123456789".contains($0) }
+                        if zipCode != filtered {
+                            zipCode = filtered
+                        }
+                        if zipCode.count > 6 {
+                            zipCode = String(zipCode.prefix(6))
+                        }
+                    }
+                    .overlay(
+                        Text("\(zipCode.count)/6")
+                            .font(.caption)
+                            .foregroundColor(zipCode.count > 6 ? .red : .gray)
+                            .padding(.trailing, 8),
+                        alignment: .trailing
+                    )
+                if !isValidZipCode(zipCode) && !zipCode.isEmpty {
+                    Text("Zip Code should be 6 digits")
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
 
-                }
-                
-                
-                MapView(locationCoordinate: $locationCoordinate, region: $region)
-                    .frame(height: 300)
-                
-                // Section for admin details
-                Section(header: Text("Admin Details")) {
-                    Picker(selection: $selectedTypeIndex, label: Text("Type")) {
-                        ForEach(0 ..< adminTypes.count) { index in
-                            Text(self.adminTypes[index])
-                        }
+            }
+            
+            
+            MapView(locationCoordinate: $locationCoordinate, region: $region)
+                .frame(height: 300)
+            
+            // Section for admin details
+            Section(header: Text("Admin Details")) {
+                Picker(selection: $selectedTypeIndex, label: Text("Type")) {
+                    ForEach(0 ..< adminTypes.count) { index in
+                        Text(self.adminTypes[index])
                     }
-                    .pickerStyle(.menu)
+                }
+                .pickerStyle(.menu)
 
-                    if selectedTypeIndex > 0 {
-                        if adminTypes[selectedTypeIndex] == "New" {
-                            TextField("Name", text: $newAdminName)
-                                .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                                    newAdminName = newAdminName.trimmingCharacters(in: .whitespacesAndNewlines)
+                if selectedTypeIndex > 0 {
+                    if adminTypes[selectedTypeIndex] == "New" {
+                        TextField("Name", text: $newAdminName)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminName = newAdminName.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }
+                            .onChange(of: newAdminName) { newValue in
+                                if newValue.count > 25 {
+                                    newAdminName = String(newValue.prefix(25))
                                 }
-                                .onChange(of: newAdminName) { newValue in
-                                    if newValue.count > 25 {
-                                        newAdminName = String(newValue.prefix(25))
-                                    }
-                                }
-                                .overlay(
-                                    Text("\(newAdminName.count)/25")
-                                        .font(.caption)
-                                        .foregroundColor(newAdminName.count > 25 ? .red : .gray)
-                                        .padding(.trailing, 8),
-                                    alignment: .trailing
-                                )
-                            if !isNewAdminNameValid && !newAdminName.isEmpty {
-                                Text("Name should not exceed 25 characters")
-                                    .foregroundColor(.red)
+                            }
+                            .overlay(
+                                Text("\(newAdminName.count)/25")
                                     .font(.caption)
+                                    .foregroundColor(newAdminName.count > 25 ? .red : .gray)
+                                    .padding(.trailing, 8),
+                                alignment: .trailing
+                            )
+                        if !isNewAdminNameValid && !newAdminName.isEmpty {
+                            Text("Name should not exceed 25 characters")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                        TextField("Email", text: $newAdminEmail)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            .textInputAutocapitalization(.never)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
                             }
-                            TextField("Email", text: $newAdminEmail)
-                                .keyboardType(.emailAddress)
-                                .autocapitalization(.none)
-                                .textInputAutocapitalization(.never)
-                                .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                                    newAdminEmail = newAdminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .onChange(of: newAdminEmail) { newValue in
+                                if newValue.count > 100 {
+                                    newAdminEmail = String(newValue.prefix(100))
                                 }
-                                .onChange(of: newAdminEmail) { newValue in
-                                    if newValue.count > 100 {
-                                        newAdminEmail = String(newValue.prefix(100))
-                                    }
+                            }
+                        if !isNewAdminEmailValid && !newAdminEmail.isEmpty {
+                            Text("Invalid email format")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                        TextField("Phone Number", text: $newAdminPhone)
+                            .keyboardType(.numberPad)
+                            .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
+                                newAdminPhone = newAdminPhone.trimmingCharacters(in: .whitespacesAndNewlines)
+                            }
+                            .onChange(of: newAdminPhone) { newValue in
+                                let filtered = newValue.filter { "0123456789".contains($0) }
+                                if newAdminPhone != filtered {
+                                    newAdminPhone = filtered
                                 }
-                            if !isNewAdminEmailValid && !newAdminEmail.isEmpty {
-                                Text("Invalid email format")
-                                    .foregroundColor(.red)
+                                if newAdminPhone.count > 10 {
+                                    newAdminPhone = String(newValue.prefix(10))
+                                }
+                            }
+                            .overlay(
+                                Text("\(newAdminPhone.count)/10")
                                     .font(.caption)
-                            }
-                            TextField("Phone Number", text: $newAdminPhone)
-                                .keyboardType(.numberPad)
-                                .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
-                                    newAdminPhone = newAdminPhone.trimmingCharacters(in: .whitespacesAndNewlines)
-                                }
-                                .onChange(of: newAdminPhone) { newValue in
-                                    let filtered = newValue.filter { "0123456789".contains($0) }
-                                    if newAdminPhone != filtered {
-                                        newAdminPhone = filtered
-                                    }
-                                    if newAdminPhone.count > 10 {
-                                        newAdminPhone = String(newAdminPhone.prefix(10))
-                                    }
-                                }
-                                .overlay(
-                                    Text("\(newAdminPhone.count)/10")
-                                        .font(.caption)
-                                        .foregroundColor(newAdminPhone.count > 10 ? .red : .gray)
-                                        .padding(.trailing, 8),
-                                    alignment: .trailing
-                                )
-                            if !isNewAdminPhoneValid && !newAdminPhone.isEmpty {
-                                Text("Phone number should be 10 digits")
-                                    .foregroundColor(.red)
-                                    .font(.caption)
-                            }
-                        } else if selectedTypeIndex == 2 {
-                            NavigationLink(destination: AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
-                                Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
-                            }
+                                    .foregroundColor(newAdminPhone.count > 10 ? .red : .gray)
+                                    .padding(.trailing, 8),
+                                alignment: .trailing
+                            )
+                        if !isNewAdminPhoneValid && !newAdminPhone.isEmpty {
+                            Text("Phone number should be 10 digits")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                    } else if selectedTypeIndex == 2 {
+                        NavigationLink(destination: AdminPickerView(existingAdmins: $existingAdmins, selectedAdminIndex: $selectedAdminIndex)) {
+                            Text(selectedAdminIndex == 0 ? "Select Admin" : existingAdmins[selectedAdminIndex])
                         }
                     }
                 }
-                
-                .scrollContentBackground(.hidden)
             }
         }
-        .background(Color("BackgroundColor"))
         .navigationTitle("New Hospital")
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -292,21 +288,22 @@ struct AddHospital: View {
             MailView(recipient: newAdminEmail, subject: "Admin Credentials for New Hospital", body: mailBody(), completion: { result in
                 if result == .sent {
                     performFirebaseSignup()
-                    addNewAdminToExistingAdmins()
+                    existingAdmins.append(newAdminName)
+                    saveHospitalToDatabase()
                 } else {
                     presentationMode.wrappedValue.dismiss()
                 }
             })
-        }.background(Color("SecondaryColor"))
+        }
     }
     
     // Function to save hospital details
     func saveHospital() {
         var admins: [AdminProfile] = []
         if selectedTypeIndex == 1 {
-            newAdminEmail = generateNewAdminEmail(name: newAdminName)
+            generatedAdminEmail = generateNewAdminEmail(name: newAdminName)
             newPassword = generateRandomPassword(length: 8)
-            let newAdmin = AdminProfile(id: UUID().uuidString, firstName: newAdminName, lastName: "", email: newAdminEmail, phone: newAdminPhone)
+            let newAdmin = AdminProfile(id: UUID().uuidString, firstName: newAdminName, lastName: "", email: generatedAdminEmail, phone: newAdminPhone)
             admins.append(newAdmin)
 
             showingMailView = true
@@ -329,6 +326,19 @@ struct AddHospital: View {
         }
     }
     
+    // Function to save hospital details to database
+    func saveHospitalToDatabase() {
+        let newHospital = Hospital(id: UUID().uuidString, name: name, email: email, phone: phone, admins: [], address: address, city: city, country: country, zipCode: zipCode, type: adminTypes[selectedTypeIndex], latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+        hospitals.append(newHospital)
+        DataController.shared.addHospital(newHospital) { error in
+            if let error = error {
+                print("Failed to save hospital: \(error.localizedDescription)")
+            } else {
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
+    }
+
     // Function to generate email body
     func mailBody() -> String {
         """
@@ -336,7 +346,7 @@ struct AddHospital: View {
 
         I hope this message finds you well. We are pleased to inform you that you have been appointed as an admin for our new hospital. Below, you will find your login credentials for accessing the admin portal:
 
-        Email: \(newAdminEmail)
+        Email: \(generatedAdminEmail)
         Password: \(newPassword)
 
         Hospital Details: \(name), \(address), \(city), \(zipCode), \(country).
@@ -365,15 +375,10 @@ struct AddHospital: View {
         let email = "\(name.replacingOccurrences(of: " ", with: "").lowercased())\(randomDigits)@admin.com"
         return email
     }
-
-    // Function to add new admin to existing list
-    func addNewAdminToExistingAdmins() {
-        existingAdmins.append(newAdminName)
-    }
     
     // Function to perform Firebase signup for new admin
     func performFirebaseSignup() {
-        Auth.auth().createUser(withEmail: newAdminEmail, password: newPassword) { authResult, error in
+        Auth.auth().createUser(withEmail: generatedAdminEmail, password: newPassword) { authResult, error in
             if let error = error {
                 print("Error signing up: \(error.localizedDescription)")
             } else {
