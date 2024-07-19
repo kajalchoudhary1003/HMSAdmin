@@ -28,6 +28,8 @@ struct AddHospital: View {
     @State private var newAdminPhone: String = ""
     @State private var generatedAdminEmail: String = ""
 
+    @ObservedObject private var keyboardResponder = KeyboardResponder()
+
     // Admin types and existing admins for selection
     let adminTypes = ["Select", "New", "Existing"]
     @State private var existingAdmins = ["Select", "Michael", "Emily", "David", "Robert"]
@@ -76,7 +78,7 @@ struct AddHospital: View {
                             .padding(.trailing, 8),
                         alignment: .trailing
                     )
- 
+
                 TextField("Phone", text: $phone)
                     .keyboardType(.numberPad)
                     .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification)) { _ in
@@ -120,7 +122,6 @@ struct AddHospital: View {
                         .foregroundColor(.red)
                         .font(.caption)
                 }
-                
             }
             
             Section(){
@@ -295,6 +296,12 @@ struct AddHospital: View {
                 }
             })
         }
+        .padding(.bottom, keyboardResponder.currentHeight)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
+        .animation(.easeOut(duration: 0.16))
     }
     
     // Function to save hospital details
@@ -389,7 +396,7 @@ struct AddHospital: View {
     
     // Validation functions
     func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "^[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
+        let emailRegEx = "^[a-zA-Z0-9._%+-]+@[A-Za.za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
     }
