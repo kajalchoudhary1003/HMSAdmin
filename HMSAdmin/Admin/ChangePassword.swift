@@ -12,8 +12,6 @@ struct ChangePassword: View {
     @Environment(\.presentationMode) var presentationMode
     var isFirstLogin: Bool
     
-    var loggedInAdminID: String
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -81,7 +79,7 @@ struct ChangePassword: View {
                 .padding(.top, 20)
                 
                 // Navigation link to redirect to home view on success
-                NavigationLink("", destination: AdminView(loggedInAdminID: loggedInAdminID).navigationBarBackButtonHidden(true), isActive: $navigateToHome)
+                NavigationLink("", destination: AdminView().navigationBarBackButtonHidden(true), isActive: $navigateToHome)
             }
             .padding()
         }
@@ -136,4 +134,8 @@ struct ChangePassword: View {
             }
         }
     }
+}
+
+#Preview{
+    ChangePassword()
 }

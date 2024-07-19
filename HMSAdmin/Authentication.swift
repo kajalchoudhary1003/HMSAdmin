@@ -179,14 +179,11 @@ struct Authentication: View {
                 return
             }
             
-            guard let user = authResult?.user else {
+            guard (authResult?.user) != nil else {
                 errorMessage = "Authentication failed"
                 showErrorAlert = true
                 return
             }
-            
-            // Store the user ID
-            userID = user.uid
             
             // User role based on email domain
             let emailDomain = email.components(separatedBy: "@").last ?? ""
@@ -196,7 +193,6 @@ struct Authentication: View {
                     userRole = "superadmin"
                     isLoggedIn = true
                     navigateToScreen(screen: NewHome())
-                    
                 case "admin.com", "doctor.com":
                     userRole = emailDomain == "admin.com" ? "admin" : "doctor"
                     isLoggedIn = true

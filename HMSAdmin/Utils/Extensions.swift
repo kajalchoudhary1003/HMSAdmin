@@ -30,15 +30,24 @@ extension Appointment {
         guard let patientID = dictionary["patientID"] as? String,
               let doctorID = dictionary["doctorID"] as? String,
               let date = dictionary["date"] as? TimeInterval,
-              let timeSlotID = dictionary["timeSlotID"] as? String else {
+              let shortDescription = dictionary["shortDescription"] as? String,
+              let timeSlotData = dictionary["timeSlot"] as? [String: Any],
+              let endTime = timeSlotData["endTime"] as? Double,
+              let isAvailable = timeSlotData["isAvailable"] as? Bool,
+              let isPremium = timeSlotData["isPremium"] as? Bool,
+              let startTime = timeSlotData["startTime"] as? Double else {
             return nil
         }
         
+        self.id = id
         self.patientID = patientID
         self.doctorID = doctorID
         self.date = Date(timeIntervalSince1970: date)
-        self.timeSlotID = timeSlotID
-        self.id = id
+        self.shortDescription = shortDescription
+        self.timeSlot = TimeSlot(endTime: endTime,
+                                 isAvailable: isAvailable,
+                                 isPremium: isPremium,
+                                 startTime: startTime)
     }
 }
 

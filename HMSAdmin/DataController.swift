@@ -4,16 +4,17 @@ import FirebaseAuth
 import CoreLocation
 
 class DataController: ObservableObject {
+    
+    // Singleton instance of DataController
     static let shared = DataController()
     
     private var database: DatabaseReference
-    @Published var currentAdmin: AdminProfile?
     private var hospitals: [String: Hospital] = [:]
     private var doctors: [String: Doctor] = [:]
     @Published var patients: [String: Patient] = [:]
     @Published var appointments: [Appointment] = []
     @Published var staffs: [String: Staff] = [:]
-
+    
     private init() {
         // Initialize the Firebase database reference
         self.database = Database.database(url: "https://hms-hospital-management-system-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
@@ -24,23 +25,6 @@ class DataController: ObservableObject {
         fetchStaffs()
     }
     
-    func fetchAdminProfile(adminID: String, completion: @escaping (AdminProfile?) -> Void) {
-            let ref = database.child("hospitals")
-            ref.observeSingleEvent(of: .value) { snapshot in
-                for case let child as DataSnapshot in snapshot.children {
-                    if let hospitalData = child.value as? [String: Any],
-                       let hospital = Hospital(from: hospitalData, id: child.key) {
-                        if let admin = hospital.admins.first(where: { $0.id == adminID }) {
-                            self.currentAdmin = admin
-                            completion(admin)
-                            return
-                        }
-                    }
-                }
-                completion(nil)
-            }
-        }
-
     // Fetch hospitals data from Firebase
     func fetchHospitals() {
         let ref = database.child("hospitals")
@@ -56,7 +40,7 @@ class DataController: ObservableObject {
             NotificationCenter.default.post(name: NSNotification.Name("HospitalsUpdated"), object: nil)
         }
     }
-
+    
     // Fetch patients data from Firebase
     func fetchPatients() {
         let ref = database.child("patient_users")
@@ -75,7 +59,7 @@ class DataController: ObservableObject {
             NotificationCenter.default.post(name: NSNotification.Name("PatientsUpdated"), object: nil)
         }
     }
-
+    
     // Fetch doctors data from Firebase
     func fetchDoctors() {
         let ref = database.child("doctors")
@@ -95,30 +79,30 @@ class DataController: ObservableObject {
     
     //fetch staff details
     func fetchStaffs() {
-           let ref = database.child("staffs")
-           ref.observe(.value) { snapshot in
-               self.staffs = [:]
-               for child in snapshot.children {
-                   if let childSnapshot = child as? DataSnapshot,
-                      let staffData = childSnapshot.value as? [String: Any],
-                      let staff = Staff(from: staffData, id: childSnapshot.key) {
-                       self.staffs[staff.id ?? UUID().uuidString] = staff
-                   }
-               }
-               NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
-           }
-       }
+        let ref = database.child("staffs")
+        ref.observe(.value) { snapshot in
+            self.staffs = [:]
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let staffData = childSnapshot.value as? [String: Any],
+                   let staff = Staff(from: staffData, id: childSnapshot.key) {
+                    self.staffs[staff.id ?? UUID().uuidString] = staff
+                }
+            }
+            NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
+        }
+    }
     
     
- 
     
-
+    
+    
     // Add a hospital to Firebase
     func addHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
         let id = hospital.id ?? database.child("hospitals").childByAutoId().key ?? UUID().uuidString
         var hospitalWithID = hospital
         hospitalWithID.id = id
-
+        
         let ref = database.child("hospitals").child(id)
         ref.setValue(hospitalWithID.toDictionary()) { error, _ in
             if let error = error {
@@ -133,28 +117,28 @@ class DataController: ObservableObject {
     
     //add staff
     func addStaff(_ staff: Staff, completion: @escaping (Error?) -> Void) {
-            let id = staff.id ?? database.child("staffs").childByAutoId().key ?? UUID().uuidString
-            var staffWithID = staff
-            staffWithID.id = id
-
-            let ref = database.child("staffs").child(id)
-            ref.setValue(staffWithID.toDictionary()) { error, _ in
-                if let error = error {
-                    completion(error)
-                    return
-                }
-                self.staffs[id] = staffWithID
-                NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
-                           completion(nil)
+        let id = staff.id ?? database.child("staffs").childByAutoId().key ?? UUID().uuidString
+        var staffWithID = staff
+        staffWithID.id = id
+        
+        let ref = database.child("staffs").child(id)
+        ref.setValue(staffWithID.toDictionary()) { error, _ in
+            if let error = error {
+                completion(error)
+                return
             }
+            self.staffs[id] = staffWithID
+            NotificationCenter.default.post(name: NSNotification.Name("StaffsUpdated"), object: nil)
+            completion(nil)
         }
-
+    }
+    
     // Add a doctor to Firebase
     func addDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
         let id = doctor.id ?? database.child("doctors").childByAutoId().key ?? UUID().uuidString
         var doctorWithID = doctor
         doctorWithID.id = id
-
+        
         let ref = database.child("doctors").child(id)
         ref.setValue(doctorWithID.toDictionary()) { error, _ in
             if let error = error {
@@ -166,7 +150,7 @@ class DataController: ObservableObject {
             completion(nil)
         }
     }
-
+    
     // Delete a doctor from Firebase
     func deleteDoctor(_ doctor: Doctor, completion: @escaping (Error?) -> Void) {
         guard let doctorID = doctor.id else {
@@ -188,16 +172,13 @@ class DataController: ObservableObject {
     
     
     func addPrescription(_ prescription: String, forAppointment appointment: Appointment, completion: @escaping(Error?)-> Void){
-        guard let appointmentID = appointment.id else{
-            completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Appointment id is nil"]))
-            return
-        }
+        let appointmentID = appointment.id
         let ref = database.child("appointments").child(appointmentID).child("prescription")
         ref.setValue(prescription){
             error, _ in
-            if let error = error{
+            if let error = error {
                 completion(error)
-            }else{
+            } else {
                 self.fetchAppointments()
                 completion(nil)
             }
@@ -206,24 +187,24 @@ class DataController: ObservableObject {
     
     
     
-
+    
     // Get all hospitals
     func getHospitals() -> [Hospital] {
         return Array(hospitals.values)
     }
-
+    
     // Get all doctors
     func getDoctors() -> [Doctor] {
         return Array(doctors.values)
     }
-
+    
     // Remove a hospital from Firebase
     func removeHospital(_ hospital: Hospital, completion: @escaping (Error?) -> Void) {
         guard let id = hospital.id else {
             completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Hospital ID is nil"]))
             return
         }
-
+        
         let ref = database.child("hospitals").child(id)
         ref.removeValue { error, _ in
             if let error = error {
@@ -235,7 +216,7 @@ class DataController: ObservableObject {
             completion(nil)
         }
     }
-
+    
     func geocodeAddress(address: String, city: String, country: String, zipCode: String, completion: @escaping (Result<CLLocationCoordinate2D, Error>) -> Void) {
         let fullAddress = "\(address), \(city), \(country), \(zipCode)"
         let geocoder = CLGeocoder()
@@ -249,7 +230,7 @@ class DataController: ObservableObject {
             }
         }
     }
-
+    
     func fetchAppointments() {
         database.child("appointments").observe(.value) { snapshot in
             var newAppointments: [Appointment] = []
@@ -265,7 +246,7 @@ class DataController: ObservableObject {
             }
         }
     }
-
+    
     func fetchAppointmentsById(for doctorID: String) {
         database.child("appointments").queryOrdered(byChild: "doctorID").queryEqual(toValue: doctorID).observe(.value) { snapshot in
             var newAppointments: [Appointment] = []
@@ -277,12 +258,12 @@ class DataController: ObservableObject {
                 }
             }
             DispatchQueue.main.async {
+                print("Fetched \(newAppointments.count) appointments")
                 self.appointments = newAppointments
             }
         }
     }
 }
-
 
 
 
