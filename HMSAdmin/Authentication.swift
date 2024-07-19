@@ -10,6 +10,8 @@ struct Authentication: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("userRole") var userRole: String = ""
     @AppStorage("userID") var userID: String = "" // Store the logged-in user's ID
+    @AppStorage("hasChangedPassword") var hasChangedPassword: Bool = false
+    @State private var showChangePassword = false
     
     var body: some View {
         NavigationView {
@@ -27,19 +29,18 @@ struct Authentication: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
                     
-                    Spacer() // Pushes VStack content to the top
+                    Spacer()
                 }
                 GeometryReader { geometry in
                     Image("Staff 3D")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width)  // Adjust as needed
-                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)  // Adjust as needed
+                        .frame(width: geometry.size.width)
+                        .position(x: geometry.size.width / 1.62, y: geometry.size.height * 0.355)
                 }
 
-                // Login input section at the bottom
                 VStack {
-                    Spacer() // Pushes login section to the bottom
+                    Spacer()
                     
                     VStack(alignment: .leading) {
                         Text("Enter your credentials")
@@ -48,7 +49,6 @@ struct Authentication: View {
                             .padding(.top,8)
                             .padding(.horizontal,5)
 
-                        
                         Text("Please enter your email and password to proceed")
                             .font(.subheadline)
                             .foregroundColor(Color.customPrimary)
@@ -56,7 +56,6 @@ struct Authentication: View {
                             .padding(.bottom, 5)
                             .padding(.horizontal,5)
 
-                        
                         VStack(alignment: .leading){
                             TextField("Email", text: $username)
                                 .padding()
@@ -70,25 +69,22 @@ struct Authentication: View {
                                     }
                                 }
                                 .onTapGesture {
-                                    clearFields = false // Ensure fields are not cleared on tap
+                                    clearFields = false
                                 }
                             if username.isEmpty {
                                 Text(" ")
                                     .font(.caption)
                                     .padding(.horizontal,5)
-
                             } else if isValidEmail(username) {
                                 Text("Yeah, Looks Valid Email Address")
                                     .foregroundColor(Color.customPrimary)
                                     .font(.caption)
                                     .padding(.horizontal,5)
-
                             } else {
                                 Text("Enter a valid email address")
                                     .foregroundColor(Color(UIColor.systemRed))
                                     .font(.caption)
                                     .padding(.horizontal,5)
-
                             }
                             
                             SecureField("Password", text: $password)
@@ -112,7 +108,6 @@ struct Authentication: View {
                                     .foregroundColor(Color(UIColor.systemRed))
                                     .font(.caption)
                                     .padding(.horizontal,5)
-
                             }
                             
                             Button(action: {
@@ -133,7 +128,6 @@ struct Authentication: View {
                             }
                         }
                         .padding(.horizontal,5)
-                        
                     }
                     .padding(.vertical, 5)
                     .background(Blur())
@@ -154,32 +148,29 @@ struct Authentication: View {
             }
             )
         }
+        .fullScreenCover(isPresented: $showChangePassword) {
+            ChangePassword(isFirstLogin: true, loggedInAdminID: userID)
+        }
     }
     
-    // Function to validate inputs
     func validateInputs() {
-        // Reset previous error message
         errorMessage = ""
         
-        // Check if email is empty or invalid
         if username.isEmpty || !isValidEmail(username) {
             errorMessage = "Please enter a valid email address"
             showErrorAlert = true
             return
         }
         
-        // Check if password is empty or less than 6 characters
         if password.isEmpty || password.count < 6 {
             errorMessage = "Password must be at least 6 characters"
             showErrorAlert = true
             return
         }
         
-        // Proceed with authentication if inputs are valid
         authenticateUser(email: username, password: password)
     }
     
-    // Function to authenticate user with Firebase
     func authenticateUser(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -206,16 +197,14 @@ struct Authentication: View {
                     isLoggedIn = true
                     navigateToScreen(screen: NewHome())
                     
-                case "admin.com":
-                    userRole = "admin"
+                case "admin.com", "doctor.com":
+                    userRole = emailDomain == "admin.com" ? "admin" : "doctor"
                     isLoggedIn = true
-                    navigateToScreen(screen: AdminView(loggedInAdminID: user.uid))
-                    
-                case "doctor.com":
-                    userRole = "doctor"
-                    isLoggedIn = true
-                    navigateToScreen(screen: DoctorView())
-
+                    if !hasChangedPassword {
+                        showChangePassword = true
+                    } else {
+                        navigateToAppropriateScreen()
+                    }
                     
                 default:
                     errorMessage = "Invalid email domain"
@@ -224,22 +213,31 @@ struct Authentication: View {
         }
     }
     
-    // Function to validate email format
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$"
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
     
-    // Function to navigate to different screens based on user role
-     func navigateToScreen<Screen: View>(screen: Screen) {
-         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-             if let window = windowScene.windows.first {
-                 window.rootViewController = UIHostingController(rootView: screen)
-                 window.makeKeyAndVisible()
-             }
-         }
-     }
+    func navigateToScreen<Screen: View>(screen: Screen) {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let window = windowScene.windows.first {
+                window.rootViewController = UIHostingController(rootView: screen)
+                window.makeKeyAndVisible()
+            }
+        }
+    }
+    
+    func navigateToAppropriateScreen() {
+        switch userRole {
+        case "admin":
+            navigateToScreen(screen: AdminView(loggedInAdminID: userID))
+        case "doctor":
+            navigateToScreen(screen: DoctorView())
+        default:
+            break
+        }
+    }
 }
 
 struct Authentication_Previews: PreviewProvider {
