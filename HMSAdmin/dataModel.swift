@@ -200,26 +200,33 @@ struct Hospital: Codable, Identifiable, Equatable {
     }
 }
 
-// Struct to represent an Appointment
 struct Appointment: Hashable, Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String
     var patientID: String
     var doctorID: String
     var date: Date
-    var timeSlotID: String
-    var prescription: String?
+    var shortDescription: String
+    var timeSlot: TimeSlot
     
-    enum CodingKeys: String, CodingKey {
-        case id, patientID, doctorID, date, timeSlotID, prescription
+    struct TimeSlot: Hashable, Codable {
+        var endTime: Double
+        var isAvailable: Bool
+        var isPremium: Bool
+        var startTime: Double
     }
     
-    init(patientID: String, doctorID: String, date: Date, timeSlotID: String, id: String? = nil, prescription: String?) {
-        self.id = id
-        self.patientID = patientID
-        self.doctorID = doctorID
-        self.date = date
-        self.timeSlotID = timeSlotID
-        self.prescription = prescription
+    enum CodingKeys: String, CodingKey {
+        case id, patientID, doctorID, date, shortDescription, timeSlot
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        patientID = try container.decode(String.self, forKey: .patientID)
+        doctorID = try container.decode(String.self, forKey: .doctorID)
+        date = try container.decode(Date.self, forKey: .date)
+        shortDescription = try container.decode(String.self, forKey: .shortDescription)
+        timeSlot = try container.decode(TimeSlot.self, forKey: .timeSlot)
     }
 }
 

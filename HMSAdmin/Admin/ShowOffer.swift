@@ -17,7 +17,7 @@ struct ShowOffersView: View {
                             .font(.title)
                     }
                     .sheet(isPresented: $showAddOfferView) {
-                        AddOfferView()
+//                        AddOfferView()
                     }
                 }
                 
