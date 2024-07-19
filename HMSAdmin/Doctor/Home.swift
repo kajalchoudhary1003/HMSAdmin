@@ -23,7 +23,7 @@ struct PatientRow: View {
                     VStack(alignment: .trailing) {
                         Image(systemName: "chevron.right")
                             .foregroundColor(.gray)
-                        Text(formatDate(appointment.date))
+                        Text(formatTime(appointment.timeSlot.startTime))
                             .font(.headline)
                             .foregroundColor(Color("AccentColor"))
                             .padding(.top, 10)
@@ -75,19 +75,22 @@ struct Home: View {
                     }
                 }
                 .vSpacing(.top)
-                .onAppear {
+            }.onAppear {
+                if DataController.shared.appointments.isEmpty {
                     DataController.shared.fetchAppointmentsById(for: currentDoctorID)
-                    print("current user \(currentDoctorID)")
-                    if weekSlider.isEmpty {
-                        let currentWeek = Date().fetchWeek()
-                        weekSlider.append(currentWeek)
-                        if let lastDate = currentWeek.last?.date {
-                            weekSlider.append(lastDate.createNextWeek())
-                        }
+                }
+                DataController.shared.fetchAppointmentsById(for: currentDoctorID)
+                print("current user \(currentDoctorID)")
+                if weekSlider.isEmpty {
+                    let currentWeek = Date().fetchWeek()
+                    weekSlider.append(currentWeek)
+                    if let lastDate = currentWeek.last?.date {
+                        weekSlider.append(lastDate.createNextWeek())
                     }
                 }
             }
         }
+
         var doctorAppointments: [Appointment] {
             DataController.shared.appointments.filter { $0.doctorID == currentDoctorID }
         }
@@ -95,7 +98,6 @@ struct Home: View {
         var todaysAppointments: [Appointment] {
             DataController.shared.appointments.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
         }
-
     
     @ViewBuilder
     func HeaderView() -> some View {
@@ -183,6 +185,12 @@ func formatDate(_ date: Date) -> String {
        formatter.dateStyle = .medium
        return formatter.string(from: date)
    }
+func formatTime(_ timestamp: Double) -> String {
+    let date = Date(timeIntervalSince1970: timestamp)
+    let formatter = DateFormatter()
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
+}
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home()
