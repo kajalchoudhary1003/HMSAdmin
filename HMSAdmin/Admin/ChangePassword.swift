@@ -135,7 +135,3 @@ struct ChangePassword: View {
         }
     }
 }
-
-#Preview{
-    ChangePassword()
-}

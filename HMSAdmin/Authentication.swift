@@ -7,7 +7,7 @@ struct Authentication: View {
     @State private var errorMessage = ""
     @State private var showErrorAlert = false
     @State private var clearFields = false
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
     @AppStorage("userRole") var userRole: String = ""
     @AppStorage("userID") var userID: String = "" // Store the logged-in user's ID
     @AppStorage("hasChangedPassword") var hasChangedPassword: Bool = false
@@ -149,7 +149,7 @@ struct Authentication: View {
             )
         }
         .fullScreenCover(isPresented: $showChangePassword) {
-            ChangePassword(isFirstLogin: true, loggedInAdminID: userID)
+            ChangePassword(isFirstLogin: true)
         }
     }
     
@@ -227,7 +227,7 @@ struct Authentication: View {
     func navigateToAppropriateScreen() {
         switch userRole {
         case "admin":
-            navigateToScreen(screen: AdminView(loggedInAdminID: userID))
+            navigateToScreen(screen: AdminView())
         case "doctor":
             navigateToScreen(screen: DoctorView())
         default:
